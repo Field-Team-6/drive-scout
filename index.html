@@ -503,6 +503,65 @@
         <div class="college-list" id="collegeList" style="display: none;">
             <h2 style="margin-bottom: 20px; color: #333;">Campus Details</h2>
             <div id="collegeItems"></div>
+            
+            <!-- MOVEABLE FULL CONTROLS BUTTON (appears here after main button is clicked) -->
+            <div id="moveableControlsContainer" style="display: none; text-align: center; margin-top: 25px; padding-top: 20px; border-top: 2px solid #e1e5e9;">
+                <button id="moveableFullControlsBtn" onclick="toggleFullControls()" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
+                    Full Drive Scout Controls
+                </button>
+                
+                <!-- MOVEABLE FULL CONTROLS SECTION (initially hidden) -->
+                <div id="moveableFullControlsSection" style="display: none; margin-top: 20px; background: rgba(102, 126, 234, 0.1); padding: 20px; border-radius: 15px; text-align: left;">
+                    
+                    <!-- CLOSEST DISTRICTS BUTTON -->
+                    <div style="margin-bottom: 20px; text-align: center;">
+                        <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; margin-bottom: 15px;">
+                            Find closest swing districts to me
+                        </button>
+                    </div>
+                    
+                    <!-- DIFFERENT LOCATION SECTION -->
+                    <div style="margin-bottom: 20px; text-align: center;">
+                        <button onclick="findDifferentLocation()" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; margin-bottom: 10px;">
+                            Find swing districts closest to a different location
+                        </button>
+                        <div id="moveableLocationInputSection" style="display: none; margin-top: 10px;">
+                            <input type="text" id="moveableLocationInput" placeholder="Enter city, state OR zip code" style="padding: 10px; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 16px; width: 300px; max-width: 90%;" onkeypress="handleMoveableLocationKeypress(event)">
+                            <div style="margin-top: 8px; font-size: 0.9rem; color: #666; opacity: 0.8;">
+                                Press Enter to search
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- MANUAL DISTRICT SELECTION -->
+                    <div style="margin-bottom: 20px;">
+                        <div style="color: #333; font-size: 1rem; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                            Find swing district campuses:
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="moveableStateSelect">Select State:</label>
+                                <select id="moveableStateSelect" onchange="handleMoveableStateChange()">
+                                    <option value="">Choose a state...</option>
+                                    <option value="Alaska">Alaska</option>
+                                    <option value="Arizona">Arizona</option>
+                                    <option value="California">California</option>
+                                    <option value="Colorado">Colorado</option>
+                                    <option value="Connecticut">Connecticut</option>
+                                    <option value="Florida">Florida</option>
+                                    <option value="Nevada">Nevada</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="moveableDistrictSelect">Select Congressional District:</label>
+                                <select id="moveableDistrictSelect" disabled onchange="handleMoveableDistrictChange()">
+                                    <option value="">First select a state...</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- Upcoming Drives Container -->
@@ -755,6 +814,7 @@
         let districtBoundaries = null;
         let districtBoundariesVisible = true;
         let currentSelectedDistrict = null;
+        let fullControlsVisible = false;
 
         // District mappings
         const districtMappings = {
@@ -786,6 +846,9 @@
             btn.innerHTML = '🔍 Finding closest swing district...';
             btn.disabled = true;
             resultContainer.style.display = 'none';
+            
+            // Hide the intro controls and show moveable version after results
+            document.getElementById('advancedControlsIntro').style.display = 'none';
             
             // Check if geolocation is available
             if (!navigator.geolocation) {
@@ -845,6 +908,11 @@
                         if (state) {
                             // Load campus data for this district
                             displayColleges(state, closestDistrict);
+                            
+                            // Show moveable controls after college list loads
+                            setTimeout(() => {
+                                document.getElementById('moveableControlsContainer').style.display = 'block';
+                            }, 500);
                         }
                     }
                     
@@ -875,6 +943,9 @@
                     // Reset button - KEEP CONSISTENT TEXT
                     btn.innerHTML = '🔍 Find closest swing district campuses!';
                     btn.disabled = false;
+                    
+                    // Show controls back if error
+                    document.getElementById('advancedControlsIntro').style.display = 'block';
                 },
                 {
                     enableHighAccuracy: false,
@@ -882,6 +953,204 @@
                     maximumAge: 30000
                 }
             );
+        }
+        
+        function toggleFullControls() {
+            fullControlsVisible = !fullControlsVisible;
+            
+            // Determine which sections to show/hide based on location
+            const isInHeader = document.getElementById('advancedControlsIntro').style.display !== 'none';
+            
+            if (isInHeader) {
+                // Controls are in header
+                const section = document.getElementById('fullControlsSection');
+                const btn = document.getElementById('fullControlsBtn');
+                
+                if (fullControlsVisible) {
+                    section.style.display = 'block';
+                    btn.innerHTML = 'Hide Full Drive Scout Controls';
+                } else {
+                    section.style.display = 'none';
+                    btn.innerHTML = 'Full Drive Scout Controls';
+                }
+            } else {
+                // Controls are in moveable section
+                const section = document.getElementById('moveableFullControlsSection');
+                const btn = document.getElementById('moveableFullControlsBtn');
+                
+                if (fullControlsVisible) {
+                    section.style.display = 'block';
+                    btn.innerHTML = 'Hide Full Drive Scout Controls';
+                } else {
+                    section.style.display = 'none';
+                    btn.innerHTML = 'Full Drive Scout Controls';
+                }
+            }
+        }
+        
+        function findClosestDistricts() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    
+                    // Calculate distances to all swing districts
+                    const districtDistances = [];
+                    for (const [districtId, data] of Object.entries(districtData)) {
+                        const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                        districtDistances.push({ district: districtId, distance: distance, data: data });
+                    }
+                    
+                    // Sort by distance and get top 5
+                    districtDistances.sort((a, b) => a.distance - b.distance);
+                    const closest5 = districtDistances.slice(0, 5);
+                    
+                    showClosestDistrictsResults(closest5);
+                },
+                function(error) {
+                    alert('Unable to get your location: ' + error.message);
+                }
+            );
+        }
+        
+        function findDifferentLocation() {
+            const inputSection = document.getElementById('locationInputSection') || document.getElementById('moveableLocationInputSection');
+            
+            if (inputSection.style.display === 'none') {
+                inputSection.style.display = 'block';
+                const input = inputSection.querySelector('input');
+                input.focus();
+            } else {
+                inputSection.style.display = 'none';
+            }
+        }
+        
+        function handleLocationKeypress(event) {
+            if (event.key === 'Enter') {
+                searchLocationAndFindDistricts(document.getElementById('locationInput').value);
+            }
+        }
+        
+        function handleMoveableLocationKeypress(event) {
+            if (event.key === 'Enter') {
+                searchLocationAndFindDistricts(document.getElementById('moveableLocationInput').value);
+            }
+        }
+        
+        async function searchLocationAndFindDistricts(locationQuery) {
+            if (!locationQuery.trim()) {
+                alert('Please enter a location');
+                return;
+            }
+            
+            try {
+                // Use a geocoding service to get coordinates
+                // For now, we'll show a placeholder - you could integrate with Google Geocoding API
+                alert('Location search for: "' + locationQuery + '"\n\nNote: This would normally geocode the location and find closest districts. For now, using your current location as fallback.');
+                
+                // Fallback to current location
+                findClosestDistricts();
+                
+            } catch (error) {
+                alert('Error searching for location: ' + error.message);
+            }
+        }
+        
+        function showClosestDistrictsResults(districts) {
+            let resultsHTML = '<div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin: 15px 0;"><h3 style="margin-bottom: 15px;">🎯 Closest Swing Districts:</h3>';
+            
+            districts.forEach((item, index) => {
+                const districtInfo = item.data;
+                const partyColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                const actionColor = districtInfo.action === 'FLIP' ? '#f44336' : '#4CAF50';
+                
+                resultsHTML += `
+                    <div style="background: white; padding: 15px; margin-bottom: 10px; border-radius: 8px; border-left: 4px solid ${partyColor};">
+                        <div style="font-weight: bold; margin-bottom: 5px;">${index + 1}. ${item.district} - ${Math.round(item.distance)} miles</div>
+                        <div style="font-size: 0.9rem; color: #666;">
+                            Rep. ${districtInfo.rep} (${districtInfo.party}) • 
+                            <span style="color: ${actionColor}; font-weight: bold;">${districtInfo.action}</span> • 
+                            PVI: ${districtInfo.pvi}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsHTML += '</div>';
+            
+            // Show results in closest districts container
+            document.getElementById('closestDistricts').innerHTML = resultsHTML;
+            document.getElementById('closestDistricts').style.display = 'block';
+        }
+        
+        // Handle visible state/district dropdowns
+        function handleVisibleStateChange() {
+            const selectedState = document.getElementById('stateSelectVisible').value;
+            populateVisibleDistrictDropdown(selectedState);
+        }
+        
+        function handleVisibleDistrictChange() {
+            const selectedState = document.getElementById('stateSelectVisible').value;
+            const selectedDistrict = document.getElementById('districtSelectVisible').value;
+            if (selectedState && selectedDistrict) {
+                displayColleges(selectedState, selectedDistrict);
+            }
+        }
+        
+        function handleMoveableStateChange() {
+            const selectedState = document.getElementById('moveableStateSelect').value;
+            populateMoveableDistrictDropdown(selectedState);
+        }
+        
+        function handleMoveableDistrictChange() {
+            const selectedState = document.getElementById('moveableStateSelect').value;
+            const selectedDistrict = document.getElementById('moveableDistrictSelect').value;
+            if (selectedState && selectedDistrict) {
+                displayColleges(selectedState, selectedDistrict);
+            }
+        }
+        
+        function populateVisibleDistrictDropdown(state) {
+            const districtSelect = document.getElementById('districtSelectVisible');
+            districtSelect.innerHTML = '<option value="">Choose a district...</option>';
+            
+            if (state && districtMappings[state]) {
+                districtSelect.disabled = false;
+                const districts = districtMappings[state];
+                
+                districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            } else {
+                districtSelect.disabled = true;
+            }
+        }
+        
+        function populateMoveableDistrictDropdown(state) {
+            const districtSelect = document.getElementById('moveableDistrictSelect');
+            districtSelect.innerHTML = '<option value="">Choose a district...</option>';
+            
+            if (state && districtMappings[state]) {
+                districtSelect.disabled = false;
+                const districts = districtMappings[state];
+                
+                districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            } else {
+                districtSelect.disabled = true;
+            }
         }
 
         // Initialize the application
