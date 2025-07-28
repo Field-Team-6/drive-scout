@@ -847,9 +847,6 @@
             btn.disabled = true;
             resultContainer.style.display = 'none';
             
-            // Hide the intro controls and show moveable version after results
-            document.getElementById('advancedControlsIntro').style.display = 'none';
-            
             // Check if geolocation is available
             if (!navigator.geolocation) {
                 alert('Geolocation is not supported by your browser');
@@ -909,8 +906,9 @@
                             // Load campus data for this district
                             displayColleges(state, closestDistrict);
                             
-                            // Show moveable controls after college list loads
+                            // Hide the intro controls and show moveable version after results
                             setTimeout(() => {
+                                document.getElementById('advancedControlsIntro').style.display = 'none';
                                 document.getElementById('moveableControlsContainer').style.display = 'block';
                             }, 500);
                         }
@@ -944,8 +942,7 @@
                     btn.innerHTML = '🔍 Find closest swing district campuses!';
                     btn.disabled = false;
                     
-                    // Show controls back if error
-                    document.getElementById('advancedControlsIntro').style.display = 'block';
+                    // Keep controls visible if error occurs
                 },
                 {
                     enableHighAccuracy: false,
