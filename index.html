@@ -493,7 +493,7 @@
 
         <div class="map-container" id="mapContainer" style="display: none; margin: -24px 0 8px 0 !important; padding: 0 !important;">
             <div id="map">
-                <button class="district-toggle-button" id="districtToggleBtn" title="Toggle district boundaries">🗺️ Districts</button>
+                <button class="district-toggle-button" id="districtToggleBtn" title="Toggle district boundaries">Districts</button>
                 <button class="location-button" id="locationBtn" title="Find my location">
                     <img src="images/icons8-my-location-50.png" style="width: 28px; height: 28px;" alt="Find location">
                 </button>
@@ -1676,11 +1676,11 @@
             if (districtToggleBtn) {
                 if (districtBoundariesVisible) {
                     districtToggleBtn.classList.add('active');
-                    districtToggleBtn.innerHTML = '🗺️ Districts';
+                    districtToggleBtn.innerHTML = 'Districts';
                     districtToggleBtn.title = 'Hide district boundaries';
                 } else {
                     districtToggleBtn.classList.remove('active');
-                    districtToggleBtn.innerHTML = '🗺️ Districts';
+                    districtToggleBtn.innerHTML = 'Districts';
                     districtToggleBtn.title = 'Show district boundaries';
                 }
             }
