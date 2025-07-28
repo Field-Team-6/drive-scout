@@ -1929,146 +1929,15 @@
             const title = district + ' - ' + collegeName + ' - Register Democrats to save the world!';
             const tags = 'Drive,CA,' + districtCode;
             
-            console.log('🚀 Drive Scout: Preparing clipboard data:', { title, tags });
+            // Open Mobilize in a new tab
+            const mobilizeWindow = window.open('https://www.mobilize.us/dashboard/ft6/event-campaign/699/', '_blank');
             
-            // Copy title to clipboard first
-            copyToClipboard(title).then(() => {
-                console.log('📋 Title copied to clipboard');
-                
-                // Open Mobilize in new tab
-                const mobilizeWindow = window.open('https://www.mobilize.us/dashboard/ft6/event-campaign/699/', '_blank');
-                
-                // Show helpful notification with both pieces of info
-                showClipboardNotification(title, tags);
-                
-            }).catch(error => {
-                console.log('❌ Clipboard copy failed:', error);
-                // Still open Mobilize even if clipboard fails
-                window.open('https://www.mobilize.us/dashboard/ft6/event-campaign/699/', '_blank');
-                showFallbackNotification(title, tags);
-            });
-        }
-        
-        async function copyToClipboard(text) {
-            if (navigator.clipboard && navigator.clipboard.writeText) {
-                // Modern clipboard API
-                return navigator.clipboard.writeText(text);
-            } else {
-                // Fallback for older browsers
-                return new Promise((resolve, reject) => {
-                    const textArea = document.createElement('textarea');
-                    textArea.value = text;
-                    textArea.style.position = 'fixed';
-                    textArea.style.left = '-999999px';
-                    textArea.style.top = '-999999px';
-                    document.body.appendChild(textArea);
-                    textArea.focus();
-                    textArea.select();
-                    
-                    try {
-                        const successful = document.execCommand('copy');
-                        document.body.removeChild(textArea);
-                        if (successful) {
-                            resolve();
-                        } else {
-                            reject(new Error('Copy command failed'));
-                        }
-                    } catch (err) {
-                        document.body.removeChild(textArea);
-                        reject(err);
-                    }
-                });
-            }
-        }
-        
-        function showClipboardNotification(title, tags) {
-            // Create a modern notification overlay
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: linear-gradient(135deg, #4CAF50, #45a049);
-                color: white;
-                padding: 20px 25px;
-                border-radius: 12px;
-                box-shadow: 0 8px 32px rgba(76, 175, 80, 0.3);
-                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                font-size: 14px;
-                line-height: 1.4;
-                max-width: 400px;
-                z-index: 10000;
-                cursor: pointer;
-                transition: all 0.3s ease;
-                border: 2px solid rgba(255,255,255,0.2);
-            `;
-            
-            notification.innerHTML = `
-                <div style="font-weight: bold; margin-bottom: 8px; font-size: 16px;">
-                    🎉 Ready for Mobilize!
-                </div>
-                <div style="margin-bottom: 10px;">
-                    <strong>📋 Title copied to clipboard!</strong><br>
-                    <span style="opacity: 0.9; font-size: 13px;">Paste with Ctrl+V (or Cmd+V)</span>
-                </div>
-                <div style="margin-bottom: 12px;">
-                    <strong>🏷️ Tags to add:</strong><br>
-                    <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; font-size: 13px;">${tags}</code>
-                </div>
-                <div style="font-size: 12px; opacity: 0.8; text-align: center; margin-top: 12px;">
-                    Click to copy tags • Auto-closes in 8 seconds
-                </div>
-            `;
-            
-            // Click to copy tags
-            notification.addEventListener('click', () => {
-                copyToClipboard(tags).then(() => {
-                    notification.innerHTML = `
-                        <div style="text-align: center;">
-                            <div style="font-weight: bold; margin-bottom: 8px; font-size: 16px;">
-                                ✅ Tags copied!
-                            </div>
-                            <div style="font-size: 13px; opacity: 0.9;">
-                                Ready to paste: <code style="background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px;">${tags}</code>
-                            </div>
-                        </div>
-                    `;
-                    setTimeout(() => {
-                        notification.style.opacity = '0';
-                        setTimeout(() => notification.remove(), 300);
-                    }, 2000);
-                }).catch(() => {
-                    // If copy fails, at least show the tags clearly
-                    alert('Tags to add: ' + tags);
-                });
-            });
-            
-            // Hover effects
-            notification.addEventListener('mouseenter', () => {
-                notification.style.transform = 'translateY(-2px)';
-                notification.style.boxShadow = '0 12px 40px rgba(76, 175, 80, 0.4)';
-            });
-            
-            notification.addEventListener('mouseleave', () => {
-                notification.style.transform = 'translateY(0)';
-                notification.style.boxShadow = '0 8px 32px rgba(76, 175, 80, 0.3)';
-            });
-            
-            document.body.appendChild(notification);
-            
-            // Auto-remove after 8 seconds
+            // Instructions for the user
             setTimeout(() => {
-                notification.style.opacity = '0';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.remove();
-                    }
-                }, 300);
-            }, 8000);
-        }
-        
-        function showFallbackNotification(title, tags) {
-            alert(`Drive Scout: Copy this info to Mobilize:\n\n📝 Title:\n${title}\n\n🏷️ Tags:\n${tags}`);
+                alert('Drive Scout Tip: After the Mobilize form loads, look for:\n\n' +
+                      '📝 Default title: Paste this text:\n"' + title + '"\n\n' +
+                      '🏷️ Tag options: Add these tags:\n"Drive", "CA", "' + districtCode + '"');
+            }, 1000);
         }
 
         // Initialize the app when the page loads
