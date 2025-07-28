@@ -503,65 +503,6 @@
         <div class="college-list" id="collegeList" style="display: none;">
             <h2 style="margin-bottom: 20px; color: #333;">Campus Details</h2>
             <div id="collegeItems"></div>
-            
-            <!-- MOVEABLE FULL CONTROLS BUTTON (appears here after main button is clicked) -->
-            <div id="moveableControlsContainer" style="display: none; text-align: center; margin-top: 25px; padding-top: 20px; border-top: 2px solid #e1e5e9;">
-                <button id="moveableFullControlsBtn" onclick="toggleFullControls()" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; transition: all 0.3s ease;">
-                    Full Drive Scout Controls
-                </button>
-                
-                <!-- MOVEABLE FULL CONTROLS SECTION (initially hidden) -->
-                <div id="moveableFullControlsSection" style="display: none; margin-top: 20px; background: rgba(102, 126, 234, 0.1); padding: 20px; border-radius: 15px; text-align: left;">
-                    
-                    <!-- CLOSEST DISTRICTS BUTTON -->
-                    <div style="margin-bottom: 20px; text-align: center;">
-                        <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; margin-bottom: 15px;">
-                            Find closest swing districts to me
-                        </button>
-                    </div>
-                    
-                    <!-- DIFFERENT LOCATION SECTION -->
-                    <div style="margin-bottom: 20px; text-align: center;">
-                        <button onclick="findDifferentLocation()" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; margin-bottom: 10px;">
-                            Find swing districts closest to a different location
-                        </button>
-                        <div id="moveableLocationInputSection" style="display: none; margin-top: 10px;">
-                            <input type="text" id="moveableLocationInput" placeholder="Enter city, state OR zip code" style="padding: 10px; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 16px; width: 300px; max-width: 90%;" onkeypress="handleMoveableLocationKeypress(event)">
-                            <div style="margin-top: 8px; font-size: 0.9rem; color: #666; opacity: 0.8;">
-                                Press Enter to search
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- MANUAL DISTRICT SELECTION -->
-                    <div style="margin-bottom: 20px;">
-                        <div style="color: #333; font-size: 1rem; font-weight: bold; margin-bottom: 15px; text-align: center;">
-                            Find swing district campuses:
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="moveableStateSelect">Select State:</label>
-                                <select id="moveableStateSelect" onchange="handleMoveableStateChange()">
-                                    <option value="">Choose a state...</option>
-                                    <option value="Alaska">Alaska</option>
-                                    <option value="Arizona">Arizona</option>
-                                    <option value="California">California</option>
-                                    <option value="Colorado">Colorado</option>
-                                    <option value="Connecticut">Connecticut</option>
-                                    <option value="Florida">Florida</option>
-                                    <option value="Nevada">Nevada</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="moveableDistrictSelect">Select Congressional District:</label>
-                                <select id="moveableDistrictSelect" disabled onchange="handleMoveableDistrictChange()">
-                                    <option value="">First select a state...</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <!-- Upcoming Drives Container -->
@@ -814,7 +755,6 @@
         let districtBoundaries = null;
         let districtBoundariesVisible = true;
         let currentSelectedDistrict = null;
-        let fullControlsVisible = false;
 
         // District mappings
         const districtMappings = {
