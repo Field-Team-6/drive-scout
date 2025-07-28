@@ -2247,23 +2247,120 @@
                         districtDistances.push({ district: districtId, distance: distance, data: data });
                     }
                     
-                    // Sort by distance and get top 5
+                    // Sort by distance and get top 3
                     districtDistances.sort((a, b) => a.distance - b.distance);
-                    const closest5 = districtDistances.slice(0, 5);
+                    const closest3 = districtDistances.slice(0, 3);
                     
-                    let message = '🎯 Your 5 Closest Swing Districts:\n\n';
-                    closest5.forEach((item, index) => {
-                        const districtInfo = item.data;
-                        message += `${index + 1}. ${item.district} - ${Math.round(item.distance)} miles\n`;
-                        message += `   Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}\n\n`;
-                    });
-                    
-                    alert(message);
+                    // Display as cards
+                    showClosestDistrictsCards(closest3);
                 },
                 function(error) {
                     alert('Unable to get your location: ' + error.message);
                 }
             );
+        }
+        
+        function showClosestDistrictsCards(districts) {
+            // Create results container if it doesn't exist
+            let resultsContainer = document.getElementById('closestDistrictsResults');
+            if (!resultsContainer) {
+                resultsContainer = document.createElement('div');
+                resultsContainer.id = 'closestDistrictsResults';
+                resultsContainer.style.cssText = 'margin-top: 20px;';
+                
+                // Insert after the advanced controls section
+                const advancedSection = document.getElementById('advancedControlsSection');
+                advancedSection.parentNode.insertBefore(resultsContainer, advancedSection.nextSibling);
+            }
+            
+            let cardsHTML = '';
+            
+            districts.forEach((item) => {
+                const districtInfo = item.data;
+                const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                cardsHTML += `
+                    <div style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: 8px 0;">
+                        <div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">
+                            Swing district: ${item.district}
+                        </div>
+                        <div style="color: #666; margin-bottom: 0;">
+                            ${Math.round(item.distance)} miles away • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Add prompt for 5 more districts
+            cardsHTML += `
+                <div style="text-align: center; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <div style="color: white; margin-bottom: 10px; font-size: 0.9rem;">
+                        Want to see 5 more districts?
+                    </div>
+                    <button onclick="showAllClosestDistricts()" style="background: #764ba2; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
+                        Show 5 More Districts
+                    </button>
+                </div>
+            `;
+            
+            resultsContainer.innerHTML = cardsHTML;
+        }
+        
+        function showAllClosestDistricts() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    
+                    // Calculate distances to all swing districts
+                    const districtDistances = [];
+                    for (const [districtId, data] of Object.entries(districtData)) {
+                        const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                        districtDistances.push({ district: districtId, distance: distance, data: data });
+                    }
+                    
+                    // Sort by distance and get top 8 (3 + 5 more)
+                    districtDistances.sort((a, b) => a.distance - b.distance);
+                    const closest8 = districtDistances.slice(0, 8);
+                    
+                    // Display all 8 as cards
+                    showAllDistrictsCards(closest8);
+                },
+                function(error) {
+                    alert('Unable to get your location: ' + error.message);
+                }
+            );
+        }
+        
+        function showAllDistrictsCards(districts) {
+            const resultsContainer = document.getElementById('closestDistrictsResults');
+            
+            let cardsHTML = '';
+            
+            districts.forEach((item, index) => {
+                const districtInfo = item.data;
+                const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                cardsHTML += `
+                    <div style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: 8px 0;">
+                        <div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">
+                            ${index + 1}. Swing district: ${item.district}
+                        </div>
+                        <div style="color: #666; margin-bottom: 0;">
+                            ${Math.round(item.distance)} miles away • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            resultsContainer.innerHTML = cardsHTML;
         }
         
         function toggleLocationSearch() {
