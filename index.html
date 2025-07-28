@@ -494,10 +494,51 @@
                 
                 <!-- EXPANDABLE CONTROLS SECTION -->
                 <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px; margin-top: 15px; border-radius: 10px;">
-                    <div style="text-align: center; margin-bottom: 15px;">
+                    
+                    <!-- Closest Districts Button -->
+                    <div style="text-align: center; margin-bottom: 20px;">
                         <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
                             Find closest swing districts to me
                         </button>
+                    </div>
+                    
+                    <!-- Different Location Search -->
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <button id="locationSearchBtn" onclick="toggleLocationSearch()" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                            Find swing districts closest to a different location
+                        </button>
+                        <div id="locationInputSection" style="display: none; margin-top: 10px;">
+                            <input type="text" id="locationInput" placeholder="Enter city, state OR zip code" style="padding: 10px; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 16px; width: 300px; max-width: 90%;" onkeypress="handleLocationKeypress(event)">
+                            <br><span style="font-size: 0.9rem; color: white; opacity: 0.8;">Press Enter to search</span>
+                        </div>
+                    </div>
+                    
+                    <!-- Manual District Selection -->
+                    <div style="margin-bottom: 10px;">
+                        <div style="color: white; font-size: 1rem; font-weight: bold; margin-bottom: 15px; text-align: center;">
+                            Find swing district campuses:
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <label style="color: white; font-weight: 600; margin-bottom: 8px; display: block;">Select State:</label>
+                                <select id="stateSelect" onchange="handleStateChange()" style="padding: 12px; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 16px; background: white; width: 100%;">
+                                    <option value="">Choose a state...</option>
+                                    <option value="Alaska">Alaska</option>
+                                    <option value="Arizona">Arizona</option>
+                                    <option value="California">California</option>
+                                    <option value="Colorado">Colorado</option>
+                                    <option value="Connecticut">Connecticut</option>
+                                    <option value="Florida">Florida</option>
+                                    <option value="Nevada">Nevada</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="color: white; font-weight: 600; margin-bottom: 8px; display: block;">Select District:</label>
+                                <select id="districtSelect" disabled onchange="handleDistrictChange()" style="padding: 12px; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 16px; background: white; width: 100%;">
+                                    <option value="">First select a state...</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div id="closestCampusesResult" style="display: none; margin: 0 !important; padding: 0 !important;"></div>
@@ -2189,7 +2230,93 @@
         }
         
         function findClosestDistricts() {
-            alert('Finding closest swing districts...\n\nThis will show you the top 5 closest swing districts with distances and details!');
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    
+                    // Calculate distances to all swing districts
+                    const districtDistances = [];
+                    for (const [districtId, data] of Object.entries(districtData)) {
+                        const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                        districtDistances.push({ district: districtId, distance: distance, data: data });
+                    }
+                    
+                    // Sort by distance and get top 5
+                    districtDistances.sort((a, b) => a.distance - b.distance);
+                    const closest5 = districtDistances.slice(0, 5);
+                    
+                    let message = '🎯 Your 5 Closest Swing Districts:\n\n';
+                    closest5.forEach((item, index) => {
+                        const districtInfo = item.data;
+                        message += `${index + 1}. ${item.district} - ${Math.round(item.distance)} miles\n`;
+                        message += `   Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}\n\n`;
+                    });
+                    
+                    alert(message);
+                },
+                function(error) {
+                    alert('Unable to get your location: ' + error.message);
+                }
+            );
+        }
+        
+        function toggleLocationSearch() {
+            const inputSection = document.getElementById('locationInputSection');
+            
+            if (inputSection.style.display === 'none') {
+                inputSection.style.display = 'block';
+                document.getElementById('locationInput').focus();
+            } else {
+                inputSection.style.display = 'none';
+            }
+        }
+        
+        function handleLocationKeypress(event) {
+            if (event.key === 'Enter') {
+                const location = document.getElementById('locationInput').value;
+                if (location.trim()) {
+                    alert(`Location search for: "${location}"\n\nThis would normally geocode the location and find closest districts. For now, using your current location as fallback.`);
+                    findClosestDistricts();
+                } else {
+                    alert('Please enter a location');
+                }
+            }
+        }
+        
+        function handleStateChange() {
+            const selectedState = document.getElementById('stateSelect').value;
+            const districtSelect = document.getElementById('districtSelect');
+            
+            districtSelect.innerHTML = '<option value="">Choose a district...</option>';
+            
+            if (selectedState && districtMappings[selectedState]) {
+                districtSelect.disabled = false;
+                const districts = districtMappings[selectedState];
+                
+                districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                });
+            } else {
+                districtSelect.disabled = true;
+            }
+        }
+        
+        function handleDistrictChange() {
+            const selectedState = document.getElementById('stateSelect').value;
+            const selectedDistrict = document.getElementById('districtSelect').value;
+            
+            if (selectedState && selectedDistrict) {
+                displayColleges(selectedState, selectedDistrict);
+            }
         }
 
         // Initialize the app when the page loads
