@@ -2286,25 +2286,118 @@
                             Swing district: ${item.district}
                         </div>
                         <div style="color: #666; margin-bottom: 0;">
-                            ${Math.round(item.distance)} miles away • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                            <em>${Math.round(item.distance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
                         </div>
                     </div>
                 `;
             });
             
-            // Add prompt for 5 more districts
+            // Store current count for progressive loading
+            window.currentDistrictCount = districts.length;
+            
+            // Add buttons for more districts and hide
             cardsHTML += `
                 <div style="text-align: center; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
-                    <div style="color: white; margin-bottom: 10px; font-size: 0.9rem;">
-                        Want to see 5 more districts?
-                    </div>
-                    <button onclick="showAllClosestDistricts()" style="background: #764ba2; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
+                    <button onclick="showMoreDistricts()" style="background: #764ba2; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold; margin-bottom: 10px;">
                         Show 5 More Districts
+                    </button>
+                    <br>
+                    <button onclick="hideClosestDistricts()" style="background: #666; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
+                        Hide Districts
                     </button>
                 </div>
             `;
             
             resultsContainer.innerHTML = cardsHTML;
+        }
+        
+        function showMoreDistricts() {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    
+                    // Calculate distances to all swing districts
+                    const districtDistances = [];
+                    for (const [districtId, data] of Object.entries(districtData)) {
+                        const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                        districtDistances.push({ district: districtId, distance: distance, data: data });
+                    }
+                    
+                    // Sort by distance and get next batch
+                    districtDistances.sort((a, b) => a.distance - b.distance);
+                    const currentCount = window.currentDistrictCount || 3;
+                    const newCount = Math.min(currentCount + 5, districtDistances.length);
+                    const districts = districtDistances.slice(0, newCount);
+                    
+                    // Update the display
+                    updateDistrictsDisplay(districts, newCount, districtDistances.length);
+                },
+                function(error) {
+                    alert('Unable to get your location: ' + error.message);
+                }
+            );
+        }
+        
+        function updateDistrictsDisplay(districts, currentCount, totalCount) {
+            const resultsContainer = document.getElementById('closestDistrictsResults');
+            
+            let cardsHTML = '';
+            
+            districts.forEach((item) => {
+                const districtInfo = item.data;
+                const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                cardsHTML += `
+                    <div style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: 8px 0;">
+                        <div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">
+                            Swing district: ${item.district}
+                        </div>
+                        <div style="color: #666; margin-bottom: 0;">
+                            <em>${Math.round(item.distance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Update stored count
+            window.currentDistrictCount = currentCount;
+            
+            // Add buttons - only show "Show 5 More" if there are more districts
+            cardsHTML += `
+                <div style="text-align: center; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+            `;
+            
+            if (currentCount < totalCount) {
+                cardsHTML += `
+                    <button onclick="showMoreDistricts()" style="background: #764ba2; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold; margin-bottom: 10px;">
+                        Show 5 More Districts
+                    </button>
+                    <br>
+                `;
+            }
+            
+            cardsHTML += `
+                    <button onclick="hideClosestDistricts()" style="background: #666; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
+                        Hide Districts
+                    </button>
+                </div>
+            `;
+            
+            resultsContainer.innerHTML = cardsHTML;
+        }
+        
+        function hideClosestDistricts() {
+            const resultsContainer = document.getElementById('closestDistrictsResults');
+            if (resultsContainer) {
+                resultsContainer.innerHTML = '';
+            }
         }
         
         function showAllClosestDistricts() {
@@ -2359,6 +2452,15 @@
                     </div>
                 `;
             });
+            
+            // Add hide button for the expanded view
+            cardsHTML += `
+                <div style="text-align: center; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <button onclick="hideClosestDistricts()" style="background: #666; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
+                        Hide Districts
+                    </button>
+                </div>
+            `;
             
             resultsContainer.innerHTML = cardsHTML;
         }
