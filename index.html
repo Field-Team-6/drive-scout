@@ -477,7 +477,7 @@
                 <img src="images/FT6Logo2.png" alt="Field Team 6 Logo" class="mobile-logo" style="width: 110px; height: 110px; flex-shrink: 0;">
                 <h1 class="mobile-title" style="margin: 0; text-align: center; font-family: 'Typewriter Serial ExtraBold', 'American Typewriter', 'Courier New Bold', 'Monaco Bold', 'Andale Mono', 'Lucida Console', monospace; font-size: clamp(3.36rem, 11.2vw, 6.72rem); font-weight: 900; letter-spacing: normal; text-shadow: 4px 4px 8px rgba(0,0,0,0.5); color: #ffffff; line-height: 0.85;">Drive Scout</h1>
             </div>
-            <p>Want to flip the House blue in '26? Hold a college voter drive in a swing district.<br><em>Drive Scout shows you where!</em><br><br><strong>Or for advanced activists:</strong></p>
+            <p>Want to flip the House blue in '26? Hold a college voter drive in a swing district.<br><em>Drive Scout shows you where!</em></p>
             
             <!-- IMPROVED PRIMARY ACTION BUTTON -->
             <div style="background: transparent; padding: 0; margin: 8px 0; text-align: center;">
@@ -525,6 +525,17 @@
 
         <!-- HIDDEN DROPDOWN CONTROLS -->
         <div class="controls" style="display: none !important; visibility: hidden !important; position: absolute !important; left: -99999px !important; top: -99999px !important;">
+            
+            <!-- TEST: Put advanced controls here where we know things render -->
+            <div style="display: block !important; position: static !important; left: auto !important; top: auto !important; visibility: visible !important; background: red; color: white; padding: 20px; margin: 20px auto; text-align: center; max-width: 600px;">
+                <div style="margin-bottom: 15px; font-size: 1.2rem;">
+                    Or for advanced activists:
+                </div>
+                <button onclick="alert('Full controls clicked!')" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                    Full Drive Scout Controls
+                </button>
+            </div>
+            
             <div class="form-row">
                 <div class="form-group">
                     <label for="stateSelect">Select State:</label>
