@@ -484,6 +484,22 @@
                 <button id="findClosestCampusesBtn" onclick="findClosestCampuses()" class="main-action-button">
                     🔍 Find closest swing district campuses!
                 </button>
+                <br><br>
+                <div style="color: white; font-size: 1.1rem; opacity: 0.9; margin-bottom: 10px;">
+                    Or for advanced activists:
+                </div>
+                <button id="fullControlsBtn" onclick="toggleFullControls()" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                    Full Drive Scout Controls
+                </button>
+                
+                <!-- EXPANDABLE CONTROLS SECTION -->
+                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px; margin-top: 15px; border-radius: 10px;">
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                            Find closest swing districts to me
+                        </button>
+                    </div>
+                </div>
                 <div id="closestCampusesResult" style="display: none; margin: 0 !important; padding: 0 !important;"></div>
             </div>
         </div>
@@ -2158,8 +2174,22 @@
         }
         
         function toggleFullControls() {
-            // For now, just show an alert - we'll build this step by step
-            alert('Full Drive Scout Controls - Coming soon!\n\nThis will show advanced features like:\n• Find closest swing districts\n• Search by location\n• Manual district selection');
+            const section = document.getElementById('advancedControlsSection');
+            const btn = document.getElementById('fullControlsBtn');
+            
+            if (section.style.display === 'none') {
+                // Show the controls
+                section.style.display = 'block';
+                btn.innerHTML = 'Hide Full Drive Scout Controls';
+            } else {
+                // Hide the controls
+                section.style.display = 'none';
+                btn.innerHTML = 'Full Drive Scout Controls';
+            }
+        }
+        
+        function findClosestDistricts() {
+            alert('Finding closest swing districts...\n\nThis will show you the top 5 closest swing districts with distances and details!');
         }
 
         // Initialize the app when the page loads
