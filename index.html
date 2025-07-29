@@ -1066,8 +1066,13 @@
                 const collegeListId = `district-colleges-${districtId}`;
                 
                 contentDiv.innerHTML = `
-                    <div style="background: white; border-radius: 10px; padding: 0; margin: 10px 0; overflow: hidden;">
-                        <div id="${mapId}" style="height: 280px; width: 100%; background: #f8f9fa;"></div>
+                    <div style="background: white; border-radius: 10px; padding: 0; margin: 10px 0; overflow: hidden; position: relative;">
+                        <div id="${mapId}" style="height: 280px; width: 100%; background: #f8f9fa; position: relative;">
+                            <button class="district-toggle-button" id="district-toggle-${districtId}" title="Toggle district boundaries" style="position: absolute; bottom: 20px; right: 80px; z-index: 1000; background: white; border: 2px solid #333; border-radius: 8px; padding: 12px 16px; cursor: pointer; font-size: 0.9rem; font-weight: bold; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">Districts</button>
+                            <button class="location-button" id="location-btn-${districtId}" title="Find my location" style="position: absolute; bottom: 20px; right: 20px; z-index: 1000; background: white; border: 2px solid #333; border-radius: 8px; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
+                                <img src="images/icons8-my-location-50.png" style="width: 28px; height: 28px;" alt="Find location">
+                            </button>
+                        </div>
                     </div>
                     <div id="${collegeListId}" style="background: transparent; padding: 0; margin: 10px 0;">
                         <!-- College list will be populated here -->
@@ -1101,6 +1106,23 @@
                 minZoom: 6
             }).addTo(districtMap);
             
+            // Set up the location button functionality
+            const locationBtn = document.getElementById(`location-btn-${districtId}`);
+            if (locationBtn) {
+                locationBtn.addEventListener('click', function() {
+                    findUserLocationOnDistrictMap(districtMap, locationBtn);
+                });
+            }
+            
+            // Set up district toggle button
+            const districtToggleBtn = document.getElementById(`district-toggle-${districtId}`);
+            if (districtToggleBtn) {
+                districtToggleBtn.addEventListener('click', function() {
+                    // For now, just show a placeholder
+                    alert('District boundaries toggle coming soon!');
+                });
+            }
+            
             // Add college markers
             const group = new L.featureGroup();
             colleges.forEach(function(college) {
@@ -1125,14 +1147,82 @@
                 group.addLayer(marker);
             });
             
+            // Fit the map to the colleges, or use district center if no colleges
             if (group.getLayers().length > 0) {
-                districtMap.fitBounds(group.getBounds(), { padding: [20, 20] });
+                districtMap.fitBounds(group.getBounds(), { padding: [50, 50] });
+            } else {
+                // Use district center and appropriate zoom
+                const districtInfo = districtData[districtId];
+                if (districtInfo && districtInfo.center) {
+                    districtMap.setView(districtInfo.center, 10);
+                }
             }
+            
+            // Store the map reference for potential future use
+            window[`districtMap_${districtId}`] = districtMap;
             
             // Resize the map after a short delay
             setTimeout(() => {
                 districtMap.invalidateSize();
             }, 200);
+        }
+        
+        function findUserLocationOnDistrictMap(districtMap, locationBtn) {
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                return;
+            }
+
+            locationBtn.classList.add('loading');
+            locationBtn.innerHTML = '<img src="images/icons8-my-location-50.png" style="width: 28px; height: 28px; animation: spin 1s linear infinite;" alt="Finding location">';
+            
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
+
+                    // Remove existing user location marker if any
+                    if (districtMap.userLocationMarker) {
+                        districtMap.removeLayer(districtMap.userLocationMarker);
+                    }
+
+                    const locationIcon = L.divIcon({
+                        className: 'user-location-marker',
+                        html: '<div style="background: #4285f4; width: 16px; height: 16px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 6px rgba(0,0,0,0.3);"></div>',
+                        iconSize: [16, 16],
+                        iconAnchor: [8, 8]
+                    });
+
+                    districtMap.userLocationMarker = L.marker([lat, lng], { icon: locationIcon }).addTo(districtMap);
+                    
+                    const accuracyCircle = L.circle([lat, lng], {
+                        radius: accuracy,
+                        color: '#4285f4',
+                        fillColor: '#4285f4',
+                        fillOpacity: 0.1,
+                        weight: 1
+                    }).addTo(districtMap);
+
+                    districtMap.setView([lat, lng], 12);
+                    districtMap.userLocationMarker.bindPopup('<div style="text-align: center;"><strong>📍 Your Location</strong><br>Accuracy: ±' + Math.round(accuracy) + ' meters</div>');
+
+                    locationBtn.classList.remove('loading');
+                    locationBtn.innerHTML = '<img src="images/icons8-my-location-50.png" style="width: 28px; height: 28px;" alt="Find location">';
+                },
+                function(error) {
+                    console.log('❌ Geolocation error:', error.message);
+                    alert('Unable to get your location.');
+                    
+                    locationBtn.classList.remove('loading');
+                    locationBtn.innerHTML = '<img src="images/icons8-my-location-50.png" style="width: 28px; height: 28px;" alt="Find location">';
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300000
+                }
+            );
         }
         
         function displayDistrictCollegeList(collegeListId, districtId, withinColleges, nearColleges) {
@@ -1162,7 +1252,7 @@
             
             if (withinColleges.length > 0) {
                 const withinSection = document.createElement('div');
-                withinSection.innerHTML = '<h3 style="margin: 20px 0 15px 0; color: white; border-bottom: 2px solid #667eea; padding-bottom: 8px;">COLLEGES IN ' + districtId + '</h3>';
+                withinSection.innerHTML = '<h3 style="margin: 20px 0 15px 0; color: #333; border-bottom: 2px solid #667eea; padding-bottom: 8px;">COLLEGES IN ' + districtId + '</h3>';
                 container.appendChild(withinSection);
                 
                 const sortedWithinColleges = sortCollegesByDistance(withinColleges);
@@ -1174,7 +1264,7 @@
             
             if (nearColleges.length > 0) {
                 const nearSection = document.createElement('div');
-                nearSection.innerHTML = '<h3 style="margin: 30px 0 15px 0; color: white; border-bottom: 2px solid #764ba2; padding-bottom: 8px;">COLLEGES NEAR ' + districtId + '</h3>';
+                nearSection.innerHTML = '<h3 style="margin: 30px 0 15px 0; color: #333; border-bottom: 2px solid #764ba2; padding-bottom: 8px;">COLLEGES NEAR ' + districtId + '</h3>';
                 container.appendChild(nearSection);
                 
                 const sortedNearColleges = sortCollegesByDistance(nearColleges);
