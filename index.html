@@ -974,27 +974,254 @@
             );
         }
         
+        function showDistrictCampuses(districtId) {
+            // Clear any existing district content
+            clearAllDistrictContent();
+            
+            // Find the state for this district
+            const state = Object.keys(districtMappings).find(s => 
+                districtMappings[s].includes(districtId)
+            );
+            
+            if (!state) {
+                console.log('❌ Could not find state for district:', districtId);
+                return;
+            }
+            
+            const contentDiv = document.getElementById(`district-content-${districtId}`);
+            if (!contentDiv) {
+                console.log('❌ Could not find content div for district:', districtId);
+                return;
+            }
+            
+            // Show loading state
+            contentDiv.style.display = 'block';
+            contentDiv.innerHTML = `
+                <div style="background: white; border-radius: 10px; padding: 20px; margin: 10px 0;">
+                    <div class="loading-modern">
+                        <div class="loading-spinner"></div>
+                        <h3>Loading ${districtId} college data...</h3>
+                        <p>Please wait while we fetch the latest information.</p>
+                    </div>
+                </div>
+            `;
+            
+            // Load the college data and display
+            loadAndDisplayDistrictData(state, districtId, contentDiv);
+        }
+        
+        function clearAllDistrictContent() {
+            // Hide all district content divs
+            const allContentDivs = document.querySelectorAll('[id^="district-content-"]');
+            allContentDivs.forEach(div => {
+                div.style.display = 'none';
+                div.innerHTML = '';
+            });
+            
+            // Also clear the main map and college list if they're showing
+            const mainMapContainer = document.getElementById('mapContainer');
+            const mainCollegeList = document.getElementById('collegeList');
+            if (mainMapContainer) mainMapContainer.style.display = 'none';
+            if (mainCollegeList) mainCollegeList.style.display = 'none';
+        }
+        
+        async function loadAndDisplayDistrictData(state, districtId, contentDiv) {
+            try {
+                // Load the district data
+                await loadDistrictDataWithTimeout(districtId);
+                
+                const collegeDataForDistrict = collegeData[state] && collegeData[state][districtId] ? collegeData[state][districtId] : [];
+                
+                let allColleges = [];
+                let withinColleges = [];
+                let nearColleges = [];
+
+                // Handle both array format and object format
+                if (Array.isArray(collegeDataForDistrict)) {
+                    allColleges = collegeDataForDistrict;
+                    withinColleges = collegeDataForDistrict;
+                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
+                    withinColleges = collegeDataForDistrict.within || [];
+                    nearColleges = collegeDataForDistrict.near || [];
+                    allColleges = withinColleges.concat(nearColleges);
+                }
+                
+                // Filter out invalid colleges
+                allColleges = allColleges.filter(college => college && college.name && college.lat && college.lng);
+                withinColleges = withinColleges.filter(college => college && college.name && college.lat && college.lng);
+                nearColleges = nearColleges.filter(college => college && college.name && college.lat && college.lng);
+                
+                if (allColleges.length === 0) {
+                    contentDiv.innerHTML = `
+                        <div style="background: white; border-radius: 10px; padding: 20px; margin: 10px 0; text-align: center; color: #666;">
+                            <h3>No college data available for ${districtId}</h3>
+                            <p>This district is mapped but waiting for CSV data.</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Create the map and college list HTML
+                const mapId = `district-map-${districtId}`;
+                const collegeListId = `district-colleges-${districtId}`;
+                
+                contentDiv.innerHTML = `
+                    <div style="background: white; border-radius: 10px; padding: 0; margin: 10px 0; overflow: hidden;">
+                        <div id="${mapId}" style="height: 280px; width: 100%; background: #f8f9fa;"></div>
+                    </div>
+                    <div id="${collegeListId}" style="background: transparent; padding: 0; margin: 10px 0;">
+                        <!-- College list will be populated here -->
+                    </div>
+                `;
+                
+                // Initialize the district-specific map
+                setTimeout(() => {
+                    initializeDistrictMap(mapId, allColleges, state, districtId);
+                    displayDistrictCollegeList(collegeListId, districtId, withinColleges, nearColleges);
+                }, 100);
+                
+            } catch (error) {
+                console.log('❌ Error loading district data:', error);
+                contentDiv.innerHTML = `
+                    <div style="background: white; border-radius: 10px; padding: 20px; margin: 10px 0; text-align: center; color: #666;">
+                        <h3>Error loading data for ${districtId}</h3>
+                        <p>Please try again later.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function initializeDistrictMap(mapId, colleges, state, districtId) {
+            // Create a new map instance for this district
+            const districtMap = L.map(mapId).setView([39.8283, -98.5795], 4);
+            
+            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                attribution: '© OpenStreetMap contributors © CARTO',
+                maxZoom: 15,
+                minZoom: 6
+            }).addTo(districtMap);
+            
+            // Add college markers
+            const group = new L.featureGroup();
+            colleges.forEach(function(college) {
+                const lat = parseFloat(college.lat);
+                const lng = parseFloat(college.lng);
+                
+                if (isNaN(lat) || isNaN(lng)) return;
+                
+                const iconColor = getSuitabilityColor(college.suitability);
+                const marker = L.marker([lat, lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: '<div style="background-color: ' + iconColor + '; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 6px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">📍</div>',
+                        iconSize: [24, 24],
+                        iconAnchor: [12, 12]
+                    })
+                });
+                
+                const popupContent = createPopupContent(college);
+                marker.bindPopup(popupContent, { maxWidth: 400 });
+                marker.addTo(districtMap);
+                group.addLayer(marker);
+            });
+            
+            if (group.getLayers().length > 0) {
+                districtMap.fitBounds(group.getBounds(), { padding: [20, 20] });
+            }
+            
+            // Resize the map after a short delay
+            setTimeout(() => {
+                districtMap.invalidateSize();
+            }, 200);
+        }
+        
+        function displayDistrictCollegeList(collegeListId, districtId, withinColleges, nearColleges) {
+            const container = document.getElementById(collegeListId);
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Get user location if available
+            let userLat = null;
+            let userLng = null;
+            if (window.lastUserLocation) {
+                userLat = window.lastUserLocation.lat;
+                userLng = window.lastUserLocation.lng;
+            }
+            
+            // Sort function
+            function sortCollegesByDistance(colleges) {
+                if (!userLat || !userLng) return colleges;
+                return colleges.slice().sort((a, b) => {
+                    if (!a.lat || !a.lng || !b.lat || !b.lng) return 0;
+                    const distanceA = calculateDistance(userLat, userLng, a.lat, a.lng);
+                    const distanceB = calculateDistance(userLat, userLng, b.lat, b.lng);
+                    return distanceA - distanceB;
+                });
+            }
+            
+            if (withinColleges.length > 0) {
+                const withinSection = document.createElement('div');
+                withinSection.innerHTML = '<h3 style="margin: 20px 0 15px 0; color: white; border-bottom: 2px solid #667eea; padding-bottom: 8px;">COLLEGES IN ' + districtId + '</h3>';
+                container.appendChild(withinSection);
+                
+                const sortedWithinColleges = sortCollegesByDistance(withinColleges);
+                sortedWithinColleges.forEach(function(college) {
+                    const collegeElement = createCollegeElement(college, false, userLat, userLng);
+                    container.appendChild(collegeElement);
+                });
+            }
+            
+            if (nearColleges.length > 0) {
+                const nearSection = document.createElement('div');
+                nearSection.innerHTML = '<h3 style="margin: 30px 0 15px 0; color: white; border-bottom: 2px solid #764ba2; padding-bottom: 8px;">COLLEGES NEAR ' + districtId + '</h3>';
+                container.appendChild(nearSection);
+                
+                const sortedNearColleges = sortCollegesByDistance(nearColleges);
+                sortedNearColleges.forEach(function(college) {
+                    const collegeElement = createCollegeElement(college, true, userLat, userLng);
+                    container.appendChild(collegeElement);
+                });
+            }
+        }
+        
+        // Add exclusive button behavior
+        function clearAllResults() {
+            // Clear closest districts results
+            const closestDistrictsResults = document.getElementById('closestDistrictsResults');
+            if (closestDistrictsResults) {
+                closestDistrictsResults.innerHTML = '';
+            }
+            
+            // Clear main campus results
+            const closestCampusesResult = document.getElementById('closestCampusesResult');
+            if (closestCampusesResult) {
+                closestCampusesResult.style.display = 'none';
+                closestCampusesResult.innerHTML = '';
+            }
+            
+            // Clear main map and college list
+            const mainMapContainer = document.getElementById('mapContainer');
+            const mainCollegeList = document.getElementById('collegeList');
+            if (mainMapContainer) mainMapContainer.style.display = 'none';
+            if (mainCollegeList) mainCollegeList.style.display = 'none';
+            
+            // Clear all district content
+            clearAllDistrictContent();
+        }
+        
         function exploreNationalMap() {
+            // Clear all other results first
+            clearAllResults();
+            
             // For now, show a placeholder - you can implement the national map functionality later
             alert('National map exploration coming soon!\n\nThis will show all swing districts on an interactive national map.');
         }
         
-        function toggleFullControls() {
-            const section = document.getElementById('advancedControlsSection');
-            const btn = document.getElementById('fullControlsBtn');
-            
-            if (section.style.display === 'none') {
-                // Show the controls
-                section.style.display = 'block';
-                btn.innerHTML = 'Hide Full Drive Scout Controls';
-            } else {
-                // Hide the controls
-                section.style.display = 'none';
-                btn.innerHTML = 'Full Drive Scout Controls';
-            }
-        }
-        
         function findClosestDistricts() {
+            // Clear all other results first
+            clearAllResults();
+            
             if (!navigator.geolocation) {
                 alert('Geolocation is not supported by your browser');
                 return;
@@ -1025,6 +1252,20 @@
             );
         }
         
+        function toggleLocationSearch() {
+            // Clear all other results first
+            clearAllResults();
+            
+            const inputSection = document.getElementById('locationInputSection');
+            
+            if (inputSection.style.display === 'none') {
+                inputSection.style.display = 'block';
+                document.getElementById('locationInput').focus();
+            } else {
+                inputSection.style.display = 'none';
+            }
+        }
+        
         function showClosestDistrictsCards(districts) {
             // Create results container if it doesn't exist
             let resultsContainer = document.getElementById('closestDistrictsResults');
@@ -1044,23 +1285,31 @@
             cardsHTML += `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h2 style="color: white; font-size: 1.8rem; font-weight: bold; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
-                        Swing Districts Closest to You
+                        Closest Swing Districts
                     </h2>
                 </div>
             `;
             
-            districts.forEach((item) => {
+            districts.forEach((item, index) => {
                 const districtInfo = item.data;
                 const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                 const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
                 
                 cardsHTML += `
-                    <div style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: 8px 0;">
+                    <div id="district-card-${item.district}" style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: 8px 0;">
                         <div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">
                             Swing district: ${item.district}
                         </div>
-                        <div style="color: #666; margin-bottom: 0;">
+                        <div style="color: #666; margin-bottom: 8px;">
                             <em>${Math.round(item.distance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                        </div>
+                        <div style="text-align: center;">
+                            <button onclick="showDistrictCampuses('${item.district}')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
+                                Show campuses
+                            </button>
+                        </div>
+                        <div id="district-content-${item.district}" style="display: none; margin-top: 15px;">
+                            <!-- Map and college list will be inserted here -->
                         </div>
                     </div>
                 `;
@@ -1127,7 +1376,7 @@
             cardsHTML += `
                 <div style="text-align: center; margin-bottom: 20px;">
                     <h2 style="color: white; font-size: 1.8rem; font-weight: bold; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
-                        Swing Districts Closest to You
+                        Closest Swing Districts
                     </h2>
                 </div>
             `;
