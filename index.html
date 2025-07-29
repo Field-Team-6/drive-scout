@@ -908,6 +908,12 @@
                                 </div>
                             </div>
                         `;
+                        
+                        // Add mobile-specific styling directly
+                        const resultDiv = resultContainer.querySelector('div');
+                        if (window.innerWidth <= 768) {
+                            resultDiv.style.marginTop = '-30px';
+                        }
                         resultContainer.style.display = 'block';
                         
                         // Extract state from district ID
