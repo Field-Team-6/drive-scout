@@ -1218,6 +1218,21 @@
             alert('National map exploration coming soon!\n\nThis will show all swing districts on an interactive national map.');
         }
         
+        function toggleFullControls() {
+            const section = document.getElementById('advancedControlsSection');
+            const btn = document.getElementById('fullControlsBtn');
+            
+            if (section.style.display === 'none') {
+                // Show the controls
+                section.style.display = 'block';
+                btn.innerHTML = 'Hide Full Drive Scout Controls';
+            } else {
+                // Hide the controls
+                section.style.display = 'none';
+                btn.innerHTML = 'Full Drive Scout Controls';
+            }
+        }
+        
         function findClosestDistricts() {
             // Clear all other results first
             clearAllResults();
