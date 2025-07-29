@@ -1761,8 +1761,17 @@
                 map.districtLayer = null;
             }
             
-            // Set map to show continental US with maximum zoom out
+            // Set map to show entire continental US with maximum zoom out
             map.setView([39.8283, -98.5795], 1);
+            
+            // Force the map to fit bounds of entire US if needed
+            setTimeout(() => {
+                const usBounds = [
+                    [20.0, -130.0], // Southwest corner (southern tip of Hawaii, western Alaska)
+                    [50.0, -60.0]   // Northeast corner (northern border, eastern seaboard)
+                ];
+                map.fitBounds(usBounds, { padding: [20, 20] });
+            }, 500);
             
             // Load all available state boundaries
             const statesToLoad = ['Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Nevada'];
@@ -2677,13 +2686,15 @@
 
             setTimeout(function() {
                 map = L.map('map', {
-                    attributionControl: false // Remove the attribution banner
+                    attributionControl: false, // Remove the attribution banner
+                    minZoom: 1, // Allow zooming out to see whole world
+                    maxZoom: 15
                 }).setView([39.8283, -98.5795], 4);
                 
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                     attribution: '© OpenStreetMap contributors © CARTO',
                     maxZoom: 15,
-                    minZoom: 6
+                    minZoom: 1
                 }).addTo(map);
 
                 setupLocationButton();
