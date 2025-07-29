@@ -247,13 +247,15 @@
         /* Mobile-specific styling for college cards in district content */
         @media (max-width: 768px) {
             .district-college-item {
-                margin-left: 0 !important;
-                margin-right: 0 !important;
+                margin-left: -20px !important;
+                margin-right: -20px !important;
                 border-radius: 0;
                 border-left: none;
                 border-right: none;
                 border-top: 1px solid #e1e5e9;
                 border-bottom: 1px solid #e1e5e9;
+                padding-left: 15px !important;
+                padding-right: 15px !important;
             }
             
             .district-college-content {
@@ -265,6 +267,7 @@
             .district-college-left {
                 flex: 1;
                 min-width: 0;
+                text-align: left;
             }
             
             .district-college-right {
@@ -1584,12 +1587,80 @@
                 }
             }
             
-            // Load and display the new district's colleges
-            displayColleges(state, newDistrictId);
+            // Clear existing map and college list
+            const mapContainer = document.getElementById('mapContainer');
+            const collegeList = document.getElementById('collegeList');
+            if (mapContainer) mapContainer.style.display = 'none';
+            if (collegeList) collegeList.style.display = 'none';
+            
+            // Load and display the new district's colleges with proper map initialization
+            loadAndDisplayNewDistrict(state, newDistrictId);
             
             // Close any open popups
             if (map && map.closePopup) {
                 map.closePopup();
+            }
+        }
+        
+        async function loadAndDisplayNewDistrict(state, districtId) {
+            try {
+                // Load the district data
+                await loadDistrictDataWithTimeout(districtId);
+                
+                const collegeDataForDistrict = collegeData[state] && collegeData[state][districtId] ? collegeData[state][districtId] : [];
+                
+                let allColleges = [];
+                let withinColleges = [];
+                let nearColleges = [];
+
+                // Handle both array format and object format
+                if (Array.isArray(collegeDataForDistrict)) {
+                    allColleges = collegeDataForDistrict;
+                    withinColleges = collegeDataForDistrict;
+                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
+                    withinColleges = collegeDataForDistrict.within || [];
+                    nearColleges = collegeDataForDistrict.near || [];
+                    allColleges = withinColleges.concat(nearColleges);
+                }
+                
+                // Filter out invalid colleges
+                allColleges = allColleges.filter(college => college && college.name && college.lat && college.lng);
+                withinColleges = withinColleges.filter(college => college && college.name && college.lat && college.lng);
+                nearColleges = nearColleges.filter(college => college && college.name && college.lat && college.lng);
+                
+                if (allColleges.length === 0) {
+                    showNoData(state, districtId);
+                    return;
+                }
+                
+                // Show and update main map and college list
+                updateStats(allColleges);
+                
+                const statsElement = document.getElementById('stats');
+                const mapContainer = document.getElementById('mapContainer');
+                const collegeList = document.getElementById('collegeList');
+                
+                if (statsElement) statsElement.style.display = 'grid';
+                if (mapContainer) mapContainer.style.display = 'block';
+                if (collegeList) collegeList.style.display = 'block';
+                
+                // Reinitialize the main map with new district data
+                initializeMap();
+                
+                // Load district boundaries for the selected state
+                await loadDistrictBoundaries(state);
+                
+                setTimeout(function() {
+                    addMarkersToMap(allColleges);
+                    // Add district boundaries and zoom to the new district
+                    addDistrictBoundariesToMap(districtId);
+                }, 300);
+                
+                displayCollegeListWithSections(districtId, withinColleges, nearColleges);
+                checkUpcomingDrives(districtId);
+                
+            } catch (error) {
+                console.log('❌ Error loading new district data:', error);
             }
         }
         
