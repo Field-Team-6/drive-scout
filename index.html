@@ -913,6 +913,17 @@
                         if (state) {
                             // Load campus data for this district
                             displayColleges(state, closestDistrict);
+                            
+                            // Hide the advanced controls section after finding closest campuses
+                            setTimeout(() => {
+                                const advancedText = document.querySelector('div[style*="Or for advanced activists"]');
+                                const fullControlsBtn = document.getElementById('fullControlsBtn');
+                                const advancedControlsSection = document.getElementById('advancedControlsSection');
+                                
+                                if (advancedText) advancedText.style.display = 'none';
+                                if (fullControlsBtn) fullControlsBtn.style.display = 'none';
+                                if (advancedControlsSection) advancedControlsSection.style.display = 'none';
+                            }, 500);
                         }
                     }
                     
