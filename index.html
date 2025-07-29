@@ -406,6 +406,11 @@
                 word-wrap: break-word;
                 hyphens: auto;
             }
+
+            /* MOBILE SPACING FIX FOR CLOSEST DISTRICT RESULT */
+            #closestCampusesResult > div {
+                margin: -18px 0 0 0 !important;
+            }
         }
 
         @media (max-width: 480px) {
@@ -894,7 +899,7 @@
                         const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336'; // Blue border for Dem, red for Rep
                         
                         resultContainer.innerHTML = `
-                            <div style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: -13px 0 0 0 !important;">
+                            <div style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: -12px 0 0 0 !important;">
                                 <div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">
                                     Closest swing district: ${closestDistrict}
                                 </div>
