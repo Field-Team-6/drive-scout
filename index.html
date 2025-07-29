@@ -1967,27 +1967,167 @@
             }
         }
         
-        function toggleLocationSearch() {
-            const inputSection = document.getElementById('locationInputSection');
-            
-            if (inputSection.style.display === 'none') {
-                inputSection.style.display = 'block';
-                document.getElementById('locationInput').focus();
-            } else {
-                inputSection.style.display = 'none';
-            }
-        }
-        
         function handleLocationKeypress(event) {
             if (event.key === 'Enter') {
                 const location = document.getElementById('locationInput').value;
                 if (location.trim()) {
-                    alert(`Location search for: "${location}"\n\nThis would normally geocode the location and find closest districts. For now, using your current location as fallback.`);
-                    findClosestDistricts();
+                    geocodeLocationAndFindDistricts(location.trim());
                 } else {
                     alert('Please enter a location');
                 }
             }
+        }
+        
+        // NEW GEOCODING FUNCTION - This is the minimal addition we need
+        async function geocodeLocationAndFindDistricts(locationString) {
+            console.log('🔍 Geocoding location:', locationString);
+            
+            try {
+                // Use Nominatim geocoding service (free, no API key required)
+                const encodedLocation = encodeURIComponent(locationString);
+                const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodedLocation}&countrycodes=us&limit=1`);
+                
+                if (!response.ok) {
+                    throw new Error('Geocoding service unavailable');
+                }
+                
+                const results = await response.json();
+                
+                if (results.length === 0) {
+                    alert(`Location "${locationString}" not found. Please try a different format like "Phoenix, AZ" or "85001"`);
+                    return;
+                }
+                
+                const lat = parseFloat(results[0].lat);
+                const lng = parseFloat(results[0].lon);
+                const displayName = results[0].display_name;
+                
+                console.log('✅ Geocoded to:', lat, lng, displayName);
+                
+                // Store the geocoded location for distance calculations
+                window.lastUserLocation = { lat: lat, lng: lng };
+                
+                // Calculate distances to all swing districts
+                const districtDistances = [];
+                for (const [districtId, data] of Object.entries(districtData)) {
+                    const distance = calculateDistance(lat, lng, data.center[0], data.center[1]);
+                    districtDistances.push({ district: districtId, distance: distance, data: data });
+                }
+                
+                // Sort by distance and get top 3
+                districtDistances.sort((a, b) => a.distance - b.distance);
+                const closest3 = districtDistances.slice(0, 3);
+                
+                // Display the results with a header showing the geocoded location
+                showGeocodedDistrictsResults(closest3, displayName);
+                
+            } catch (error) {
+                console.log('❌ Geocoding error:', error);
+                alert(`Unable to find location "${locationString}". Please check the spelling and try again.`);
+            }
+        }
+        
+        function showGeocodedDistrictsResults(districts, locationName) {
+            // Create results container if it doesn't exist
+            let resultsContainer = document.getElementById('closestDistrictsResults');
+            if (!resultsContainer) {
+                resultsContainer = document.createElement('div');
+                resultsContainer.id = 'closestDistrictsResults';
+                resultsContainer.style.cssText = 'margin-top: 20px;';
+                
+                // Insert after the advanced controls section
+                const advancedSection = document.getElementById('advancedControlsSection');
+                advancedSection.parentNode.insertBefore(resultsContainer, advancedSection.nextSibling);
+            }
+            
+            let cardsHTML = '';
+            
+            // Add centered white title with location info
+            cardsHTML += `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <h2 style="color: white; font-size: 1.8rem; font-weight: bold; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">
+                        Closest Swing Districts to:
+                    </h2>
+                    <p style="color: white; font-size: 1.1rem; margin: 5px 0 0 0; opacity: 0.9;">
+                        📍 ${locationName}
+                    </p>
+                </div>
+            `;
+            
+            districts.forEach((item, index) => {
+                const districtInfo = item.data;
+                const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                cardsHTML += `
+                    <div id="district-card-${item.district}" style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: 8px 0;">
+                        <div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">
+                            Swing district: ${item.district}
+                        </div>
+                        <div style="color: #666; margin-bottom: 8px;">
+                            <em>${Math.round(item.distance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                        </div>
+                        <div style="text-align: center;">
+                            <button onclick="showDistrictCampuses('${item.district}')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
+                                Show campuses
+                            </button>
+                        </div>
+                        <div id="district-content-${item.district}" style="display: none; margin-top: 15px;">
+                            <!-- Map and college list will be inserted here -->
+                        </div>
+                    </div>
+                `;
+            });
+            
+            // Store current count for progressive loading
+            window.currentDistrictCount = districts.length;
+            
+            // Add buttons for more districts and hide
+            cardsHTML += `
+                <div style="text-align: center; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;">
+                    <button onclick="showMoreDistrictsFromGeocode()" style="background: #764ba2; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold; margin-bottom: 10px;">
+                        Show 5 More Districts
+                    </button>
+                    <br>
+                    <button onclick="hideClosestDistricts()" style="background: #666; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
+                        Hide Districts
+                    </button>
+                </div>
+            `;
+            
+            resultsContainer.innerHTML = cardsHTML;
+            
+            // Hide the location input section
+            const inputSection = document.getElementById('locationInputSection');
+            if (inputSection) {
+                inputSection.style.display = 'none';
+            }
+        }
+        
+        function showMoreDistrictsFromGeocode() {
+            if (!window.lastUserLocation) {
+                alert('Location data not available. Please search again.');
+                return;
+            }
+            
+            const userLat = window.lastUserLocation.lat;
+            const userLng = window.lastUserLocation.lng;
+            
+            // Calculate distances to all swing districts
+            const districtDistances = [];
+            for (const [districtId, data] of Object.entries(districtData)) {
+                const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                districtDistances.push({ district: districtId, distance: distance, data: data });
+            }
+            
+            // Sort by distance and get next batch
+            districtDistances.sort((a, b) => a.distance - b.distance);
+            const currentCount = window.currentDistrictCount || 3;
+            const newCount = Math.min(currentCount + 5, districtDistances.length);
+            const districts = districtDistances.slice(0, newCount);
+            
+            // Update the display
+            updateDistrictsDisplay(districts, newCount, districtDistances.length);
         }
         
         function handleStateChange() {
