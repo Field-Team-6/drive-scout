@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+function calculateDistance(lat1, lng1, lat2, lng2) {<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -880,7 +880,7 @@
             try {
                 const response = await fetch('data/119th Congress 72925.csv');
                 if (!response.ok) {
-                    console.log('⚠️ Could not load representative data CSV');
+                    console.log('⚠️ Could not load representative data CSV - using fallback data');
                     return;
                 }
                 
@@ -888,7 +888,7 @@
                 const lines = csvText.split('\n').filter(line => line.trim());
                 
                 if (lines.length < 2) {
-                    console.log('⚠️ Representative CSV appears to be empty or invalid');
+                    console.log('⚠️ Representative CSV appears to be empty or invalid - using fallback data');
                     return;
                 }
                 
@@ -936,7 +936,7 @@
                 console.log('📋 Loaded', Object.keys(representativeData).length, 'representatives from CSV');
                 
             } catch (error) {
-                console.log('❌ Error loading representative data:', error.message);
+                console.log('❌ Error loading representative data:', error.message, '- using fallback data');
             }
         }
         
@@ -959,7 +959,38 @@
         
         // NEW FUNCTION: Get representative name for a district
         function getRepresentativeName(districtId) {
-            return representativeData[districtId] || 'Representative TBD';
+            // First try to get from CSV data
+            if (representativeData[districtId]) {
+                return representativeData[districtId];
+            }
+            
+            // Fallback to old hardcoded data if CSV not available
+            const fallbackData = {
+                'AK-AL': 'Mary Peltola',
+                'AZ-01': 'David Schweikert', 
+                'AZ-02': 'Eli Crane',
+                'AZ-04': 'Greg Stanton',
+                'AZ-06': 'Juan Ciscomani',
+                'CA-09': 'Josh Harder',
+                'CA-13': 'Adam Gray',
+                'CA-21': 'Jim Costa',
+                'CA-22': 'David Valadao',
+                'CA-27': 'George Whitesides',
+                'CA-41': 'Ken Calvert',
+                'CA-45': 'Derek Tran',
+                'CA-47': 'Dave Min',
+                'CA-49': 'Mike Levin',
+                'CO-03': 'Jeff Hurd',
+                'CO-08': 'Gabe Evans',
+                'CT-05': 'Jahana Hayes',
+                'FL-23': 'Jared Moskowitz',
+                'FL-25': 'Mario Díaz-Balart',
+                'NV-01': 'Dina Titus',
+                'NV-03': 'Susie Lee',
+                'NV-04': 'Steven Horsford'
+            };
+            
+            return fallbackData[districtId] || 'Representative TBD';
         }
             const R = 3959; // Earth's radius in miles
             const dLat = (lat2 - lat1) * Math.PI / 180;
@@ -2532,8 +2563,10 @@
             console.log('App initialized successfully');
             console.log('District mappings loaded:', districtMappings);
             
-            // Load representative data first
-            loadRepresentativeData();
+            // Load representative data in background (don't wait for it)
+            loadRepresentativeData().catch(error => {
+                console.log('📋 Representative data loading failed, using fallback data');
+            });
             
             initializeCollegeData();
             setupEventListeners();
