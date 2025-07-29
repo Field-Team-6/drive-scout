@@ -1644,16 +1644,28 @@
                 if (mapContainer) mapContainer.style.display = 'block';
                 if (collegeList) collegeList.style.display = 'block';
                 
-                // Reinitialize the main map with new district data
-                initializeMap();
+                // Clear existing markers and boundaries first
+                clearMarkers();
+                if (map && map.districtLayer) {
+                    map.removeLayer(map.districtLayer);
+                    map.districtLayer = null;
+                }
                 
                 // Load district boundaries for the selected state
                 await loadDistrictBoundaries(state);
                 
+                // Add markers and boundaries with proper timing
                 setTimeout(function() {
+                    // Add college markers first
                     addMarkersToMap(allColleges);
-                    // Add district boundaries and zoom to the new district
+                    
+                    // Then add district boundaries and zoom to the selected district
                     addDistrictBoundariesToMap(districtId);
+                    
+                    // Force zoom to the specific district after boundaries are added
+                    setTimeout(() => {
+                        zoomToSpecificDistrict(districtId);
+                    }, 200);
                 }, 300);
                 
                 displayCollegeListWithSections(districtId, withinColleges, nearColleges);
@@ -1661,6 +1673,36 @@
                 
             } catch (error) {
                 console.log('❌ Error loading new district data:', error);
+            }
+        }
+        
+        function zoomToSpecificDistrict(districtId) {
+            if (!map || !districtBoundaries) return;
+            
+            // Find the selected district in the boundaries data
+            const selectedFeatures = districtBoundaries.data.features.filter(feature => {
+                const featureDistrictId = getDistrictId(feature);
+                return featureDistrictId === districtId;
+            });
+            
+            if (selectedFeatures.length > 0) {
+                const selectedLayer = L.geoJSON(selectedFeatures);
+                const bounds = selectedLayer.getBounds();
+                
+                // Fit the map to the selected district with padding
+                map.fitBounds(bounds, { 
+                    padding: [40, 40],
+                    maxZoom: 11
+                });
+                
+                console.log('🎯 Map zoomed to district', districtId);
+            } else {
+                // Fallback to district center if boundaries not found
+                const districtInfo = districtData[districtId];
+                if (districtInfo && districtInfo.center) {
+                    map.setView(districtInfo.center, 10);
+                    console.log('🎯 Map centered on district', districtId, 'using fallback center');
+                }
             }
         }
         
