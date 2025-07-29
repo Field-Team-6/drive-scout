@@ -1156,7 +1156,15 @@
             // Load and display district boundaries
             loadDistrictBoundariesForMap(state, districtMap, districtId).then(() => {
                 // After boundaries are loaded, fit the map to show the district
-                fitMapToDistrict(districtMap, districtId);
+                // Add a longer delay for desktop to ensure proper rendering
+                setTimeout(() => {
+                    fitMapToDistrict(districtMap, districtId);
+                    // Force another resize and fit for desktop compatibility
+                    setTimeout(() => {
+                        districtMap.invalidateSize();
+                        fitMapToDistrict(districtMap, districtId);
+                    }, 300);
+                }, 100);
             });
             
             // Store the map reference for potential future use
@@ -2078,7 +2086,9 @@
             }
 
             setTimeout(function() {
-                map = L.map('map').setView([39.8283, -98.5795], 4);
+                map = L.map('map', {
+                    attributionControl: false // Remove the attribution banner
+                }).setView([39.8283, -98.5795], 4);
                 
                 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                     attribution: '© OpenStreetMap contributors © CARTO',
@@ -2328,7 +2338,7 @@
             let distanceText = '';
             if (userLat && userLng && college.lat && college.lng) {
                 const distance = calculateDistance(userLat, userLng, college.lat, college.lng);
-                distanceText = '<div style="color: #666; font-size: 0.9rem; line-height: 1.3; margin-bottom: 4px;">' + Math.round(distance) + ' miles away</div>';
+                distanceText = '<div style="color: #666; font-size: 0.9rem; font-style: italic; margin-top: 4px;">' + Math.round(distance) + ' miles away</div>';
             }
             
             // Create Mobilize URL with auto-fill data passed via URL hash
@@ -2337,29 +2347,19 @@
             const state = district.split('-')[0] || 'XX'; // Extract state from district (e.g., "CA" from "CA-27")
             const districtCode = district.replace('-', ''); // Convert "CA-27" to "CA27"
             
-            const autoFillData = {
-                title: district + ' - ' + collegeName + ' - Register Democrats to save the world!',
-                tags: 'Drive,CA,' + districtCode
-            };
-            
-            // Encode the data and pass via URL hash (after #)
-            const encodedData = encodeURIComponent(JSON.stringify(autoFillData));
-            const mobilizeURL = 'https://www.mobilize.us/dashboard/ft6/event-campaign/699/#autofill=' + encodedData;
-            
             div.innerHTML = '<div class="college-name">' + college.name + '</div>' +
                 '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">' +
                     '<div style="flex: 1;">' +
                         '<div style="color: #666; font-size: 0.9rem; line-height: 1.3;">' + addressDisplay + '</div>' +
-                        (distanceText || '') +
                     '</div>' +
                     '<div style="margin-left: 20px; flex-shrink: 0; text-align: right;">' +
                         '<div style="font-size: 0.8rem; color: #666; font-weight: 600; margin-bottom: 2px;">DRIVE RATING:</div>' +
                         '<span class="suitability-badge suitability-' + college.suitability.toLowerCase() + '">' + college.suitability + '</span>' +
+                        (distanceText || '') +
                     '</div>' +
                 '</div>' +
                 '<div class="college-actions">' +
                     '<a href="https://www.google.com/maps/search/' + encodeURIComponent((college.streetAddress || college.address || college.name) + ', ' + (college.city || college.addressCity || '') + ', ' + (college.state || '')) + '" target="_blank" class="btn btn-primary">🗺️ Directions</a>' +
-                    '<button class="btn btn-secondary" onclick="focusOnCollege(' + college.lat + ', ' + college.lng + ')">📍 Show on Map</button>' +
                     '<button class="btn btn-tertiary" onclick="openMobilizeWithAutoFill(\'' + district + '\', \'' + collegeName.replace(/'/g, "\\'") + '\', \'' + state + '\', \'' + districtCode + '\')">🗳️ Set Up Voter Drive</button>' +
                 '</div>';
 
