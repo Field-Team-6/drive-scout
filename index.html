@@ -502,13 +502,13 @@
                     <!-- Closest Districts Button -->
                     <div style="text-align: center; margin-bottom: 20px;">
                         <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
-                            Find closest swing districts to me
+                            Find closest swing districts
                         </button>
                     </div>
                     
                     <!-- Different Location Search -->
                     <div style="text-align: center; margin-bottom: 20px;">
-                        <button id="locationSearchBtn" onclick="toggleLocationSearch()" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                        <button id="locationSearchBtn" onclick="toggleLocationSearch()" style="background: #a24b66; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
                             Find swing districts closest to a different location
                         </button>
                         <div id="locationInputSection" style="display: none; margin-top: 10px;">
@@ -517,8 +517,15 @@
                         </div>
                     </div>
                     
-                    <!-- Manual District Selection -->
-                    <div style="margin-bottom: 10px;">
+                    <!-- Explore National Map Button -->
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <button onclick="exploreNationalMap()" style="background: #8bc3af; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                            Explore national map
+                        </button>
+                    </div>
+                    
+                    <!-- HIDDEN Manual District Selection -->
+                    <div style="margin-bottom: 10px; display: none;">
                         <div style="color: white; font-size: 1rem; font-weight: bold; margin-bottom: 15px; text-align: center;">
                             Find swing district campuses:
                         </div>
@@ -965,6 +972,11 @@
                     maximumAge: 30000
                 }
             );
+        }
+        
+        function exploreNationalMap() {
+            // For now, show a placeholder - you can implement the national map functionality later
+            alert('National map exploration coming soon!\n\nThis will show all swing districts on an interactive national map.');
         }
         
         function toggleFullControls() {
