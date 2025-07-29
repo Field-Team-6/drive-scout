@@ -2570,6 +2570,13 @@ function calculateDistance(lat1, lng1, lat2, lng2) {<!DOCTYPE html>
             
             initializeCollegeData();
             setupEventListeners();
+            
+            // Verify functions are available
+            console.log('✅ Functions available:', {
+                findClosestCampuses: typeof findClosestCampuses,
+                toggleFullControls: typeof toggleFullControls,
+                exploreNationalMap: typeof exploreNationalMap
+            });
         }
 
         function initializeCollegeData() {
