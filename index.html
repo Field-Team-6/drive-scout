@@ -692,10 +692,10 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Congressional district data
+        // Congressional district data - NOW ONLY CONTAINS STRATEGIC DATA
+        // Representative names are loaded from CSV file
         const districtData = {
             'AK-AL': { 
-                rep: 'Mary Peltola', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'R+8', 
@@ -703,7 +703,6 @@
                 cities: ['Anchorage', 'Fairbanks', 'Juneau', 'Wasilla', 'Sitka']
             },
             'AZ-01': { 
-                rep: 'David Schweikert', 
                 party: 'R', 
                 action: 'FLIP', 
                 pvi: 'R+2', 
@@ -711,7 +710,6 @@
                 cities: ['Scottsdale', 'Tempe', 'Mesa', 'Fountain Hills', 'Paradise Valley']
             },
             'AZ-02': { 
-                rep: 'Eli Crane', 
                 party: 'R', 
                 action: 'FLIP', 
                 pvi: 'R+7', 
@@ -719,7 +717,6 @@
                 cities: ['Flagstaff', 'Prescott', 'Sedona', 'Cottonwood', 'Show Low']
             },
             'AZ-04': { 
-                rep: 'Greg Stanton', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+2', 
@@ -727,7 +724,6 @@
                 cities: ['Phoenix', 'Chandler', 'Ahwatukee', 'South Mountain', 'Laveen']
             },
             'AZ-06': { 
-                rep: 'Juan Ciscomani', 
                 party: 'R', 
                 action: 'FLIP', 
                 pvi: 'R+1', 
@@ -735,7 +731,6 @@
                 cities: ['Tucson', 'Sierra Vista', 'Oro Valley', 'Marana', 'Sahuarita']
             },
             'CA-09': { 
-                rep: 'Josh Harder', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+5', 
@@ -743,7 +738,6 @@
                 cities: ['Stockton', 'Lodi', 'Tracy', 'Manteca', 'Mountain House']
             },
             'CA-13': { 
-                rep: 'Adam Gray', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'EVEN', 
@@ -751,7 +745,6 @@
                 cities: ['Modesto', 'Turlock', 'Merced', 'Los Banos', 'Ceres']
             },
             'CA-21': { 
-                rep: 'Jim Costa', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+5', 
@@ -759,7 +752,6 @@
                 cities: ['Fresno', 'Hanford', 'Tulare', 'Visalia', 'Dinuba']
             },
             'CA-22': { 
-                rep: 'David Valadao', 
                 party: 'R', 
                 action: 'FLIP', 
                 pvi: 'D+5', 
@@ -767,7 +759,6 @@
                 cities: ['Bakersfield', 'Delano', 'Wasco', 'Shafter', 'Taft']
             },
             'CA-27': { 
-                rep: 'George Whitesides', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+4', 
@@ -775,7 +766,6 @@
                 cities: ['Santa Clarita', 'Palmdale', 'Lancaster', 'Simi Valley', 'Moorpark']
             },
             'CA-41': { 
-                rep: 'Ken Calvert', 
                 party: 'R', 
                 action: 'FLIP', 
                 pvi: 'R+3', 
@@ -783,7 +773,6 @@
                 cities: ['Riverside', 'Corona', 'Murrieta', 'Temecula', 'Norco']
             },
             'CA-45': { 
-                rep: 'Derek Tran', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+2', 
@@ -791,7 +780,6 @@
                 cities: ['Irvine', 'Tustin', 'Lake Forest', 'Mission Viejo', 'Laguna Hills']
             },
             'CA-47': { 
-                rep: 'Dave Min', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+3', 
@@ -799,7 +787,6 @@
                 cities: ['Huntington Beach', 'Garden Grove', 'Westminster', 'Fountain Valley', 'Seal Beach']
             },
             'CA-49': { 
-                rep: 'Mike Levin', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+3', 
@@ -807,7 +794,6 @@
                 cities: ['Oceanside', 'Vista', 'Carlsbad', 'Encinitas', 'San Marcos']
             },
             'CO-03': { 
-                rep: 'Jeff Hurd', 
                 party: 'R', 
                 action: 'FLIP', 
                 pvi: 'R+7', 
@@ -815,7 +801,6 @@
                 cities: ['Grand Junction', 'Pueblo', 'Montrose', 'Durango', 'Glenwood Springs']
             },
             'CO-08': { 
-                rep: 'Gabe Evans', 
                 party: 'R', 
                 action: 'FLIP', 
                 pvi: 'D+1', 
@@ -823,7 +808,6 @@
                 cities: ['Thornton', 'Westminster', 'Northglenn', 'Commerce City', 'Brighton']
             },
             'CT-05': { 
-                rep: 'Jahana Hayes', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+1', 
@@ -831,7 +815,6 @@
                 cities: ['Waterbury', 'Danbury', 'New Britain', 'Meriden', 'Torrington']
             },
             'FL-23': { 
-                rep: 'Jared Moskowitz', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+6', 
@@ -839,7 +822,6 @@
                 cities: ['Boca Raton', 'Delray Beach', 'Boynton Beach', 'Coral Springs', 'Coconut Creek']
             },
             'FL-25': { 
-                rep: 'Mario Díaz-Balart', 
                 party: 'R', 
                 action: 'FLIP', 
                 pvi: 'R+2', 
@@ -847,7 +829,6 @@
                 cities: ['Hialeah', 'Homestead', 'Florida City', 'Doral', 'Sweetwater']
             },
             'NV-01': { 
-                rep: 'Dina Titus', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+9', 
@@ -855,7 +836,6 @@
                 cities: ['Las Vegas', 'Paradise', 'Winchester', 'Enterprise', 'Spring Valley']
             },
             'NV-03': { 
-                rep: 'Susie Lee', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+1', 
@@ -863,7 +843,6 @@
                 cities: ['Henderson', 'Boulder City', 'Summerlin', 'Green Valley', 'Seven Hills']
             },
             'NV-04': { 
-                rep: 'Steven Horsford', 
                 party: 'D', 
                 action: 'HOLD', 
                 pvi: 'D+3', 
@@ -881,6 +860,7 @@
         let districtBoundaries = null;
         let districtBoundariesVisible = true;
         let currentSelectedDistrict = null;
+        let representativeData = {}; // NEW: Will store CSV data
 
         // District mappings
         const districtMappings = {
@@ -893,7 +873,94 @@
             "Nevada": ["NV-01", "NV-03", "NV-04"]
         };
 
-        function calculateDistance(lat1, lng1, lat2, lng2) {
+        // NEW FUNCTION: Load representative data from CSV
+        async function loadRepresentativeData() {
+            console.log('📋 Loading representative data from CSV...');
+            
+            try {
+                const response = await fetch('data/119th Congress 72925.csv');
+                if (!response.ok) {
+                    console.log('⚠️ Could not load representative data CSV');
+                    return;
+                }
+                
+                const csvText = await response.text();
+                const lines = csvText.split('\n').filter(line => line.trim());
+                
+                if (lines.length < 2) {
+                    console.log('⚠️ Representative CSV appears to be empty or invalid');
+                    return;
+                }
+                
+                // Parse CSV - first line should be headers
+                let headerRowFound = false;
+                let stateIndex = -1;
+                let districtIndex = -1;
+                let representativeIndex = -1;
+                
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    const values = parseCSVLine(line);
+                    
+                    if (!headerRowFound) {
+                        // Find column indices
+                        for (let j = 0; j < values.length; j++) {
+                            const header = values[j].toLowerCase().trim();
+                            if (header === 'state') stateIndex = j;
+                            if (header === 'district') districtIndex = j;
+                            if (header === 'representative') representativeIndex = j;
+                        }
+                        headerRowFound = true;
+                        console.log('📋 Found columns: State=' + stateIndex + ', District=' + districtIndex + ', Representative=' + representativeIndex);
+                        continue;
+                    }
+                    
+                    // Process data rows
+                    if (stateIndex >= 0 && districtIndex >= 0 && representativeIndex >= 0 && values.length > Math.max(stateIndex, districtIndex, representativeIndex)) {
+                        const state = values[stateIndex] ? values[stateIndex].trim() : '';
+                        const district = values[districtIndex] ? values[districtIndex].trim() : '';
+                        const representative = values[representativeIndex] ? values[representativeIndex].trim() : '';
+                        
+                        if (state && district && representative) {
+                            // Convert state name to abbreviation and create district ID
+                            const stateAbbrev = getStateAbbreviation(state);
+                            if (stateAbbrev) {
+                                const districtId = stateAbbrev + '-' + district.padStart(2, '0');
+                                representativeData[districtId] = representative;
+                                console.log('✅ Loaded: ' + districtId + ' -> ' + representative);
+                            }
+                        }
+                    }
+                }
+                
+                console.log('📋 Loaded', Object.keys(representativeData).length, 'representatives from CSV');
+                
+            } catch (error) {
+                console.log('❌ Error loading representative data:', error.message);
+            }
+        }
+        
+        // Helper function to convert full state names to abbreviations
+        function getStateAbbreviation(fullStateName) {
+            const stateMap = {
+                'Alabama': 'AL', 'Alaska': 'AK', 'Arizona': 'AZ', 'Arkansas': 'AR', 'California': 'CA',
+                'Colorado': 'CO', 'Connecticut': 'CT', 'Delaware': 'DE', 'Florida': 'FL', 'Georgia': 'GA',
+                'Hawaii': 'HI', 'Idaho': 'ID', 'Illinois': 'IL', 'Indiana': 'IN', 'Iowa': 'IA',
+                'Kansas': 'KS', 'Kentucky': 'KY', 'Louisiana': 'LA', 'Maine': 'ME', 'Maryland': 'MD',
+                'Massachusetts': 'MA', 'Michigan': 'MI', 'Minnesota': 'MN', 'Mississippi': 'MS', 'Missouri': 'MO',
+                'Montana': 'MT', 'Nebraska': 'NE', 'Nevada': 'NV', 'New Hampshire': 'NH', 'New Jersey': 'NJ',
+                'New Mexico': 'NM', 'New York': 'NY', 'North Carolina': 'NC', 'North Dakota': 'ND', 'Ohio': 'OH',
+                'Oklahoma': 'OK', 'Oregon': 'OR', 'Pennsylvania': 'PA', 'Rhode Island': 'RI', 'South Carolina': 'SC',
+                'South Dakota': 'SD', 'Tennessee': 'TN', 'Texas': 'TX', 'Utah': 'UT', 'Vermont': 'VT',
+                'Virginia': 'VA', 'Washington': 'WA', 'West Virginia': 'WV', 'Wisconsin': 'WI', 'Wyoming': 'WY'
+            };
+            return stateMap[fullStateName] || null;
+        }
+        
+        // NEW FUNCTION: Get representative name for a district
+        function getRepresentativeName(districtId) {
+            return representativeData[districtId] || 'Representative TBD';
+        }
             const R = 3959; // Earth's radius in miles
             const dLat = (lat2 - lat1) * Math.PI / 180;
             const dLng = (lng2 - lng1) * Math.PI / 180;
@@ -957,7 +1024,7 @@
                                     Swing district: ${closestDistrict}
                                 </div>
                                 <div style="color: #666; margin-bottom: 0;">
-                                    ${Math.round(shortestDistance)} miles away • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                                    ${Math.round(shortestDistance)} miles away • Rep. ${getRepresentativeName(closestDistrict)} (${districtInfo.party}) • ${districtInfo.action}
                                 </div>
                             </div>
                         `;
@@ -1329,7 +1396,7 @@
                 
                 if (districtInfo) {
                     popupContent += '<div style="font-size: 0.9rem; color: #666; margin-bottom: 12px; line-height: 1.3;">';
-                    popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ')<br>' + districtInfo.action;
+                    popupContent += 'Rep. ' + getRepresentativeName(districtId) + ' (' + districtInfo.party + ')<br>' + districtInfo.action;
                     popupContent += '</div>';
                     
                     // Add "Show campuses" button for all swing districts
@@ -1589,7 +1656,7 @@
                             Swing district: ${newDistrictId}
                         </div>
                         <div style="color: #666; margin-bottom: 0;">
-                            ${distanceText} • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                            ${distanceText} • Rep. ${getRepresentativeName(newDistrictId)} (${districtInfo.party}) • ${districtInfo.action}
                         </div>
                     </div>
                 `;
@@ -1923,7 +1990,7 @@
                     popupContent += '</div>';
                     
                     popupContent += '<div style="font-size: 0.9rem; color: #666; margin-bottom: 12px; line-height: 1.3;">';
-                    popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ')<br>' + districtInfo.action;
+                    popupContent += 'Rep. ' + getRepresentativeName(districtId) + ' (' + districtInfo.party + ')<br>' + districtInfo.action;
                     popupContent += '</div>';
                     
                     // Show campuses button (only if we have data)
@@ -2136,7 +2203,7 @@
                             Swing district: ${item.district}
                         </div>
                         <div style="color: #666; margin-bottom: 8px;">
-                            <em>${Math.round(item.distance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                            <em>${Math.round(item.distance)} miles away</em> • Rep. ${getRepresentativeName(item.district)} (${districtInfo.party}) • ${districtInfo.action}
                         </div>
                         <div style="text-align: center;">
                             <button onclick="showDistrictCampuses('${item.district}')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
@@ -2227,7 +2294,7 @@
                             Swing district: ${item.district}
                         </div>
                         <div style="color: #666; margin-bottom: 0;">
-                            <em>${Math.round(item.distance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                            <em>${Math.round(item.distance)} miles away</em> • Rep. ${getRepresentativeName(item.district)} (${districtInfo.party}) • ${districtInfo.action}
                         </div>
                     </div>
                 `;
@@ -2365,7 +2432,7 @@
                             Swing district: ${item.district}
                         </div>
                         <div style="color: #666; margin-bottom: 8px;">
-                            <em>${Math.round(item.distance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                            <em>${Math.round(item.distance)} miles away</em> • Rep. ${getRepresentativeName(item.district)} (${districtInfo.party}) • ${districtInfo.action}
                         </div>
                         <div style="text-align: center;">
                             <button onclick="showDistrictCampuses('${item.district}')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
@@ -2464,6 +2531,10 @@
         function init() {
             console.log('App initialized successfully');
             console.log('District mappings loaded:', districtMappings);
+            
+            // Load representative data first
+            loadRepresentativeData();
+            
             initializeCollegeData();
             setupEventListeners();
         }
