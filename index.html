@@ -244,6 +244,36 @@
             background: white;
         }
 
+        /* Mobile-specific styling for college cards in district content */
+        @media (max-width: 768px) {
+            .district-college-item {
+                margin-left: 0 !important;
+                margin-right: 0 !important;
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                border-top: 1px solid #e1e5e9;
+                border-bottom: 1px solid #e1e5e9;
+            }
+            
+            .district-college-content {
+                display: flex;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .district-college-left {
+                flex: 1;
+                min-width: 0;
+            }
+            
+            .district-college-right {
+                flex-shrink: 0;
+                width: 100px;
+                text-align: right;
+            }
+        }
+
         .college-item:hover {
             border-color: #667eea;
             transform: translateY(-2px);
@@ -1272,24 +1302,29 @@
                 const districtInfo = districtData[districtId];
                 const isSelected = selectedDistrict && districtId === selectedDistrict;
                 
-                let popupContent = '<div style="max-width: 200px; text-align: center; padding: 0; margin: 0;">';
-                popupContent += '<div style="font-weight: bold; margin-bottom: 2px; color: #333; font-size: 0.9rem;">';
+                let popupContent = '<div style="max-width: 240px; text-align: center; padding: 8px; margin: 0;">';
+                popupContent += '<div style="font-weight: bold; margin-bottom: 8px; color: #333; font-size: 1rem; line-height: 1.2;">';
                 popupContent += districtId;
                 if (isSelected) {
-                    popupContent += ' • <span style="background: #4CAF50; color: white; padding: 1px 6px; border-radius: 8px; font-size: 0.75rem;">SELECTED</span>';
+                    popupContent += '<br><span style="background: #4CAF50; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; margin-top: 4px; display: inline-block;">CURRENT</span>';
                 }
                 popupContent += '</div>';
                 
                 if (districtInfo) {
-                    popupContent += '<div style="font-size: 0.8rem; color: #666; margin: 0; line-height: 1.1;">';
-                    popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action;
+                    popupContent += '<div style="font-size: 0.9rem; color: #666; margin-bottom: 12px; line-height: 1.3;">';
+                    popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ')<br>' + districtInfo.action;
+                    popupContent += '</div>';
+                    
+                    // Add "Show campuses" button for all swing districts
+                    popupContent += '<div style="margin-top: 10px;">';
+                    popupContent += '<button onclick="switchToDistrict(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
                     popupContent += '</div>';
                 } else {
-                    popupContent += '<div style="font-size: 0.8rem; color: #666;">Not a swing district</div>';
+                    popupContent += '<div style="font-size: 0.85rem; color: #666;">Not a swing district</div>';
                 }
                 popupContent += '</div>';
                 
-                layer.bindPopup(popupContent, { maxWidth: 220 });
+                layer.bindPopup(popupContent, { maxWidth: 260 });
             }
             
             // Add the district boundaries to the map
@@ -1480,7 +1515,7 @@
                 
                 const sortedWithinColleges = sortCollegesByDistance(withinColleges);
                 sortedWithinColleges.forEach(function(college) {
-                    const collegeElement = createCollegeElement(college, false, userLat, userLng);
+                    const collegeElement = createCollegeElement(college, false, userLat, userLng, true);
                     container.appendChild(collegeElement);
                 });
             }
@@ -1492,13 +1527,72 @@
                 
                 const sortedNearColleges = sortCollegesByDistance(nearColleges);
                 sortedNearColleges.forEach(function(college) {
-                    const collegeElement = createCollegeElement(college, true, userLat, userLng);
+                    const collegeElement = createCollegeElement(college, true, userLat, userLng, true);
                     container.appendChild(collegeElement);
                 });
             }
         }
         
         // Add exclusive button behavior
+        function switchToDistrict(newDistrictId) {
+            console.log('🔄 Switching to district:', newDistrictId);
+            
+            // Find the state for this district
+            const state = Object.keys(districtMappings).find(s => 
+                districtMappings[s].includes(newDistrictId)
+            );
+            
+            if (!state) {
+                console.log('❌ Could not find state for district:', newDistrictId);
+                return;
+            }
+            
+            // Update the main result card to show the new district
+            const resultContainer = document.getElementById('closestCampusesResult');
+            if (resultContainer && resultContainer.style.display !== 'none') {
+                const districtInfo = districtData[newDistrictId];
+                const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                // Calculate distance if user location is available
+                let distanceText = 'Distance unknown';
+                if (window.lastUserLocation && districtInfo.center) {
+                    const distance = calculateDistance(
+                        window.lastUserLocation.lat, 
+                        window.lastUserLocation.lng, 
+                        districtInfo.center[0], 
+                        districtInfo.center[1]
+                    );
+                    distanceText = Math.round(distance) + ' miles away';
+                }
+                
+                resultContainer.innerHTML = `
+                    <div style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: 6px 0 0 0 !important;">
+                        <div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">
+                            Swing district: ${newDistrictId}
+                        </div>
+                        <div style="color: #666; margin-bottom: 0;">
+                            ${distanceText} • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                        </div>
+                    </div>
+                `;
+                
+                // Apply mobile margin fix if needed
+                const resultDiv = resultContainer.querySelector('div');
+                if (window.innerWidth <= 768) {
+                    resultDiv.style.marginTop = '12px';
+                }
+            }
+            
+            // Load and display the new district's colleges
+            displayColleges(state, newDistrictId);
+            
+            // Close any open popups
+            if (map && map.closePopup) {
+                map.closePopup();
+            }
+        }
+        
         function clearAllResults() {
             // Clear closest districts results
             const closestDistrictsResults = document.getElementById('closestDistrictsResults');
@@ -2326,9 +2420,9 @@
             }
         }
 
-        function createCollegeElement(college, showDistance, userLat, userLng) {
+        function createCollegeElement(college, showDistance, userLat, userLng, isDistrictView = false) {
             const div = document.createElement('div');
-            div.className = 'college-item';
+            div.className = isDistrictView && window.innerWidth <= 768 ? 'college-item district-college-item' : 'college-item';
             
             const addressDisplay = college.streetAddress ? 
                 college.streetAddress + '<br>' + (college.city || college.addressCity || '') + ', ' + (college.state || '') + ' ' + (college.zipCode || '') :
@@ -2347,21 +2441,41 @@
             const state = district.split('-')[0] || 'XX'; // Extract state from district (e.g., "CA" from "CA-27")
             const districtCode = district.replace('-', ''); // Convert "CA-27" to "CA27"
             
-            div.innerHTML = '<div class="college-name">' + college.name + '</div>' +
-                '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">' +
-                    '<div style="flex: 1; text-align: left;">' +
-                        '<div style="color: #666; font-size: 0.9rem; line-height: 1.3;">' + addressDisplay + '</div>' +
-                        (distanceText || '') +
+            // Different layout for mobile district view
+            if (isDistrictView && window.innerWidth <= 768) {
+                div.innerHTML = '<div class="college-name">' + college.name + '</div>' +
+                    '<div class="district-college-content">' +
+                        '<div class="district-college-left">' +
+                            '<div style="color: #666; font-size: 0.9rem; line-height: 1.3;">' + addressDisplay + '</div>' +
+                            (distanceText || '') +
+                        '</div>' +
+                        '<div class="district-college-right">' +
+                            '<div style="font-size: 0.8rem; color: #666; font-weight: 600; margin-bottom: 2px;">DRIVE RATING:</div>' +
+                            '<span class="suitability-badge suitability-' + college.suitability.toLowerCase() + '">' + college.suitability + '</span>' +
+                        '</div>' +
                     '</div>' +
-                    '<div style="margin-left: 20px; flex-shrink: 0; text-align: right;">' +
-                        '<div style="font-size: 0.8rem; color: #666; font-weight: 600; margin-bottom: 2px;">DRIVE RATING:</div>' +
-                        '<span class="suitability-badge suitability-' + college.suitability.toLowerCase() + '">' + college.suitability + '</span>' +
+                    '<div class="college-actions" style="margin-top: 10px;">' +
+                        '<a href="https://www.google.com/maps/search/' + encodeURIComponent((college.streetAddress || college.address || college.name) + ', ' + (college.city || college.addressCity || '') + ', ' + (college.state || '')) + '" target="_blank" class="btn btn-primary">🗺️ Directions</a>' +
+                        '<button class="btn btn-tertiary" onclick="openMobilizeWithAutoFill(\'' + district + '\', \'' + collegeName.replace(/'/g, "\\'") + '\', \'' + state + '\', \'' + districtCode + '\')">🗳️ Set Up Voter Drive</button>' +
+                    '</div>';
+            } else {
+                // Standard layout for desktop and main views
+                div.innerHTML = '<div class="college-name">' + college.name + '</div>' +
+                    '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">' +
+                        '<div style="flex: 1; text-align: left;">' +
+                            '<div style="color: #666; font-size: 0.9rem; line-height: 1.3;">' + addressDisplay + '</div>' +
+                            (distanceText || '') +
+                        '</div>' +
+                        '<div style="margin-left: 20px; flex-shrink: 0; text-align: right;">' +
+                            '<div style="font-size: 0.8rem; color: #666; font-weight: 600; margin-bottom: 2px;">DRIVE RATING:</div>' +
+                            '<span class="suitability-badge suitability-' + college.suitability.toLowerCase() + '">' + college.suitability + '</span>' +
+                        '</div>' +
                     '</div>' +
-                '</div>' +
-                '<div class="college-actions">' +
-                    '<a href="https://www.google.com/maps/search/' + encodeURIComponent((college.streetAddress || college.address || college.name) + ', ' + (college.city || college.addressCity || '') + ', ' + (college.state || '')) + '" target="_blank" class="btn btn-primary">🗺️ Directions</a>' +
-                    '<button class="btn btn-tertiary" onclick="openMobilizeWithAutoFill(\'' + district + '\', \'' + collegeName.replace(/'/g, "\\'") + '\', \'' + state + '\', \'' + districtCode + '\')">🗳️ Set Up Voter Drive</button>' +
-                '</div>';
+                    '<div class="college-actions">' +
+                        '<a href="https://www.google.com/maps/search/' + encodeURIComponent((college.streetAddress || college.address || college.name) + ', ' + (college.city || college.addressCity || '') + ', ' + (college.state || '')) + '" target="_blank" class="btn btn-primary">🗺️ Directions</a>' +
+                        '<button class="btn btn-tertiary" onclick="openMobilizeWithAutoFill(\'' + district + '\', \'' + collegeName.replace(/'/g, "\\'") + '\', \'' + state + '\', \'' + districtCode + '\')">🗳️ Set Up Voter Drive</button>' +
+                    '</div>';
+            }
 
             return div;
         }
@@ -2464,28 +2578,33 @@
                 const districtInfo = districtData[districtId];
                 const isSelected = selectedDistrict && districtId === selectedDistrict;
                 
-                let popupContent = '<div style="max-width: 200px; text-align: center; padding: 0; margin: 0;">';
+                let popupContent = '<div style="max-width: 240px; text-align: center; padding: 8px; margin: 0;">';
                 
                 // District ID with selected indicator
-                popupContent += '<div style="font-weight: bold; margin-bottom: 2px; color: #333; font-size: 0.9rem; line-height: 1.0;">';
+                popupContent += '<div style="font-weight: bold; margin-bottom: 8px; color: #333; font-size: 1rem; line-height: 1.2;">';
                 popupContent += districtId;
                 if (isSelected) {
-                    popupContent += ' • <span style="background: #4CAF50; color: white; padding: 1px 6px; border-radius: 8px; font-size: 0.75rem;">SELECTED</span>';
+                    popupContent += '<br><span style="background: #4CAF50; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; margin-top: 4px; display: inline-block;">CURRENT</span>';
                 }
                 popupContent += '</div>';
                 
                 if (districtInfo) {
                     // Rep name, party, and action
-                    popupContent += '<div style="font-size: 0.8rem; color: #666; margin: 0; line-height: 1.1;">';
-                    popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action;
+                    popupContent += '<div style="font-size: 0.9rem; color: #666; margin-bottom: 12px; line-height: 1.3;">';
+                    popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ')<br>' + districtInfo.action;
+                    popupContent += '</div>';
+                    
+                    // Add "Show campuses" button for all swing districts
+                    popupContent += '<div style="margin-top: 10px;">';
+                    popupContent += '<button onclick="switchToDistrict(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
                     popupContent += '</div>';
                 } else {
-                    popupContent += '<div style="font-size: 0.8rem; color: #666;">Not a swing district</div>';
+                    popupContent += '<div style="font-size: 0.85rem; color: #666;">Not a swing district</div>';
                 }
                 
                 popupContent += '</div>';
                 
-                layer.bindPopup(popupContent, { maxWidth: 220 });
+                layer.bindPopup(popupContent, { maxWidth: 260 });
                 
                 // Add hover effects
                 layer.on({
