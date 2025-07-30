@@ -1277,9 +1277,276 @@
         }
 
         function findClosestCampuses() {
-            console.log('🔍 Finding closest campuses...');
-            // Basic implementation - will be expanded
-            alert('Finding closest campuses - this feature is under development!');
+            // RESET ALL MAP AND APP STATE FIRST
+            console.log('🔄 Resetting app state for fresh closest campus search...');
+            clearAllResults();
+            window.lastUserLocation = null;
+            
+            const btn = document.getElementById('findClosestCampusesBtn');
+            const resultContainer = document.getElementById('closestCampusesResult');
+            
+            // Show loading state
+            btn.innerHTML = '🔍 Finding closest swing district...';
+            btn.disabled = true;
+            resultContainer.style.display = 'none';
+            
+            // Check if geolocation is available
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                btn.innerHTML = '🔍 Find closest swing district campuses!';
+                btn.disabled = false;
+                return;
+            }
+            
+            // Get user's location
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    
+                    // Store user location globally for distance calculations
+                    window.lastUserLocation = { lat: userLat, lng: userLng };
+                    
+                    console.log('📍 User location:', userLat, userLng);
+                    
+                    // Find closest swing district
+                    let closestDistrict = null;
+                    let shortestDistance = Infinity;
+                    
+                    for (const [districtId, data] of Object.entries(districtData)) {
+                        const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                        if (distance < shortestDistance) {
+                            shortestDistance = distance;
+                            closestDistrict = districtId;
+                        }
+                    }
+                    
+                    btn.innerHTML = '🔍 Loading ' + closestDistrict + ' colleges...';
+                    
+                    if (closestDistrict) {
+                        console.log('🎯 Closest swing district:', closestDistrict, 'distance:', Math.round(shortestDistance), 'miles');
+                        
+                        // Show result with district info
+                        const districtInfo = districtData[closestDistrict];
+                        const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                        const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                        
+                        resultContainer.innerHTML = `
+                            <div style="background: rgba(255,255,255,0.95); border-radius: 15px; padding: 25px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                                <div style="background: ${partyBackgroundColor}; padding: 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin-bottom: 20px;">
+                                    <div style="font-weight: bold; font-size: 1.4rem; color: #333; margin-bottom: 8px;">
+                                        🎯 Closest Swing District: ${closestDistrict}
+                                    </div>
+                                    <div style="color: #666; font-size: 1.1rem; margin-bottom: 5px;">
+                                        <em>${Math.round(shortestDistance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
+                                    </div>
+                                    <div style="color: #888; font-size: 0.95rem;">
+                                        Major cities: ${districtInfo.cities.join(', ')}
+                                    </div>
+                                </div>
+                                <div style="text-align: center;">
+                                    <p style="margin-bottom: 15px; color: #666;">Ready to find colleges in this district!</p>
+                                    <button onclick="loadDistrictColleges('${closestDistrict}')" style="background: #667eea; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                                        📚 Load ${closestDistrict} Colleges
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                        resultContainer.style.display = 'block';
+                    }
+                    
+                    // Reset button
+                    btn.innerHTML = '🔍 Find closest swing district campuses!';
+                    btn.disabled = false;
+                },
+                function(error) {
+                    console.log('❌ Geolocation error:', error.message);
+                    let errorMessage = 'Unable to get your location. ';
+                    
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage += 'Please allow location access and try again.';
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage += 'Location information is unavailable.';
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage += 'Location request timed out.';
+                            break;
+                        default:
+                            errorMessage += 'An unknown error occurred.';
+                            break;
+                    }
+                    
+                    alert(errorMessage);
+                    btn.innerHTML = '🔍 Find closest swing district campuses!';
+                    btn.disabled = false;
+                },
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300000
+                }
+            );
+        }
+
+        async function loadDistrictColleges(district) {
+            console.log('📚 Loading colleges for district:', district);
+            
+            // Find the state for this district
+            const state = Object.keys(districtMappings).find(s => 
+                districtMappings[s].includes(district)
+            );
+            
+            if (!state) {
+                console.log('❌ Could not find state for district:', district);
+                alert('Error: Could not find state for district ' + district);
+                return;
+            }
+            
+            // Show loading message
+            const resultContainer = document.getElementById('closestCampusesResult');
+            const loadingHTML = resultContainer.innerHTML;
+            
+            resultContainer.innerHTML = loadingHTML.replace(
+                '<button onclick="loadDistrictColleges',
+                '<div style="text-align: center; padding: 20px;"><div class="loading-spinner"></div><h3>Loading colleges...</h3><p>Please wait while we fetch the data.</p></div><button style="display: none;" onclick="loadDistrictColleges'
+            );
+            
+            try {
+                // Load the district data
+                await loadDistrictData(district);
+                
+                // Get the college data
+                const collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? 
+                    collegeData[state][district] : [];
+                
+                let allColleges = [];
+                
+                // Handle both array format and object format
+                if (Array.isArray(collegeDataForDistrict)) {
+                    allColleges = collegeDataForDistrict;
+                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
+                    const withinColleges = collegeDataForDistrict.within || [];
+                    const nearColleges = collegeDataForDistrict.near || [];
+                    allColleges = withinColleges.concat(nearColleges);
+                }
+                
+                // Filter out colleges without coordinates
+                allColleges = allColleges.filter(college => 
+                    college && college.name && college.lat && college.lng
+                );
+                
+                console.log('📊 Found', allColleges.length, 'colleges with valid coordinates');
+                
+                if (allColleges.length > 0) {
+                    // Calculate distances from user location if available
+                    if (window.lastUserLocation) {
+                        allColleges.forEach(college => {
+                            college.distanceFromUser = calculateDistance(
+                                window.lastUserLocation.lat, window.lastUserLocation.lng, 
+                                college.lat, college.lng
+                            );
+                        });
+                        
+                        // Sort by distance
+                        allColleges.sort((a, b) => a.distanceFromUser - b.distanceFromUser);
+                    }
+                    
+                    // Show colleges
+                    showCollegeResults(district, allColleges.slice(0, 5)); // Show top 5
+                } else {
+                    // No colleges found
+                    resultContainer.innerHTML = `
+                        <div style="background: rgba(255,255,255,0.95); border-radius: 15px; padding: 25px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                            <div style="text-align: center;">
+                                <h3>📍 ${district}</h3>
+                                <p style="color: #666; margin: 15px 0;">No college data available for this district yet.</p>
+                                <p style="color: #888; font-size: 0.9rem;">CSV data may be missing coordinates or the file may not exist.</p>
+                            </div>
+                        </div>
+                    `;
+                }
+                
+            } catch (error) {
+                console.log('❌ Error loading district colleges:', error);
+                resultContainer.innerHTML = `
+                    <div style="background: rgba(255,255,255,0.95); border-radius: 15px; padding: 25px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                        <div style="text-align: center;">
+                            <h3>❌ Error Loading ${district}</h3>
+                            <p style="color: #666;">Could not load college data. Please try again later.</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function showCollegeResults(district, colleges) {
+            const resultContainer = document.getElementById('closestCampusesResult');
+            const districtInfo = districtData[district];
+            
+            let html = `
+                <div style="background: rgba(255,255,255,0.95); border-radius: 15px; padding: 25px; margin: 20px 0; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+                    <h3 style="text-align: center; margin-bottom: 20px; color: #333;">
+                        📚 Top Colleges in ${district}
+                    </h3>
+                    <div style="display: grid; gap: 15px;">
+            `;
+            
+            colleges.forEach((college, index) => {
+                const suitabilityClass = college.suitability ? college.suitability.toLowerCase() : 'medium';
+                const suitabilityDisplay = college.suitability || 'Medium';
+                
+                // Create address display
+                let addressDisplay = '';
+                if (college.streetAddress) {
+                    addressDisplay = college.streetAddress + '<br>' + 
+                                   (college.city || college.addressCity || '') + ', ' + 
+                                   (college.state || '') + ' ' + (college.zipCode || '');
+                } else if (college.address) {
+                    addressDisplay = college.address;
+                } else {
+                    addressDisplay = 'Address not available';
+                }
+                
+                const distanceText = college.distanceFromUser ? 
+                    `📍 ${Math.round(college.distanceFromUser)} miles away` : '';
+                
+                html += `
+                    <div style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 10px; padding: 20px;">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                            <div style="flex: 1;">
+                                <div style="font-size: 1.3rem; font-weight: bold; color: #2c3e50; margin-bottom: 8px;">
+                                    #${index + 1} ${college.name}
+                                </div>
+                                <div style="color: #666; font-size: 0.9rem; line-height: 1.4; margin-bottom: 8px;">
+                                    ${addressDisplay}
+                                </div>
+                                ${distanceText ? `<div style="color: #28a745; font-weight: 600; font-size: 0.9rem;">${distanceText}</div>` : ''}
+                            </div>
+                            <div style="text-align: right; margin-left: 20px;">
+                                <div style="font-size: 0.8rem; color: #666; font-weight: 600; margin-bottom: 4px;">DRIVE RATING:</div>
+                                <span class="suitability-badge suitability-${suitabilityClass}">${suitabilityDisplay}</span>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                            <a href="https://www.google.com/maps/search/${encodeURIComponent((college.streetAddress || college.address || college.name) + ', ' + (college.city || college.addressCity || '') + ', ' + (college.state || ''))}" target="_blank" class="btn btn-primary" style="text-decoration: none;">
+                                🗺️ Directions
+                            </a>
+                            <button class="btn btn-tertiary" onclick="openMobilizeWithAutoFill('${district}', '${college.name.replace(/'/g, "\\'")}', '${district.split('-')[0]}', '${district.replace('-', '')}')">
+                                🗳️ Set Up Voter Drive
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += `
+                    </div>
+                </div>
+            `;
+            
+            resultContainer.innerHTML = html;
         }
 
         // UPDATED: This function now properly handles latitude and longitude from CSV
