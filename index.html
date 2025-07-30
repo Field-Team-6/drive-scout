@@ -905,6 +905,19 @@
         }
 
         function findClosestCampuses() {
+            // RESET ALL MAP AND APP STATE FIRST
+console.log('🔄 Resetting app state for fresh closest campus search...');
+clearAllResults();
+if (map) {
+    clearMarkers();
+    if (map.districtLayer) {
+        map.removeLayer(map.districtLayer);
+        map.districtLayer = null;
+    }
+    map.setView([39.8283, -98.5795], 4);
+}
+window.lastUserLocation = null;
+            
             const btn = document.getElementById('findClosestCampusesBtn');
             const resultContainer = document.getElementById('closestCampusesResult');
             
