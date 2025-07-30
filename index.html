@@ -1277,6 +1277,8 @@
         }
 
         function findClosestCampuses() {
+            console.log('🔍 findClosestCampuses() function called');
+            
             // RESET ALL MAP AND APP STATE FIRST
             console.log('🔄 Resetting app state for fresh closest campus search...');
             clearAllResults();
@@ -1285,6 +1287,19 @@
             const btn = document.getElementById('findClosestCampusesBtn');
             const resultContainer = document.getElementById('closestCampusesResult');
             
+            console.log('📋 Button element:', btn);
+            console.log('📋 Result container:', resultContainer);
+            
+            if (!btn) {
+                console.error('❌ Could not find findClosestCampusesBtn element');
+                return;
+            }
+            
+            if (!resultContainer) {
+                console.error('❌ Could not find closestCampusesResult element');
+                return;
+            }
+            
             // Show loading state
             btn.innerHTML = '🔍 Finding closest swing district...';
             btn.disabled = true;
@@ -1292,15 +1307,19 @@
             
             // Check if geolocation is available
             if (!navigator.geolocation) {
+                console.error('❌ Geolocation not supported');
                 alert('Geolocation is not supported by your browser');
                 btn.innerHTML = '🔍 Find closest swing district campuses!';
                 btn.disabled = false;
                 return;
             }
             
+            console.log('📍 Starting geolocation request...');
+            
             // Get user's location
             navigator.geolocation.getCurrentPosition(
                 function(position) {
+                    console.log('✅ Geolocation success:', position);
                     const userLat = position.coords.latitude;
                     const userLng = position.coords.longitude;
                     
@@ -1313,8 +1332,11 @@
                     let closestDistrict = null;
                     let shortestDistance = Infinity;
                     
+                    console.log('🎯 Calculating distances to districts...');
+                    
                     for (const [districtId, data] of Object.entries(districtData)) {
                         const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                        console.log(`📏 Distance to ${districtId}: ${Math.round(distance)} miles`);
                         if (distance < shortestDistance) {
                             shortestDistance = distance;
                             closestDistrict = districtId;
@@ -1353,6 +1375,7 @@
                             </div>
                         `;
                         resultContainer.style.display = 'block';
+                        console.log('✅ Result displayed');
                     }
                     
                     // Reset button
@@ -1360,7 +1383,7 @@
                     btn.disabled = false;
                 },
                 function(error) {
-                    console.log('❌ Geolocation error:', error.message);
+                    console.log('❌ Geolocation error:', error);
                     let errorMessage = 'Unable to get your location. ';
                     
                     switch(error.code) {
@@ -1388,6 +1411,36 @@
                     maximumAge: 300000
                 }
             );
+        }
+
+        function toggleFullControls() {
+            console.log('🔧 toggleFullControls() function called');
+            
+            const section = document.getElementById('advancedControlsSection');
+            const btn = document.getElementById('fullControlsBtn');
+            
+            console.log('📋 Section element:', section);
+            console.log('📋 Button element:', btn);
+            
+            if (!section || !btn) {
+                console.error('❌ Could not find required elements');
+                return;
+            }
+            
+            if (section.style.display === 'none') {
+                // Show the controls
+                console.log('📂 Showing controls');
+                section.style.display = 'block';
+                btn.innerHTML = 'Hide Full Drive Scout Controls';
+            } else {
+                // Hide the controls and ALL content below
+                console.log('📁 Hiding controls');
+                section.style.display = 'none';
+                btn.innerHTML = 'Full Drive Scout Controls';
+                
+                // Clear all results and content
+                clearAllResults();
+            }
         }
 
         async function loadDistrictColleges(district) {
