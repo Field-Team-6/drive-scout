@@ -702,7 +702,6 @@
         let markers = [];
         let userLocationMarker;
         let collegeData = {};
-        let loadedDistricts = new Set();
         let districtBoundaries = null;
         let districtBoundariesVisible = true;
         let currentSelectedDistrict = null;
@@ -954,7 +953,14 @@
         }
 
         async function loadDistrictDataWithTimeout(district) {
-            if (loadedDistricts.has(district)) {
+            // Check if data already exists
+            const state = Object.keys(districtMappings).find(function(s) {
+                return districtMappings[s].includes(district);
+            });
+            
+            if (state && collegeData[state] && collegeData[state][district] && 
+                collegeData[state][district].length > 0) {
+                console.log('📊 District data already loaded for', district);
                 return;
             }
 
@@ -998,25 +1004,18 @@
 
                 if (!csvText) {
                     console.log('No CSV file found for ' + district);
-                    loadedDistricts.add(district);
                     return;
                 }
 
                 const colleges = await parseCSV(csvText, district);
-                
-                const state = Object.keys(districtMappings).find(function(s) {
-                    return districtMappings[s].includes(district);
-                });
 
                 if (state && colleges) {
                     collegeData[state][district] = colleges;
                     console.log('Loaded data for ' + district + ' from ' + successfulUrl);
                 }
 
-                loadedDistricts.add(district);
             } catch (error) {
                 console.log('Error loading data for ' + district + ':', error);
-                loadedDistricts.add(district);
             }
         }
 
@@ -1269,6 +1268,7 @@
                 return;
             }
             
+            // Check if boundaries for this state are already loaded
             if (districtBoundaries && districtBoundaries.state === state) {
                 console.log('📍 District boundaries already loaded for', state);
                 return;
