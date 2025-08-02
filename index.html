@@ -891,8 +891,13 @@
                 
                 setTimeout(function() {
                     addMarkersToMap(allColleges);
-                    // Always update district boundaries to highlight the correct district
-                    addDistrictBoundariesToMap(district);
+                    // Force boundaries to show after loading
+                    console.log('🗺️ FORCE: Calling addDistrictBoundariesToMap for district:', district);
+                    if (districtBoundaries) {
+                        addDistrictBoundariesToMap(district);
+                    } else {
+                        console.log('❌ FORCE: No district boundaries available after loading');
+                    }
                 }, 200);
                 
                 displayCollegeListWithSections(district, withinColleges, nearColleges);
