@@ -1115,7 +1115,7 @@
         }
 
         function initializeDistrictMapWithBoundaries(mapId, colleges, districtId, state) {
-            console.log('🗺️ ENHANCED: Initializing district map with full boundaries:', mapId, districtId);
+            console.log('🗺️ ZOOM FIX: Initializing district map with proper zoom and spacing:', mapId, districtId);
             
             try {
                 if (typeof L === 'undefined') {
@@ -1190,11 +1190,22 @@
                     }
 
                     if (group.getLayers().length > 0) {
-                        // EXACT zoom settings to match main button display
-                        districtMap.fitBounds(group.getBounds(), { 
-                            padding: [30, 30],
-                            maxZoom: 12  // Match main map zoom level
-                        });
+                        // CRITICAL FIX: Match main button zoom settings exactly
+                        console.log('🎯 ZOOM FIX: Setting bounds with main button settings');
+                        
+                        // Special handling for Alaska
+                        if (districtId === 'AK-AL') {
+                            var alaskaCenter = districtData['AK-AL'].center;
+                            districtMap.setView([alaskaCenter[0], alaskaCenter[1]], 3);
+                            console.log('✅ ZOOM FIX: Alaska centered at zoom level 3');
+                        } else {
+                            // For all other districts, use the EXACT same settings as main button
+                            districtMap.fitBounds(group.getBounds(), { 
+                                padding: [30, 30],
+                                maxZoom: 12  // Match fitMapToSelectedDistrict settings
+                            });
+                            console.log('✅ ZOOM FIX: District map fitted with main button settings');
+                        }
                     }
                 }
                 
@@ -2282,10 +2293,10 @@
         }
 
         function fitMapToSelectedDistrict(selectedDistrict) {
-            console.log('🎯 PRIORITY: Fitting map to selected district:', selectedDistrict);
+            console.log('🎯 ZOOM FIX: Fitting map to selected district:', selectedDistrict);
             
             if (!map || !districtLayer) {
-                console.log('❌ PRIORITY: No map or district layer available');
+                console.log('❌ ZOOM FIX: No map or district layer available');
                 return;
             }
             
@@ -2294,7 +2305,7 @@
                 if (selectedDistrict === 'AK-AL') {
                     var alaskaCenter = districtData['AK-AL'].center;
                     map.setView([alaskaCenter[0], alaskaCenter[1]], 3);
-                    console.log('✅ PRIORITY: Alaska centered at zoom level 3');
+                    console.log('✅ ZOOM FIX: Alaska centered at zoom level 3');
                     return;
                 }
                 
@@ -2313,14 +2324,15 @@
                     var group = L.featureGroup(selectedFeatures);
                     var bounds = group.getBounds();
                     
-                    // Special handling for CA-13 which needs to zoom out more
+                    // MAIN BUTTON ZOOM SETTINGS - these are what we want to match in district cards
                     var maxZoom = 12;
                     var padding = [30, 30];
                     
+                    // Special handling for CA-13 which needs to zoom out more
                     if (selectedDistrict === 'CA-13') {
                         maxZoom = 11;
                         padding = [50, 50];
-                        console.log('🎯 PRIORITY: Using special zoom settings for CA-13');
+                        console.log('🎯 ZOOM FIX: Using special zoom settings for CA-13');
                     }
                     
                     map.fitBounds(bounds, { 
@@ -2328,16 +2340,16 @@
                         maxZoom: maxZoom
                     });
                     
-                    console.log('✅ PRIORITY: Map fitted to district', selectedDistrict);
+                    console.log('✅ ZOOM FIX: Map fitted to district', selectedDistrict, 'with zoom', maxZoom, 'and padding', padding);
                 } else {
-                    console.log('⚠️ PRIORITY: Could not find district features, using fallback center');
+                    console.log('⚠️ ZOOM FIX: Could not find district features, using fallback center');
                     var districtInfo = districtData[selectedDistrict];
                     if (districtInfo && districtInfo.center) {
                         map.setView([districtInfo.center[0], districtInfo.center[1]], 10);
                     }
                 }
             } catch (error) {
-                console.log('❌ PRIORITY: Error fitting map to district:', error);
+                console.log('❌ ZOOM FIX: Error fitting map to district:', error);
             }
         }
 
