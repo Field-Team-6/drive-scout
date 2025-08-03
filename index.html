@@ -1647,8 +1647,15 @@
                 // Convert numeric district to proper state format based on STATEFP
                 if (districtId && /^\d+$/.test(districtId)) {
                     const state = getStateAbbreviation(props);
-                    districtId = state + '-' + districtId.padStart(2, '0');
-                    console.log('🔧 FINAL FIX: Converted numeric district to', state, 'format:', districtId);
+                    
+                    // Special handling for Alaska's at-large district (00 -> AL)
+                    if (state === 'AK' && districtId === '00') {
+                        districtId = 'AK-AL';
+                        console.log('🔧 FINAL FIX: Converted Alaska at-large district to AK-AL');
+                    } else {
+                        districtId = state + '-' + districtId.padStart(2, '0');
+                        console.log('🔧 FINAL FIX: Converted numeric district to', state, 'format:', districtId);
+                    }
                 }
                 
                 console.log('🔍 FINAL FIX: Final district ID:', districtId, 'from properties:', Object.keys(props).slice(0, 5));
