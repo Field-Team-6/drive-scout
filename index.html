@@ -1100,10 +1100,8 @@
                         console.log('⚠️ ALASKA FIX: Invalid longitude in CSV:', value);
                     }
                 } else if (headerLower === 'enrollment') {
-                    const enrollmentValue = parseInt(value);
-                    if (!isNaN(enrollmentValue)) {
-                        college.enrollment = enrollmentValue;
-                    }
+                    // FIXED: Store as string to preserve comma formatting
+                    college.enrollment = value; // Keep as string, don't parse to number
                 } else if (headerLower === 'campus size') {
                     const campusSizeValue = parseFloat(value);
                     if (!isNaN(campusSizeValue)) {
