@@ -981,6 +981,15 @@
                         // Calculate automated rating (may override manual CSV rating)
                         const calculatedRating = calculateDriveRating(college);
                         
+                        // ENHANCED DEBUG LOGGING
+                        console.log('🔍 DEBUG RATING for', college.name + ':');
+                        console.log('  - CSV Suitability:', college.suitability);
+                        console.log('  - Calculated Rating:', calculatedRating);
+                        console.log('  - Enrollment:', college.enrollment);
+                        console.log('  - Campus Size:', college.campusSize);
+                        console.log('  - Type:', college.type);
+                        console.log('  - Notes:', college.notes);
+                        
                         // Exclude colleges that shouldn't be displayed
                         if (calculatedRating === 'EXCLUDE') {
                             console.log('❌ RATING: Excluding college:', college.name, '- online/virtual/building-only');
@@ -990,6 +999,7 @@
                         // Use calculated rating if it's valid
                         if (calculatedRating && calculatedRating !== 'EXCLUDE') {
                             college.suitability = calculatedRating;
+                            console.log('✅ FINAL RATING for', college.name + ':', college.suitability);
                         }
                         
                         colleges[targetSection].push(college);
@@ -1043,7 +1053,7 @@
                 section: section,
                 enrollment: 2000,
                 campusSize: null,
-                suitability: "Medium",
+                suitability: "", // FIXED: Empty string instead of "Medium" default
                 type: "College",
                 publicPrivate: "Public",
                 lat: null,
@@ -1100,8 +1110,14 @@
                         college.campusSize = campusSizeValue;
                     }
                 } else if (headerLower === 'suitability') {
-                    // Store manual CSV rating - will be used if present, otherwise calculated
-                    college.suitability = value;
+                    // FIXED: Only set if value is not empty/null
+                    if (value && value.trim() !== '') {
+                        college.suitability = value.trim();
+                        console.log('📊 RATING: Found manual CSV rating:', value.trim(), 'for', college.name);
+                    } else {
+                        college.suitability = ""; // Keep empty to trigger calculation
+                        console.log('📊 RATING: Empty suitability field - will calculate automatically for', college.name);
+                    }
                 } else if (headerLower === 'notes') {
                     college.notes = value;
                 }
