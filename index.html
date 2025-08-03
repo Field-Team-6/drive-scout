@@ -1067,15 +1067,15 @@
                     if (allColleges.length === 0) {
                         contentDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;"><p><strong>No college data found for ' + districtId + '</strong></p><p style="font-size: 0.9rem; margin-top: 10px;">Add a ' + districtId + '.csv file to your data/ folder with college information.</p></div>';
                     } else {
-                        // Create map container for this specific district
+                        // Create map container for this specific district with PROPER spacing to match main button
                         var mapId = 'map-' + districtId.replace('-', '');
                         var html = '';
                         
-                        // Add map container with FULL district boundary functionality and proper spacing
-                        html += '<div class="map-container" style="margin: 35px 0 25px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">';
-                        html += '<div id="' + mapId + '" style="height: 250px; width: 100%; background: #f8f9fa; position: relative;">';
-                        html += '<button class="district-toggle-button" onclick="toggleDistrictBoundariesForMap(\'' + mapId + '\', \'' + districtId + '\')" title="Toggle district boundaries" style="position: absolute; bottom: 10px; right: 60px; z-index: 1000; background: #667eea; color: white; border: 2px solid #667eea; border-radius: 6px; padding: 8px 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">Districts</button>';
-                        html += '<button class="location-button" onclick="getUserLocationForMap(\'' + mapId + '\')" title="Find my location" style="position: absolute; bottom: 10px; right: 10px; z-index: 1000; background: white; border: 2px solid #333; border-radius: 6px; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><img src="images/icons8-my-location-50.png" style="width: 20px; height: 20px;" alt="Find location"></button>';
+                        // Add map container with EXACT spacing from main button display
+                        html += '<div class="map-container" style="margin: 50px 0 35px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">';
+                        html += '<div id="' + mapId + '" style="height: 280px; width: 100%; background: #f8f9fa; position: relative;">';
+                        html += '<button class="district-toggle-button" onclick="toggleDistrictBoundariesForMap(\'' + mapId + '\', \'' + districtId + '\')" title="Toggle district boundaries" style="position: absolute; bottom: 20px; right: 80px; z-index: 1000; background: #667eea; color: white; border: 2px solid #667eea; border-radius: 8px; padding: 12px 16px; cursor: pointer; font-size: 0.9rem; font-weight: bold;">Districts</button>';
+                        html += '<button class="location-button" onclick="getUserLocationForMap(\'' + mapId + '\')" title="Find my location" style="position: absolute; bottom: 20px; right: 20px; z-index: 1000; background: white; border: 2px solid #333; border-radius: 8px; width: 50px; height: 50px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><img src="images/icons8-my-location-50.png" style="width: 28px; height: 28px;" alt="Find location"></button>';
                         html += '</div>';
                         html += '</div>';
                         
@@ -1190,10 +1190,10 @@
                     }
 
                     if (group.getLayers().length > 0) {
-                        // ZOOM FIX: Start more zoomed out with extra padding so district lines don't touch edges
+                        // EXACT zoom settings to match main button display
                         districtMap.fitBounds(group.getBounds(), { 
-                            padding: [25, 25],
-                            maxZoom: 11  // Reduced from 15 to start more zoomed out
+                            padding: [30, 30],
+                            maxZoom: 12  // Match main map zoom level
                         });
                     }
                 }
