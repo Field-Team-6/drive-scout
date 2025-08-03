@@ -490,7 +490,7 @@
 
         <div class="map-container" id="mapContainer" style="display: none; margin: -24px 0 8px 0 !important; padding: 0 !important;">
             <div id="map">
-                <button class="district-toggle-button" id="districtToggleBtn" title="Toggle district boundaries">Districts</button>
+                <button class="district-toggle-button" id="districtToggleBtn" onclick="toggleDistrictBoundaries()" title="Toggle district boundaries">Districts</button>
                 <button class="location-button" id="locationBtn" title="Find my location">
                     <img src="images/icons8-my-location-50.png" style="width: 28px; height: 28px;" alt="Find location">
                 </button>
@@ -570,6 +570,7 @@
         let collegeData = {};
         let districtBoundaries = null;
         let districtBoundariesVisible = true;
+        let districtLayer = null;
         let currentSelectedDistrict = null;
 
         const districtMappings = {
@@ -598,9 +599,9 @@
             clearAllResults();
             if (map) {
                 clearMarkers();
-                if (map.districtLayer) {
-                    map.removeLayer(map.districtLayer);
-                    map.districtLayer = null;
+                if (districtLayer) {
+                    map.removeLayer(districtLayer);
+                    districtLayer = null;
                 }
                 map.setView([39.8283, -98.5795], 4);
             }
@@ -766,9 +767,9 @@
                 
                 if (map) {
                     clearMarkers();
-                    if (map.districtLayer) {
-                        map.removeLayer(map.districtLayer);
-                        map.districtLayer = null;
+                    if (districtLayer) {
+                        map.removeLayer(districtLayer);
+                        districtLayer = null;
                     }
                 }
             }
@@ -1369,6 +1370,13 @@
                     minZoom: 1
                 }).addTo(map);
 
+                // Initialize district toggle button
+                const districtToggleBtn = document.getElementById('districtToggleBtn');
+                if (districtToggleBtn) {
+                    districtToggleBtn.classList.add('active');
+                    districtBoundariesVisible = true;
+                }
+
                 setTimeout(function() {
                     if (map) {
                         map.invalidateSize();
@@ -1482,7 +1490,165 @@
         }
 
         function addDistrictBoundariesToMap(selectedDistrict = null) {
-            console.log('Adding district boundaries to map...');
+            console.log('🗺️ FIXED: Starting addDistrictBoundariesToMap with district:', selectedDistrict);
+            
+            if (!map) {
+                console.log('❌ FIXED: No map instance available');
+                return;
+            }
+            
+            if (!districtBoundaries || !districtBoundaries.data) {
+                console.log('❌ FIXED: No district boundaries data available');
+                return;
+            }
+            
+            // Remove existing district layer if it exists
+            if (districtLayer) {
+                console.log('🗺️ FIXED: Removing existing district layer');
+                map.removeLayer(districtLayer);
+                districtLayer = null;
+            }
+            
+            // Only show boundaries if they should be visible
+            if (!districtBoundariesVisible) {
+                console.log('🗺️ FIXED: District boundaries are set to not visible, skipping');
+                return;
+            }
+            
+            try {
+                console.log('🗺️ FIXED: Creating new district layer from GeoJSON data');
+                console.log('🗺️ FIXED: GeoJSON features count:', districtBoundaries.data.features.length);
+                
+                districtLayer = L.geoJSON(districtBoundaries.data, {
+                    style: function(feature) {
+                        const districtId = getDistrictId(feature);
+                        const isSelected = selectedDistrict && districtId === selectedDistrict;
+                        
+                        return {
+                            color: isSelected ? '#ff0000' : '#667eea',
+                            weight: isSelected ? 3 : 2,
+                            opacity: isSelected ? 0.9 : 0.7,
+                            fillColor: isSelected ? '#ff0000' : '#667eea',
+                            fillOpacity: isSelected ? 0.2 : 0.1
+                        };
+                    },
+                    onEachFeature: function(feature, layer) {
+                        const districtId = getDistrictId(feature);
+                        if (districtId && districtData[districtId]) {
+                            const info = districtData[districtId];
+                            const popupContent = `
+                                <div style="font-weight: bold; margin-bottom: 5px;">${districtId}</div>
+                                <div>Rep: ${info.rep} (${info.party})</div>
+                                <div>Action: ${info.action}</div>
+                                <div>PVI: ${info.pvi}</div>
+                            `;
+                            layer.bindPopup(popupContent);
+                        }
+                    }
+                });
+                
+                console.log('🗺️ FIXED: Adding district layer to map');
+                districtLayer.addTo(map);
+                
+                // Update button state
+                const districtToggleBtn = document.getElementById('districtToggleBtn');
+                if (districtToggleBtn) {
+                    districtToggleBtn.classList.add('active');
+                }
+                
+                console.log('✅ FIXED: District boundaries successfully added to map');
+                
+            } catch (error) {
+                console.log('❌ FIXED: Error creating district layer:', error);
+            }
+        }
+        
+        function getDistrictId(feature) {
+            // Try different possible property names for district ID
+            if (feature.properties) {
+                const props = feature.properties;
+                
+                // Common property names for district ID
+                if (props.DISTRICT) return props.DISTRICT;
+                if (props.CD118FP) return props.CD118FP;
+                if (props.CD119FP) return props.CD119FP;
+                if (props.NAMELSAD) {
+                    // Extract number from names like "Congressional District 27"
+                    const match = props.NAMELSAD.match(/Congressional District (\d+)/);
+                    if (match) {
+                        const state = getStateAbbreviation(props);
+                        return state + '-' + match[1].padStart(2, '0');
+                    }
+                }
+                if (props.NAME) return props.NAME;
+                if (props.GEOID) return props.GEOID;
+                
+                // For debugging - log all properties
+                console.log('🔍 FIXED: Available properties for district:', Object.keys(props));
+            }
+            
+            return null;
+        }
+        
+        function getStateAbbreviation(properties) {
+            // Try to get state abbreviation from properties
+            if (properties.STATEFP) {
+                const stateMap = {
+                    '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
+                    '09': 'CT', '12': 'FL', '32': 'NV'
+                };
+                return stateMap[properties.STATEFP];
+            }
+            
+            // Fallback based on current state
+            if (districtBoundaries && districtBoundaries.state) {
+                const stateMap = {
+                    'Alaska': 'AK', 'Arizona': 'AZ', 'California': 'CA', 
+                    'Colorado': 'CO', 'Connecticut': 'CT', 'Florida': 'FL', 'Nevada': 'NV'
+                };
+                return stateMap[districtBoundaries.state];
+            }
+            
+            return 'XX';
+        }
+        
+        function toggleDistrictBoundaries() {
+            console.log('🗺️ TOGGLE: District boundaries toggle clicked');
+            
+            const districtToggleBtn = document.getElementById('districtToggleBtn');
+            
+            if (!map) {
+                console.log('❌ TOGGLE: No map instance');
+                return;
+            }
+            
+            districtBoundariesVisible = !districtBoundariesVisible;
+            console.log('🗺️ TOGGLE: Boundaries visible set to:', districtBoundariesVisible);
+            
+            if (districtBoundariesVisible) {
+                // Show boundaries
+                if (districtBoundaries && districtBoundaries.data) {
+                    console.log('🗺️ TOGGLE: Showing district boundaries');
+                    addDistrictBoundariesToMap(currentSelectedDistrict);
+                } else {
+                    console.log('❌ TOGGLE: No boundary data to show');
+                }
+                
+                if (districtToggleBtn) {
+                    districtToggleBtn.classList.add('active');
+                }
+            } else {
+                // Hide boundaries
+                console.log('🗺️ TOGGLE: Hiding district boundaries');
+                if (districtLayer) {
+                    map.removeLayer(districtLayer);
+                    districtLayer = null;
+                }
+                
+                if (districtToggleBtn) {
+                    districtToggleBtn.classList.remove('active');
+                }
+            }
         }
 
         function setupNationalMap() {
@@ -1491,6 +1657,7 @@
 
         function loadAndDisplayNewDistrict(state, districtId) {
             console.log('Loading new district:', state, districtId);
+            currentSelectedDistrict = districtId;
             displayColleges(state, districtId);
         }
 
@@ -1522,6 +1689,3 @@
                 init();
             }, 100);
         });
-    </script>
-</body>
-</html>
