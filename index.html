@@ -648,16 +648,15 @@
                         const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                         const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
                         
-                        resultContainer.innerHTML = `
-                            <div style="background: ${partyBackgroundColor}; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ${partyBorderColor}; margin: 6px 0 0 0 !important;">
-                                <div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">
-                                    Swing district: ${closestDistrict}
-                                </div>
-                                <div style="color: #666; margin-bottom: 0;">
-                                    <em>${Math.round(shortestDistance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}
-                                </div>
-                            </div>
-                        `;
+                        resultContainer.innerHTML = 
+                            '<div style="background: ' + partyBackgroundColor + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; margin: 6px 0 0 0 !important;">' +
+                                '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">' +
+                                    'Swing district: ' + closestDistrict +
+                                '</div>' +
+                                '<div style="color: #666; margin-bottom: 0;">' +
+                                    '<em>' + Math.round(shortestDistance) + ' miles away</em> • Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                                '</div>' +
+                            '</div>';
                         resultContainer.style.display = 'block';
                         
                         const state = Object.keys(districtMappings).find(s => 
@@ -984,15 +983,14 @@
             
             const controlsDiv = document.createElement('div');
             controlsDiv.style.cssText = 'text-align: center; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 10px;';
-            controlsDiv.innerHTML = `
-                <button onclick="showMoreDistricts()" style="background: #764ba2; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold; margin-bottom: 10px;">
-                    Show 5 More Districts
-                </button>
-                <br>
-                <button onclick="hideClosestDistricts()" style="background: #666; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">
-                    Hide Districts
-                </button>
-            `;
+            controlsDiv.innerHTML = 
+                '<button onclick="showMoreDistricts()" style="background: #764ba2; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold; margin-bottom: 10px;">' +
+                    'Show 5 More Districts' +
+                '</button>' +
+                '<br>' +
+                '<button onclick="hideClosestDistricts()" style="background: #666; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">' +
+                    'Hide Districts' +
+                '</button>';
             resultsContainer.appendChild(controlsDiv);
         }
 
@@ -1536,12 +1534,11 @@
                         const districtId = getDistrictId(feature);
                         if (districtId && districtData[districtId]) {
                             const info = districtData[districtId];
-                            const popupContent = `
-                                <div style="font-weight: bold; margin-bottom: 5px;">${districtId}</div>
-                                <div>Rep: ${info.rep} (${info.party})</div>
-                                <div>Action: ${info.action}</div>
-                                <div>PVI: ${info.pvi}</div>
-                            `;
+                            const popupContent = 
+                                '<div style="font-weight: bold; margin-bottom: 5px;">' + districtId + '</div>' +
+                                '<div>Rep: ' + info.rep + ' (' + info.party + ')</div>' +
+                                '<div>Action: ' + info.action + '</div>' +
+                                '<div>PVI: ' + info.pvi + '</div>';
                             layer.bindPopup(popupContent);
                         }
                     }
