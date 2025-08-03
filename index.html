@@ -1982,6 +1982,10 @@
                     maxZoom = 11; // Zoom out one more level for CA-13
                     padding = [60, 60]; // Extra padding for CA-13
                     console.log('🎯 FINAL FIX: Using special zoom settings for CA-13');
+                } else if (districtId === 'AK-AL') {
+                    maxZoom = 4; // Much lower zoom for Alaska (huge state)
+                    padding = [80, 80]; // Extra padding for Alaska
+                    console.log('🎯 FINAL FIX: Using special zoom settings for Alaska');
                 }
                 
                 // Fit the map to the district boundaries with generous padding
