@@ -2096,11 +2096,22 @@
                         // Load district boundaries immediately
                         loadMainMapDistrictBoundaries(selectedDistrict, state);
 
-                        setTimeout(function() {
-                            if (map) {
-                                map.invalidateSize();
+                        // Add zoom event listener to show national boundaries when zoomed out
+                        map.on('zoomend', function() {
+                            var currentZoom = map.getZoom();
+                            console.log('🔍 PRIORITY: Zoom level changed to:', currentZoom);
+                            
+                            // Show national swing districts when zoomed out (zoom level 6 or less)
+                            if (currentZoom <= 6 && districtBoundariesVisible) {
+                                console.log('🗺️ PRIORITY: Zoom level', currentZoom, '- loading national swing districts');
+                                loadNationalSwingDistrictsOnMainMap();
+                            } else if (currentZoom > 6 && districtBoundariesVisible) {
+                                // Show local boundaries when zoomed in
+                                if (map.selectedDistrict && map.selectedState) {
+                                    loadMainMapDistrictBoundaries(map.selectedDistrict, map.selectedState);
+                                }
                             }
-                        }, 100);
+                        });
                     } else {
                         console.log('❌ PRIORITY: Leaflet not loaded');
                     }
@@ -2191,7 +2202,7 @@
                             };
                         }
                         
-                        // Popup function
+                        // Popup function with EXACT styling from original working version
                         function onEachDistrict(feature, layer) {
                             var featureDistrictId = getDistrictId(feature);
                             var districtInfo = districtData[featureDistrictId];
@@ -2201,16 +2212,30 @@
                                 var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                                 var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
                                 
-                                var popupContent = '<div style="padding: 8px; border-left: 3px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
-                                popupContent += '<div style="font-weight: bold; color: #333;">' + featureDistrictId;
+                                // Calculate distance if user location available
+                                var distanceText = '';
+                                if (window.lastUserLocation && districtInfo.center) {
+                                    var distance = calculateDistance(
+                                        window.lastUserLocation.lat, 
+                                        window.lastUserLocation.lng, 
+                                        districtInfo.center[0], 
+                                        districtInfo.center[1]
+                                    );
+                                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
+                                }
+                                
+                                var popupContent = '<div style="min-width: 200px; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
+                                popupContent += '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">Swing district: ' + featureDistrictId;
                                 if (isSelected) {
-                                    popupContent += ' <span style="background: #4CAF50; color: white; padding: 2px 6px; border-radius: 8px; font-size: 0.7rem;">CURRENT</span>';
+                                    popupContent += '<br><span style="background: #4CAF50; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; margin-top: 4px; display: inline-block;">CURRENT</span>';
                                 }
                                 popupContent += '</div>';
-                                popupContent += '<div style="font-size: 0.9rem; color: #666;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
-                                popupContent += '</div>';
+                                popupContent += '<div style="color: #666; margin-bottom: 8px;">' + distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
+                                popupContent += '<div style="text-align: center; margin-top: 8px;">';
+                                popupContent += '<button onclick="showDistrictCampusesFromPopup(\'' + featureDistrictId + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
+                                popupContent += '</div></div>';
                                 
-                                layer.bindPopup(popupContent, { maxWidth: 250 });
+                                layer.bindPopup(popupContent, { maxWidth: 300 });
                                 
                                 // Add hover effects for non-selected districts
                                 if (!isSelected) {
@@ -2888,14 +2913,256 @@
             }
         }
 
-        // Placeholder stubs for functions not yet implemented
-        function loadNationalSwingDistricts() {
-            console.log('🔄 loadNationalSwingDistricts - placeholder');
+        function loadNationalSwingDistrictsOnMainMap() {
+            console.log('🌎 PRIORITY: Loading national swing district boundaries...');
+            
+            // Don't reload if we already have national boundaries
+            if (map.nationalDistrictLayer) {
+                console.log('🌎 PRIORITY: National boundaries already loaded');
+                return;
+            }
+            
+            // Remove local district layer when showing national
+            if (districtLayer) {
+                map.removeLayer(districtLayer);
+                districtLayer = null;
+            }
+            
+            // Load boundaries from all swing states
+            var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Nevada'];
+            var allBoundariesData = { type: "FeatureCollection", features: [] };
+            var loadedStates = 0;
+            
+            var boundaryFiles = {
+                'Alaska': 'data/boundaries/alaska_districts_119th.json',
+                'Arizona': 'data/boundaries/arizona_districts_119th.json',
+                'California': 'data/boundaries/california_districts_119th.json',
+                'Colorado': 'data/boundaries/colorado_districts_119th.json',
+                'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
+                'Florida': 'data/boundaries/florida_districts_119th.json',
+                'Nevada': 'data/boundaries/nevada_districts_119th.json'
+            };
+            
+            // Load boundaries from each state
+            for (var i = 0; i < statesToLoad.length; i++) {
+                var state = statesToLoad[i];
+                var boundaryFile = boundaryFiles[state];
+                if (boundaryFile) {
+                    console.log('📁 PRIORITY: Loading national boundaries for', state);
+                    (function(currentState) {
+                        fetch(boundaryFile)
+                            .then(function(response) {
+                                if (response.ok) {
+                                    return response.json();
+                                }
+                                throw new Error('Failed to load ' + boundaryFile);
+                            })
+                            .then(function(geojsonData) {
+                                if (geojsonData && geojsonData.features) {
+                                    // Add all features from this state to our combined data
+                                    allBoundariesData.features = allBoundariesData.features.concat(geojsonData.features);
+                                    console.log('✅ PRIORITY: Added', geojsonData.features.length, 'districts from', currentState);
+                                }
+                                
+                                loadedStates++;
+                                
+                                // When all states are loaded, add to map
+                                if (loadedStates === statesToLoad.length) {
+                                    console.log('🌎 PRIORITY: All', allBoundariesData.features.length, 'districts loaded for national view');
+                                    addNationalSwingDistrictBoundaries(allBoundariesData);
+                                }
+                            })
+                            .catch(function(error) {
+                                console.log('❌ PRIORITY: Error loading boundaries for', currentState, ':', error.message);
+                                loadedStates++;
+                                
+                                // Still proceed when all attempts are done
+                                if (loadedStates === statesToLoad.length && allBoundariesData.features.length > 0) {
+                                    console.log('🌎 PRIORITY: Proceeding with', allBoundariesData.features.length, 'districts loaded');
+                                    addNationalSwingDistrictBoundaries(allBoundariesData);
+                                }
+                            });
+                    })(state);
+                }
+            }
         }
 
+        function addNationalSwingDistrictBoundaries(boundariesData) {
+            console.log('🗺️ PRIORITY: Adding national swing district boundaries to main map');
+            
+            // Style function for national swing districts
+            function nationalSwingDistrictStyle(feature) {
+                var districtId = getDistrictId(feature);
+                var districtInfo = districtData[districtId];
+                
+                // Only show swing districts - return null for non-swing districts
+                if (!districtInfo) {
+                    return { opacity: 0, fillOpacity: 0 };
+                }
+                
+                // Style based on party and action
+                var color = '#666666';
+                var fillColor = 'transparent';
+                var weight = 2;
+                var opacity = 0.7;
+                var fillOpacity = 0.2;
+                
+                if (districtInfo.action === 'FLIP') {
+                    color = '#DC143C'; // Red for flip districts (targeting Republicans)
+                    fillColor = '#DC143C';
+                } else if (districtInfo.action === 'HOLD') {
+                    color = '#4169E1'; // Blue for Democratic holds  
+                    fillColor = '#4169E1';
+                }
+                
+                return {
+                    color: color,
+                    weight: weight,
+                    opacity: opacity,
+                    fillColor: fillColor,
+                    fillOpacity: fillOpacity
+                };
+            }
+            
+            // Popup function for national view with EXACT styling from original
+            function onEachNationalDistrict(feature, layer) {
+                var districtId = getDistrictId(feature);
+                var districtInfo = districtData[districtId];
+                
+                if (districtInfo) {
+                    var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                    var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                    
+                    // Calculate distance if user location available
+                    var distanceText = '';
+                    if (window.lastUserLocation && districtInfo.center) {
+                        var distance = calculateDistance(
+                            window.lastUserLocation.lat, 
+                            window.lastUserLocation.lng, 
+                            districtInfo.center[0], 
+                            districtInfo.center[1]
+                        );
+                        distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
+                    }
+                    
+                    var popupContent = '<div style="min-width: 200px; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
+                    popupContent += '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">Swing district: ' + districtId + '</div>';
+                    popupContent += '<div style="color: #666; margin-bottom: 8px;">' + distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
+                    popupContent += '<div style="text-align: center; margin-top: 8px;">';
+                    popupContent += '<button onclick="showDistrictCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
+                    popupContent += '</div></div>';
+                    
+                    layer.bindPopup(popupContent, { maxWidth: 300 });
+                    
+                    // Add hover effects
+                    layer.on({
+                        mouseover: function(e) {
+                            layer.setStyle({
+                                weight: 3,
+                                opacity: 1.0
+                            });
+                        },
+                        mouseout: function(e) {
+                            layer.setStyle(nationalSwingDistrictStyle(feature));
+                        }
+                    });
+                }
+            }
+            
+            // Create the national district layer
+            map.nationalDistrictLayer = L.geoJSON(boundariesData, {
+                style: nationalSwingDistrictStyle,
+                onEachFeature: onEachNationalDistrict,
+                filter: function(feature) {
+                    // Only show swing districts
+                    var districtId = getDistrictId(feature);
+                    return districtData.hasOwnProperty(districtId);
+                }
+            }).addTo(map);
+            
+            console.log('✅ PRIORITY: National swing district boundaries added to main map');
+        }
+
+        // RESTORED: showDistrictCampusesFromPopup function
         function showDistrictCampusesFromPopup(districtId) {
-            console.log('🔄 showDistrictCampusesFromPopup - placeholder for:', districtId);
-            alert('Campus display for ' + districtId + ' will be restored in the next update!');
+            console.log('🔄 PRIORITY: showDistrictCampusesFromPopup called for:', districtId);
+            
+            // Close any open popups
+            if (map) map.closePopup();
+            
+            // Set this as the current selected district
+            currentSelectedDistrict = districtId;
+            
+            // Find the state for this district
+            var foundState = null;
+            for (var state in districtMappings) {
+                var districts = districtMappings[state];
+                for (var i = 0; i < districts.length; i++) {
+                    if (districts[i] === districtId) {
+                        foundState = state;
+                        break;
+                    }
+                }
+                if (foundState) break;
+            }
+            
+            if (!foundState) {
+                console.log('❌ PRIORITY: Could not find state for district:', districtId);
+                return;
+            }
+            
+            // Update the district card display
+            var resultContainer = document.getElementById('closestCampusesResult');
+            if (resultContainer) {
+                var districtInfo = districtData[districtId];
+                var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                var distanceText = '';
+                if (window.lastUserLocation) {
+                    var distance = calculateDistance(
+                        window.lastUserLocation.lat, 
+                        window.lastUserLocation.lng, 
+                        districtInfo.center[0], 
+                        districtInfo.center[1]
+                    );
+                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
+                }
+                
+                resultContainer.innerHTML = 
+                    '<div style="background: ' + partyBackgroundColor + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; margin: 6px 0 0 0 !important;">' +
+                        '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">' +
+                            'Swing district: ' + districtId +
+                        '</div>' +
+                        '<div style="color: #666; margin-bottom: 0;">' +
+                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                        '</div>' +
+                    '</div>';
+                resultContainer.style.display = 'block';
+            }
+            
+            // Load and display colleges for this district
+            displayColleges(foundState, districtId);
+            
+            // Center map on the selected district
+            if (map && districtData[districtId]) {
+                setTimeout(function() {
+                    fitMapToSelectedDistrict(districtId);
+                }, 500);
+                
+                // Additional timeout for desktop to ensure proper centering
+                setTimeout(function() {
+                    if (window.innerWidth > 768) {
+                        console.log('🖥️ PRIORITY: Desktop additional centering for', districtId);
+                        fitMapToSelectedDistrict(districtId);
+                    }
+                }, 1000);
+            }
+            
+            // Reload boundaries to highlight the selected district
+            if (map.selectedState && map.selectedDistrict) {
+                loadMainMapDistrictBoundaries(districtId, foundState);
+            }
         }
 
         function geocodeZipCode(zipCode) {
