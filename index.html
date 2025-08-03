@@ -1642,10 +1642,11 @@
                     districtId = props.GEOID;
                 }
                 
-                // Convert numeric district to CA-XX format
+                // Convert numeric district to proper state format based on STATEFP
                 if (districtId && /^\d+$/.test(districtId)) {
-                    districtId = 'CA-' + districtId.padStart(2, '0');
-                    console.log('🔧 FINAL FIX: Converted numeric district to CA format:', districtId);
+                    const state = getStateAbbreviation(props);
+                    districtId = state + '-' + districtId.padStart(2, '0');
+                    console.log('🔧 FINAL FIX: Converted numeric district to', state, 'format:', districtId);
                 }
                 
                 console.log('🔍 FINAL FIX: Final district ID:', districtId, 'from properties:', Object.keys(props).slice(0, 5));
@@ -1657,22 +1658,51 @@
         }
         
         function getStateAbbreviation(properties) {
+            // First try to get state from STATEFP (Federal Information Processing Standards state code)
             if (properties.STATEFP) {
+                const stateMap = {
+                    '02': 'AK', // Alaska
+                    '04': 'AZ', // Arizona  
+                    '06': 'CA', // California
+                    '08': 'CO', // Colorado
+                    '09': 'CT', // Connecticut
+                    '12': 'FL', // Florida
+                    '32': 'NV'  // Nevada
+                };
+                const stateCode = stateMap[properties.STATEFP];
+                if (stateCode) {
+                    console.log('🗺️ FINAL FIX: Found state', stateCode, 'from STATEFP:', properties.STATEFP);
+                    return stateCode;
+                }
+            }
+            
+            // Try to get state from GEOID (first 2 digits)
+            if (properties.GEOID && properties.GEOID.length >= 2) {
+                const stateCode = properties.GEOID.substring(0, 2);
                 const stateMap = {
                     '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
                     '09': 'CT', '12': 'FL', '32': 'NV'
                 };
-                return stateMap[properties.STATEFP];
+                if (stateMap[stateCode]) {
+                    console.log('🗺️ FINAL FIX: Found state', stateMap[stateCode], 'from GEOID:', properties.GEOID);
+                    return stateMap[stateCode];
+                }
             }
             
+            // Fallback to current district boundaries state if available
             if (districtBoundaries && districtBoundaries.state) {
                 const stateMap = {
                     'Alaska': 'AK', 'Arizona': 'AZ', 'California': 'CA', 
                     'Colorado': 'CO', 'Connecticut': 'CT', 'Florida': 'FL', 'Nevada': 'NV'
                 };
-                return stateMap[districtBoundaries.state];
+                const stateCode = stateMap[districtBoundaries.state];
+                if (stateCode) {
+                    console.log('🗺️ FINAL FIX: Using fallback state', stateCode, 'from districtBoundaries');
+                    return stateCode;
+                }
             }
             
+            console.log('⚠️ FINAL FIX: Could not determine state, defaulting to XX. Properties:', Object.keys(properties));
             return 'XX';
         }
 
