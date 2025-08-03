@@ -1274,8 +1274,12 @@
                 districtLayer = L.geoJSON(districtBoundaries.data, {
                     filter: function(feature) {
                         const districtId = getDistrictId(feature);
+                        console.log('🔍 ENHANCED: Checking feature district ID:', districtId);
                         const isSwing = districtId && swingDistrictIds.includes(districtId);
-                        if (isSwing) swingFeatureCount++;
+                        if (isSwing) {
+                            swingFeatureCount++;
+                            console.log('✅ ENHANCED: Including swing district:', districtId);
+                        }
                         return isSwing;
                     },
                     style: function(feature) {
@@ -1347,22 +1351,32 @@
             if (feature.properties) {
                 const props = feature.properties;
                 
-                if (props.DISTRICT) return props.DISTRICT;
-                if (props.CD118FP) return props.CD118FP;
-                if (props.CD119FP) return props.CD119FP;
-                if (props.NAMELSAD) {
+                // Try multiple property names that might contain district ID
+                let districtId = null;
+                
+                if (props.DISTRICT) {
+                    districtId = props.DISTRICT;
+                } else if (props.CD118FP) {
+                    districtId = props.CD118FP;
+                } else if (props.CD119FP) {
+                    districtId = props.CD119FP;
+                } else if (props.NAMELSAD) {
                     const match = props.NAMELSAD.match(/Congressional District (\d+)/);
                     if (match) {
                         const state = getStateAbbreviation(props);
-                        return state + '-' + match[1].padStart(2, '0');
+                        districtId = state + '-' + match[1].padStart(2, '0');
                     }
+                } else if (props.NAME) {
+                    districtId = props.NAME;
+                } else if (props.GEOID) {
+                    districtId = props.GEOID;
                 }
-                if (props.NAME) return props.NAME;
-                if (props.GEOID) return props.GEOID;
                 
-                console.log('🔍 ENHANCED: Available properties for district:', Object.keys(props));
+                console.log('🔍 ENHANCED: District ID found:', districtId, 'from properties:', Object.keys(props).slice(0, 5));
+                return districtId;
             }
             
+            console.log('❌ ENHANCED: No properties found for feature');
             return null;
         }
         
