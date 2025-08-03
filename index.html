@@ -1684,6 +1684,14 @@
                 setTimeout(function() {
                     centerMapOnDistrict(districtId);
                 }, 500); // Wait for boundaries to load
+                
+                // Additional timeout for desktop to ensure proper centering
+                setTimeout(function() {
+                    if (window.innerWidth > 768) {
+                        console.log('🖥️ FINAL FIX: Desktop additional centering for', districtId);
+                        centerMapOnDistrict(districtId);
+                    }
+                }, 1000);
             }
             
             // Update the map to highlight the selected district
