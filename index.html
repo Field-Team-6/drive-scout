@@ -1269,12 +1269,107 @@
                 console.log('🗺️ ENHANCED: Available features:', districtBoundaries.data.features.length);
                 console.log('🗺️ ENHANCED: Sample feature properties:', districtBoundaries.data.features[0] ? Object.keys(districtBoundaries.data.features[0].properties) : 'No features');
                 
+                // Style function for district boundaries
+                function districtStyle(feature) {
+                    const districtId = getDistrictId(feature);
+                    const districtInfo = districtData[districtId];
+                    const isSelected = selectedDistrict && districtId === selectedDistrict;
+                    
+                    // Default styling
+                    let color = '#666666';
+                    let fillColor = 'transparent';
+                    let weight = 2;
+                    let opacity = 0.3;
+                    let fillOpacity = 0;
+                    
+                    // Color code based on party and action if this is a swing district
+                    if (districtInfo) {
+                        if (districtInfo.action === 'FLIP') {
+                            color = '#DC143C'; // Red for flip districts (targeting Republicans)
+                            weight = 3;
+                        } else if (districtInfo.action === 'HOLD') {
+                            color = districtInfo.party === 'D' ? '#4169E1' : '#DC143C'; // Blue for Dem holds
+                            weight = 3;
+                        }
+                        opacity = 0.6; // Higher opacity for swing districts
+                    }
+                    
+                    // HIGHLIGHT SELECTED DISTRICT
+                    if (isSelected) {
+                        weight = 5; // Thicker border
+                        opacity = 1.0; // Full opacity
+                        fillOpacity = 0.15; // Light fill to highlight the area
+                        fillColor = color; // Fill with the same color as border
+                    }
+                    
+                    return {
+                        color: color,
+                        weight: weight,
+                        opacity: opacity,
+                        fillColor: fillColor,
+                        fillOpacity: fillOpacity
+                    };
+                }
+                
+                // Create popup content for districts
+                function onEachDistrict(feature, layer) {
+                    const districtId = getDistrictId(feature);
+                    const districtInfo = districtData[districtId];
+                    const isSelected = selectedDistrict && districtId === selectedDistrict;
+                    
+                    let popupContent = '<div style="max-width: 240px; text-align: center; padding: 8px; margin: 0;">';
+                    popupContent += '<div style="font-weight: bold; margin-bottom: 8px; color: #333; font-size: 1rem; line-height: 1.2;">';
+                    popupContent += districtId;
+                    if (isSelected) {
+                        popupContent += '<br><span style="background: #4CAF50; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; margin-top: 4px; display: inline-block;">CURRENT</span>';
+                    }
+                    popupContent += '</div>';
+                    
+                    if (districtInfo) {
+                        popupContent += '<div style="font-size: 0.9rem; color: #666; margin-bottom: 12px; line-height: 1.3;">';
+                        popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ')<br>' + districtInfo.action;
+                        popupContent += '</div>';
+                        
+                        // Add "Show campuses" button for all swing districts
+                        popupContent += '<div style="margin-top: 10px;">';
+                        popupContent += '<button onclick="showDistrictCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
+                        popupContent += '</div>';
+                    } else {
+                        popupContent += '<div style="font-size: 0.85rem; color: #666;">Not a swing district</div>';
+                    }
+                    
+                    popupContent += '</div>';
+                    
+                    layer.bindPopup(popupContent, { maxWidth: 260 });
+                    
+                    // Add hover effects for swing districts
+                    if (districtInfo) {
+                        layer.on({
+                            mouseover: function(e) {
+                                if (!isSelected) {
+                                    layer.setStyle({
+                                        weight: 4,
+                                        opacity: 0.8
+                                    });
+                                }
+                            },
+                            mouseout: function(e) {
+                                if (!isSelected) {
+                                    layer.setStyle(districtStyle(feature));
+                                }
+                            }
+                        });
+                    }
+                }
+                
                 // Filter to only swing districts and apply party colors
                 const swingDistrictIds = Object.keys(districtData);
                 let swingFeatureCount = 0;
                 let totalFeatureCount = districtBoundaries.data.features.length;
                 
                 districtLayer = L.geoJSON(districtBoundaries.data, {
+                    style: districtStyle,
+                    onEachFeature: onEachDistrict,
                     filter: function(feature) {
                         const districtId = getDistrictId(feature);
                         console.log('🔍 ENHANCED: Checking feature district ID:', districtId);
@@ -1285,7 +1380,7 @@
                         } else {
                             console.log('❌ ENHANCED: Excluding district:', districtId, '(not in swing list)');
                         }
-                        return true; // TEMPORARILY SHOW ALL DISTRICTS TO TEST
+                        return isSwing; // BACK TO FILTERING ONLY SWING DISTRICTS
                     },
                     style: function(feature) {
                         const districtId = getDistrictId(feature);
