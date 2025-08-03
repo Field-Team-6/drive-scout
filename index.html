@@ -2082,11 +2082,22 @@
                         // Load district boundaries immediately
                         loadMainMapDistrictBoundaries(selectedDistrict, state);
 
-                        // LOCATE FIX: Simplified zoom event listener - NO automatic boundary switching
+                        // ZOOM FIX: Enhanced zoom event listener - Load national boundaries when zoomed out
                         map.on('zoomend', function() {
                             var currentZoom = map.getZoom();
-                            console.log('🔍 LOCATE FIX: Zoom level changed to:', currentZoom, '- boundaries stay stable');
-                            // DO NOTHING - let boundaries stay as they are
+                            console.log('🔍 ZOOM FIX: Zoom level changed to:', currentZoom);
+                            
+                            // Show national swing districts when zoomed out (zoom level 6 or less)
+                            if (currentZoom <= 6 && districtBoundariesVisible) {
+                                console.log('🗺️ ZOOM FIX: Zoom level', currentZoom, '- loading national swing districts');
+                                loadNationalSwingDistrictsOnMainMap();
+                            } else if (currentZoom > 6 && districtBoundariesVisible) {
+                                // Show local boundaries when zoomed in
+                                if (map.selectedDistrict && map.selectedState) {
+                                    console.log('🗺️ ZOOM FIX: Zoom level', currentZoom, '- loading local district boundaries');
+                                    loadMainMapDistrictBoundaries(map.selectedDistrict, map.selectedState);
+                                }
+                            }
                         });
                     } else {
                         console.log('❌ PRIORITY: Leaflet not loaded');
@@ -2098,7 +2109,14 @@
         }
 
         function loadMainMapDistrictBoundaries(selectedDistrict, state) {
-            console.log('🗺️ PRIORITY: Loading district boundaries for main map:', selectedDistrict, state);
+            console.log('🗺️ ZOOM FIX: Loading district boundaries for main map:', selectedDistrict, state);
+            
+            // Remove national boundaries when loading local ones
+            if (map.nationalDistrictLayer) {
+                map.removeLayer(map.nationalDistrictLayer);
+                map.nationalDistrictLayer = null;
+                console.log('🗺️ ZOOM FIX: Removed national boundaries for local view');
+            }
             
             try {
                 var boundaryFiles = {
@@ -2113,11 +2131,11 @@
                 
                 var boundaryFile = boundaryFiles[state];
                 if (!boundaryFile) {
-                    console.log('❌ PRIORITY: No boundary file for state:', state);
+                    console.log('❌ ZOOM FIX: No boundary file for state:', state);
                     return;
                 }
                 
-                console.log('📁 PRIORITY: Loading boundary file:', boundaryFile);
+                console.log('📁 ZOOM FIX: Loading boundary file:', boundaryFile);
                 
                 fetch(boundaryFile)
                     .then(function(response) {
@@ -2128,11 +2146,11 @@
                     })
                     .then(function(geojsonData) {
                         if (!geojsonData || !geojsonData.features) {
-                            console.log('❌ PRIORITY: Invalid GeoJSON data');
+                            console.log('❌ ZOOM FIX: Invalid GeoJSON data');
                             return;
                         }
                         
-                        console.log('✅ PRIORITY: Loaded', geojsonData.features.length, 'boundary features for', state);
+                        console.log('✅ ZOOM FIX: Loaded', geojsonData.features.length, 'boundary features for', state);
                         
                         // Style function for districts
                         function districtStyle(feature) {
@@ -2166,7 +2184,7 @@
                                 opacity = 1.0;
                                 fillOpacity = 0.25;
                                 fillColor = color;
-                                console.log('🔵 PRIORITY: Highlighting selected district:', featureDistrictId);
+                                console.log('🔵 ZOOM FIX: Highlighting selected district:', featureDistrictId);
                             }
                             
                             return {
@@ -2241,7 +2259,7 @@
                             }
                         }).addTo(map);
                         
-                        console.log('✅ PRIORITY: District boundaries added to main map');
+                        console.log('✅ ZOOM FIX: District boundaries added to main map');
                         
                         // Fit bounds to selected district after boundaries load
                         setTimeout(function() {
@@ -2250,12 +2268,12 @@
                         
                     })
                     .catch(function(error) {
-                        console.log('❌ PRIORITY: Error loading district boundaries:', error.message);
-                        console.log('❌ PRIORITY: NO FALLBACK - Must use actual shapefiles only');
+                        console.log('❌ ZOOM FIX: Error loading district boundaries:', error.message);
+                        console.log('❌ ZOOM FIX: NO FALLBACK - Must use actual shapefiles only');
                     });
             } catch (error) {
-                console.log('❌ PRIORITY: Error in loadMainMapDistrictBoundaries:', error);
-                console.log('❌ PRIORITY: NO FALLBACK - Must use actual shapefiles only');
+                console.log('❌ ZOOM FIX: Error in loadMainMapDistrictBoundaries:', error);
+                console.log('❌ ZOOM FIX: NO FALLBACK - Must use actual shapefiles only');
             }
         }
 
@@ -2903,11 +2921,11 @@
         }
 
         function loadNationalSwingDistrictsOnMainMap() {
-            console.log('🌎 PRIORITY: Loading national swing district boundaries...');
+            console.log('🌎 ZOOM FIX: Loading national swing district boundaries...');
             
             // Don't reload if we already have national boundaries
             if (map.nationalDistrictLayer) {
-                console.log('🌎 PRIORITY: National boundaries already loaded');
+                console.log('🌎 ZOOM FIX: National boundaries already loaded');
                 return;
             }
             
@@ -2917,7 +2935,7 @@
                 districtLayer = null;
             }
             
-            // Load boundaries from all swing states
+            // Load boundaries from all swing states INCLUDING Alaska
             var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Nevada'];
             var allBoundariesData = { type: "FeatureCollection", features: [] };
             var loadedStates = 0;
@@ -2937,7 +2955,7 @@
                 var state = statesToLoad[i];
                 var boundaryFile = boundaryFiles[state];
                 if (boundaryFile) {
-                    console.log('📁 PRIORITY: Loading national boundaries for', state);
+                    console.log('📁 ZOOM FIX: Loading national boundaries for', state);
                     (function(currentState) {
                         fetch(boundaryFile)
                             .then(function(response) {
@@ -2950,24 +2968,24 @@
                                 if (geojsonData && geojsonData.features) {
                                     // Add all features from this state to our combined data
                                     allBoundariesData.features = allBoundariesData.features.concat(geojsonData.features);
-                                    console.log('✅ PRIORITY: Added', geojsonData.features.length, 'districts from', currentState);
+                                    console.log('✅ ZOOM FIX: Added', geojsonData.features.length, 'districts from', currentState);
                                 }
                                 
                                 loadedStates++;
                                 
                                 // When all states are loaded, add to map
                                 if (loadedStates === statesToLoad.length) {
-                                    console.log('🌎 PRIORITY: All', allBoundariesData.features.length, 'districts loaded for national view');
+                                    console.log('🌎 ZOOM FIX: All', allBoundariesData.features.length, 'districts loaded for national view');
                                     addNationalSwingDistrictBoundaries(allBoundariesData);
                                 }
                             })
                             .catch(function(error) {
-                                console.log('❌ PRIORITY: Error loading boundaries for', currentState, ':', error.message);
+                                console.log('❌ ZOOM FIX: Error loading boundaries for', currentState, ':', error.message);
                                 loadedStates++;
                                 
                                 // Still proceed when all attempts are done
                                 if (loadedStates === statesToLoad.length && allBoundariesData.features.length > 0) {
-                                    console.log('🌎 PRIORITY: Proceeding with', allBoundariesData.features.length, 'districts loaded');
+                                    console.log('🌎 ZOOM FIX: Proceeding with', allBoundariesData.features.length, 'districts loaded');
                                     addNationalSwingDistrictBoundaries(allBoundariesData);
                                 }
                             });
@@ -2977,7 +2995,7 @@
         }
 
         function addNationalSwingDistrictBoundaries(boundariesData) {
-            console.log('🗺️ PRIORITY: Adding national swing district boundaries to main map');
+            console.log('🗺️ ZOOM FIX: Adding national swing district boundaries to main map');
             
             // Style function for national swing districts
             function nationalSwingDistrictStyle(feature) {
@@ -3013,7 +3031,7 @@
                 };
             }
             
-            // Popup function for national view with EXACT styling from original
+            // ENHANCED: Popup function for national view with "Show campuses" functionality
             function onEachNationalDistrict(feature, layer) {
                 var districtId = getDistrictId(feature);
                 var districtInfo = districtData[districtId];
@@ -3069,7 +3087,7 @@
                 }
             }).addTo(map);
             
-            console.log('✅ PRIORITY: National swing district boundaries added to main map');
+            console.log('✅ ZOOM FIX: National swing district boundaries added to main map');
         }
 
         // RESTORED: showDistrictCampusesFromPopup function
@@ -3166,8 +3184,9 @@
 
         // Initialize the app
         function init() {
-            console.log('🎯 LOCATE FIX: App initialized - location button fixed');
-            console.log('🎯 LOCATE FIX: District mappings loaded:', districtMappings);
+            console.log('🎯 ZOOM FIX: App initialized - enhanced zoom-based district loading');
+            console.log('🎯 ZOOM FIX: District mappings loaded:', districtMappings);
+            console.log('🌎 ZOOM FIX: Zoom <= 6 shows ALL swing districts | Zoom > 6 shows local districts');
             
             // Initialize college data structure
             for (var state in districtMappings) {
@@ -3177,19 +3196,19 @@
                     collegeData[state][districts[i]] = [];
                 }
             }
-            console.log('🎯 LOCATE FIX: Data structure initialized');
+            console.log('🎯 ZOOM FIX: Data structure initialized');
         }
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 LOCATE FIX: DOM loaded, initializing Drive Scout...');
+            console.log('🎯 ZOOM FIX: DOM loaded, initializing Drive Scout...');
             
             setTimeout(function() {
                 init();
             }, 100);
         });
 
-        console.log("🎯 LOCATE FIX: Drive Scout script loaded - location button fixed to not move boundaries");
+        console.log("🎯 ZOOM FIX: Drive Scout script loaded - enhanced with zoom-based national district loading");
     </script>
 </body>
 </html>
