@@ -1331,7 +1331,7 @@
                                 districtInfo.center[0], 
                                 districtInfo.center[1]
                             );
-                            distanceText = Math.round(distance) + ' miles away • ';
+                            distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
                             console.log('📍 FINAL FIX: Adding distance to popup:', Math.round(distance), 'miles for district', districtId);
                         }
                         
@@ -1347,7 +1347,7 @@
                         
                         // District details with distance - same as district card  
                         popupContent += '<div style="color: #666; margin-bottom: 8px;">';
-                        popupContent += '<em>' + distanceText + '</em>Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action;
+                        popupContent += distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action;
                         popupContent += '</div>';
                         
                         // Show campuses button - same as district card
@@ -1582,7 +1582,7 @@
             let distanceText = '';
             if (userLat && userLng && college.lat && college.lng) {
                 const distance = calculateDistance(userLat, userLng, parseFloat(college.lat), parseFloat(college.lng));
-                distanceText = '<div style="color: #666; font-size: 0.9rem; font-style: italic; margin-top: 4px;">' + Math.round(distance) + ' miles away</div>';
+                distanceText = '<div style="color: #666; font-size: 0.9rem; font-style: italic; margin-top: 4px;"><em>' + Math.round(distance) + ' miles away</em></div>';
             }
             
             const district = college.district || 'Unknown';
@@ -1661,7 +1661,7 @@
                         districtInfo.center[0], 
                         districtInfo.center[1]
                     );
-                    distanceText = Math.round(distance) + ' miles away • ';
+                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
                 }
                 
                 resultContainer.innerHTML = 
@@ -1679,16 +1679,62 @@
             // Load and display colleges for this district
             displayColleges(foundState, districtId);
             
-            // FIXED: Center map on the selected district
+            // IMPROVED: Center map on the selected district with proper boundary fitting
             if (map && districtData[districtId]) {
-                const districtCenter = districtData[districtId].center;
-                console.log('🗺️ FINAL FIX: Centering map on district:', districtId, 'at coordinates:', districtCenter);
-                map.setView([districtCenter[0], districtCenter[1]], 10); // Zoom level 10 for district view
+                setTimeout(function() {
+                    centerMapOnDistrict(districtId);
+                }, 500); // Wait for boundaries to load
             }
             
             // Update the map to highlight the selected district
             if (districtBoundaries) {
                 addDistrictBoundariesToMap(districtId);
+            }
+        }
+
+        function centerMapOnDistrict(districtId) {
+            console.log('🗺️ FINAL FIX: Centering map on district:', districtId);
+            
+            if (!map || !districtBoundaries || !districtBoundaries.data) {
+                console.log('❌ FINAL FIX: No map or boundaries available for centering');
+                // Fallback to district center coordinates
+                const districtInfo = districtData[districtId];
+                if (districtInfo && districtInfo.center) {
+                    map.setView([districtInfo.center[0], districtInfo.center[1]], 10);
+                    console.log('📍 FINAL FIX: Used fallback district center coordinates');
+                }
+                return;
+            }
+            
+            // Find the selected district in the boundaries data
+            const selectedFeatures = districtBoundaries.data.features.filter(function(feature) {
+                const featureDistrictId = getDistrictId(feature);
+                return featureDistrictId === districtId;
+            });
+            
+            if (selectedFeatures.length > 0) {
+                console.log('🎯 FINAL FIX: Found', selectedFeatures.length, 'boundary features for district', districtId);
+                
+                // Create a temporary layer to get bounds
+                const tempLayer = L.geoJSON(selectedFeatures);
+                const bounds = tempLayer.getBounds();
+                
+                // Fit the map to the district boundaries with generous padding
+                // This ensures the district boundaries don't touch the map edges
+                map.fitBounds(bounds, { 
+                    padding: [50, 50], // Generous padding so boundaries don't touch edges
+                    maxZoom: 12 // Reasonable max zoom for district viewing
+                });
+                
+                console.log('✅ FINAL FIX: Map fitted to district', districtId, 'with proper padding');
+            } else {
+                console.log('⚠️ FINAL FIX: Could not find boundary features for district', districtId);
+                // Fallback to district center coordinates
+                const districtInfo = districtData[districtId];
+                if (districtInfo && districtInfo.center) {
+                    map.setView([districtInfo.center[0], districtInfo.center[1]], 10);
+                    console.log('📍 FINAL FIX: Used fallback district center coordinates');
+                }
             }
         }
 
