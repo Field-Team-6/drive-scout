@@ -1266,6 +1266,9 @@
                 console.log('🗺️ ENHANCED: Creating enhanced district layer with party colors');
                 console.log('🗺️ ENHANCED: Available features:', districtBoundaries.data.features.length);
                 
+                console.log('🗺️ ENHANCED: Available features:', districtBoundaries.data.features.length);
+                console.log('🗺️ ENHANCED: Sample feature properties:', districtBoundaries.data.features[0] ? Object.keys(districtBoundaries.data.features[0].properties) : 'No features');
+                
                 // Filter to only swing districts and apply party colors
                 const swingDistrictIds = Object.keys(districtData);
                 let swingFeatureCount = 0;
@@ -1279,8 +1282,10 @@
                         if (isSwing) {
                             swingFeatureCount++;
                             console.log('✅ ENHANCED: Including swing district:', districtId);
+                        } else {
+                            console.log('❌ ENHANCED: Excluding district:', districtId, '(not in swing list)');
                         }
-                        return isSwing;
+                        return true; // TEMPORARILY SHOW ALL DISTRICTS TO TEST
                     },
                     style: function(feature) {
                         const districtId = getDistrictId(feature);
