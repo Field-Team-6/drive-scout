@@ -1122,12 +1122,190 @@
                     districtBoundariesVisible = true;
                 }
 
+                // Add zoom event listener to show national boundaries when zoomed out
+                map.on('zoomend', function() {
+                    const currentZoom = map.getZoom();
+                    console.log('🔍 FINAL FIX: Zoom level changed to:', currentZoom);
+                    
+                    // Show national swing districts when zoomed out (zoom level 6 or less)
+                    if (currentZoom <= 6 && districtBoundariesVisible) {
+                        console.log('🗺️ FINAL FIX: Zoom level', currentZoom, '- loading national swing districts');
+                        loadNationalSwingDistricts();
+                    }
+                });
+
                 setTimeout(function() {
                     if (map) {
                         map.invalidateSize();
                     }
                 }, 100);
             }, 50);
+        }
+
+        function loadNationalSwingDistricts() {
+            console.log('🌎 FINAL FIX: Loading national swing district boundaries...');
+            
+            // Don't reload if we already have national boundaries
+            if (map.nationalDistrictLayer) {
+                console.log('🌎 FINAL FIX: National boundaries already loaded');
+                return;
+            }
+            
+            // Load boundaries from all swing states
+            const statesToLoad = ['Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Nevada'];
+            let allBoundariesData = { type: "FeatureCollection", features: [] };
+            let loadedStates = 0;
+            
+            const boundaryFiles = {
+                'Arizona': 'data/boundaries/arizona_districts_119th.json',
+                'California': 'data/boundaries/california_districts_119th.json',
+                'Colorado': 'data/boundaries/colorado_districts_119th.json',
+                'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
+                'Florida': 'data/boundaries/florida_districts_119th.json',
+                'Nevada': 'data/boundaries/nevada_districts_119th.json'
+            };
+            
+            // Load boundaries from each state
+            statesToLoad.forEach(function(state) {
+                const boundaryFile = boundaryFiles[state];
+                if (boundaryFile) {
+                    console.log('📁 FINAL FIX: Loading national boundaries for', state);
+                    fetch(boundaryFile)
+                        .then(function(response) {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error('Failed to load ' + boundaryFile);
+                        })
+                        .then(function(geojsonData) {
+                            if (geojsonData && geojsonData.features) {
+                                // Add all features from this state to our combined data
+                                allBoundariesData.features = allBoundariesData.features.concat(geojsonData.features);
+                                console.log('✅ FINAL FIX: Added', geojsonData.features.length, 'districts from', state);
+                            }
+                            
+                            loadedStates++;
+                            
+                            // When all states are loaded, add to map
+                            if (loadedStates === statesToLoad.length) {
+                                console.log('🌎 FINAL FIX: All', allBoundariesData.features.length, 'districts loaded for national view');
+                                addNationalSwingDistrictBoundaries(allBoundariesData);
+                            }
+                        })
+                        .catch(function(error) {
+                            console.log('❌ FINAL FIX: Error loading boundaries for', state, ':', error.message);
+                            loadedStates++;
+                            
+                            // Still proceed when all attempts are done
+                            if (loadedStates === statesToLoad.length && allBoundariesData.features.length > 0) {
+                                console.log('🌎 FINAL FIX: Proceeding with', allBoundariesData.features.length, 'districts loaded');
+                                addNationalSwingDistrictBoundaries(allBoundariesData);
+                            }
+                        });
+                }
+            });
+        }
+
+        function addNationalSwingDistrictBoundaries(boundariesData) {
+            console.log('🗺️ FINAL FIX: Adding national swing district boundaries to map');
+            
+            // Remove existing district layers first
+            if (districtLayer) {
+                map.removeLayer(districtLayer);
+                districtLayer = null;
+            }
+            
+            // Style function for national swing districts
+            function nationalSwingDistrictStyle(feature) {
+                const districtId = getDistrictId(feature);
+                const districtInfo = districtData[districtId];
+                
+                // Only show swing districts - return null for non-swing districts
+                if (!districtInfo) {
+                    return null;
+                }
+                
+                // Style based on party and action
+                let color = '#666666';
+                let fillColor = 'transparent';
+                let weight = 2;
+                let opacity = 0.7;
+                let fillOpacity = 0.2;
+                
+                if (districtInfo.action === 'FLIP') {
+                    color = '#DC143C'; // Red for flip districts (targeting Republicans)
+                    fillColor = '#DC143C';
+                } else if (districtInfo.action === 'HOLD') {
+                    color = '#4169E1'; // Blue for Democratic holds  
+                    fillColor = '#4169E1';
+                }
+                
+                return {
+                    color: color,
+                    weight: weight,
+                    opacity: opacity,
+                    fillColor: fillColor,
+                    fillOpacity: fillOpacity
+                };
+            }
+            
+            // Popup function for national view
+            function onEachNationalDistrict(feature, layer) {
+                const districtId = getDistrictId(feature);
+                const districtInfo = districtData[districtId];
+                
+                if (districtInfo) {
+                    const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                    const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                    
+                    // Calculate distance if user location available
+                    let distanceText = '';
+                    if (window.lastUserLocation && districtInfo.center) {
+                        const distance = calculateDistance(
+                            window.lastUserLocation.lat, 
+                            window.lastUserLocation.lng, 
+                            districtInfo.center[0], 
+                            districtInfo.center[1]
+                        );
+                        distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
+                    }
+                    
+                    let popupContent = '<div style="min-width: 200px; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
+                    popupContent += '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">Swing district: ' + districtId + '</div>';
+                    popupContent += '<div style="color: #666; margin-bottom: 8px;">' + distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
+                    popupContent += '<div style="text-align: center; margin-top: 8px;">';
+                    popupContent += '<button onclick="showDistrictCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
+                    popupContent += '</div></div>';
+                    
+                    layer.bindPopup(popupContent, { maxWidth: 300 });
+                    
+                    // Add hover effects
+                    layer.on({
+                        mouseover: function(e) {
+                            layer.setStyle({
+                                weight: 3,
+                                opacity: 1.0
+                            });
+                        },
+                        mouseout: function(e) {
+                            layer.setStyle(nationalSwingDistrictStyle(feature));
+                        }
+                    });
+                }
+            }
+            
+            // Create the national district layer
+            map.nationalDistrictLayer = L.geoJSON(boundariesData, {
+                style: nationalSwingDistrictStyle,
+                onEachFeature: onEachNationalDistrict,
+                filter: function(feature) {
+                    // Only show swing districts
+                    const districtId = getDistrictId(feature);
+                    return districtData.hasOwnProperty(districtId);
+                }
+            }).addTo(map);
+            
+            console.log('✅ FINAL FIX: National swing district boundaries added to map');
         }
 
         function addMarkersToMap(colleges) {
@@ -1253,10 +1431,18 @@
                 return;
             }
             
+            // Remove any existing district layers
             if (districtLayer) {
                 console.log('🗺️ FINAL FIX: Removing existing district layer');
                 map.removeLayer(districtLayer);
                 districtLayer = null;
+            }
+            
+            // Remove national district layer when showing specific district
+            if (map.nationalDistrictLayer) {
+                console.log('🗺️ FINAL FIX: Removing national district layer for specific district view');
+                map.removeLayer(map.nationalDistrictLayer);
+                map.nationalDistrictLayer = null;
             }
             
             if (!districtBoundariesVisible) {
@@ -1504,21 +1690,39 @@
             console.log('🗺️ FINAL FIX: Boundaries visible set to:', districtBoundariesVisible);
             
             if (districtBoundariesVisible) {
-                if (districtBoundaries && districtBoundaries.data) {
-                    console.log('🗺️ FINAL FIX: Showing FIXED district boundaries');
-                    addDistrictBoundariesToMap(currentSelectedDistrict);
+                // Show boundaries - check zoom level to decide which type
+                const currentZoom = map.getZoom();
+                
+                if (currentZoom <= 6) {
+                    // Show national boundaries for zoomed out view
+                    console.log('🗺️ FINAL FIX: Showing national boundaries (zoom level', currentZoom, ')');
+                    loadNationalSwingDistricts();
                 } else {
-                    console.log('❌ FINAL FIX: No boundary data to show');
+                    // Show local boundaries for zoomed in view
+                    if (districtBoundaries && districtBoundaries.data) {
+                        console.log('🗺️ FINAL FIX: Showing local FIXED district boundaries');
+                        addDistrictBoundariesToMap(currentSelectedDistrict);
+                    } else {
+                        console.log('❌ FINAL FIX: No local boundary data to show');
+                    }
                 }
                 
                 if (districtToggleBtn) {
                     districtToggleBtn.classList.add('active');
                 }
             } else {
-                console.log('🗺️ FINAL FIX: Hiding district boundaries');
+                console.log('🗺️ FINAL FIX: Hiding all district boundaries');
+                
+                // Remove local district layer
                 if (districtLayer) {
                     map.removeLayer(districtLayer);
                     districtLayer = null;
+                }
+                
+                // Remove national district layer
+                if (map.nationalDistrictLayer) {
+                    map.removeLayer(map.nationalDistrictLayer);
+                    map.nationalDistrictLayer = null;
                 }
                 
                 if (districtToggleBtn) {
