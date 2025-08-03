@@ -1301,6 +1301,7 @@
                         opacity = 1.0; // Full opacity
                         fillOpacity = 0.15; // Light fill to highlight the area
                         fillColor = color; // Fill with the SAME party color as border (not red)
+                        console.log('🔵 FIXED: Selected district', districtId, 'keeping party color:', color);
                     }
                     
                     return {
@@ -1318,10 +1319,14 @@
                     const districtInfo = districtData[districtId];
                     const isSelected = selectedDistrict && districtId === selectedDistrict;
                     
+                    console.log('🎨 POPUP: Creating popup for district:', districtId, 'isSelected:', isSelected, 'districtInfo:', districtInfo);
+                    
                     if (districtInfo) {
                         // Use EXACT same format as district cards
                         const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                         const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                        
+                        console.log('🎨 POPUP: Using party colors - bg:', partyBackgroundColor, 'border:', partyBorderColor);
                         
                         let popupContent = '<div style="min-width: 200px; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
                         
@@ -1344,6 +1349,8 @@
                         popupContent += '</div>';
                         
                         popupContent += '</div>';
+                        
+                        console.log('🎨 POPUP: Final popup content:', popupContent.substring(0, 100) + '...');
                         
                         layer.bindPopup(popupContent, { maxWidth: 300 });
                     } else {
