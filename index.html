@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- CACHE BUSTER: 2025-01-03-v2.1 - Fixed district colors, popup styling, PVI removal -->
     <title>Drive Scout</title>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -539,8 +540,8 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // 🎯 ENHANCED VERSION: Enhanced district boundaries with party colors and CSV lat/lng coordinates
-        console.log("🎯 ENHANCED: Starting Drive Scout with enhanced features and CSV coordinates");
+        // FORCE UPDATE: 2025-01-03-v2.1 - Fixed district selection colors and popup formatting
+        console.log("🎯 FIXED VERSION: District colors stay party-based when selected, popups match cards, PVI removed");
         
         const districtData = {
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782], cities: ['Anchorage', 'Fairbanks', 'Juneau', 'Wasilla', 'Sitka'] },
@@ -1343,15 +1344,17 @@
                         popupContent += '</div>';
                         
                         popupContent += '</div>';
+                        
+                        layer.bindPopup(popupContent, { maxWidth: 300 });
                     } else {
                         // Non-swing district
                         let popupContent = '<div style="text-align: center; padding: 8px;">';
                         popupContent += '<div style="font-weight: bold; color: #333;">' + districtId + '</div>';
                         popupContent += '<div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Not a swing district</div>';
                         popupContent += '</div>';
+                        
+                        layer.bindPopup(popupContent, { maxWidth: 200 });
                     }
-                    
-                    layer.bindPopup(popupContent, { maxWidth: 300 });
                     
                     // Add hover effects for swing districts
                     if (districtInfo) {
