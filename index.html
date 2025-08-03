@@ -1138,6 +1138,554 @@
             }
         }
 
+        // Core college display functionality
+        function displayColleges(state, district) {
+            console.log('🔄 WORKING: displayColleges called for:', state, district);
+            
+            try {
+                var collegeItems = document.getElementById('collegeItems');
+                var collegeList = document.getElementById('collegeList');
+                
+                if (!collegeItems || !collegeList) {
+                    console.log('❌ College display elements not found');
+                    return;
+                }
+                
+                // Show loading state
+                showLoadingState(collegeItems, district);
+                collegeList.style.display = 'block';
+
+                // Try to load district data
+                loadDistrictDataWithTimeout(district).then(function() {
+                    var collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
+                    
+                    console.log('📊 College data for district:', district, collegeDataForDistrict);
+                    
+                    var allColleges = [];
+                    var withinColleges = [];
+                    var nearColleges = [];
+
+                    if (Array.isArray(collegeDataForDistrict)) {
+                        allColleges = collegeDataForDistrict;
+                        withinColleges = collegeDataForDistrict;
+                    } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
+                        withinColleges = collegeDataForDistrict.within || [];
+                        nearColleges = collegeDataForDistrict.near || [];
+                        allColleges = withinColleges.concat(nearColleges);
+                    }
+                    
+                    // Filter valid colleges
+                    allColleges = allColleges.filter(function(college) {
+                        return college && college.name && 
+                               college.lat !== null && college.lng !== null && 
+                               !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
+                    });
+                    
+                    console.log('📍 Filtered colleges with valid coordinates:', allColleges.length);
+                    
+                    if (allColleges.length === 0) {
+                        showNoData(state, district);
+                    } else {
+                        // Show map container
+                        var mapContainer = document.getElementById('mapContainer');
+                        if (mapContainer) mapContainer.style.display = 'block';
+                        collegeList.style.display = 'block';
+                        
+                        // Initialize basic map
+                        initializeMap();
+                        
+                        // Display college list
+                        displayCollegeListWithSections(district, withinColleges, nearColleges);
+                        
+                        // Add markers (simplified)
+                        setTimeout(function() {
+                            addMarkersToMap(allColleges);
+                        }, 200);
+                    }
+                }).catch(function(error) {
+                    console.log('❌ Error loading district data:', error);
+                    showNoData(state, district);
+                });
+            } catch (error) {
+                console.log('❌ Error in displayColleges:', error);
+            }
+        }
+
+        function showLoadingState(container, district) {
+            container.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading ' + district + ' college data...</h3><p>Using CSV latitude/longitude coordinates for accuracy.</p></div>';
+        }
+
+        function showNoData(state, district) {
+            var collegeItems = document.getElementById('collegeItems');
+            var collegeList = document.getElementById('collegeList');
+            
+            if (!collegeItems || !collegeList) return;
+            
+            collegeItems.innerHTML = 
+                '<div class="no-data">' +
+                    '<h3>Ready for ' + district + ' data</h3>' +
+                    '<p><strong>To add your data:</strong></p>' +
+                    '<ol style="text-align: left; max-width: 500px; margin: 20px auto;">' +
+                        '<li>Export the <strong>' + district + '</strong> tab from your Google Sheet as CSV</li>' +
+                        '<li>Name the file <strong>' + district + '.csv</strong></li>' +
+                        '<li>Upload it to a <strong>data/</strong> folder on your website</li>' +
+                        '<li>Include Latitude and Longitude columns with precise coordinates</li>' +
+                        '<li>The app will automatically use CSV coordinates (no geocoding needed)</li>' +
+                    '</ol>' +
+                    '<p style="margin-top: 20px;"><em>This district is mapped but waiting for CSV data with lat/lng coordinates.</em></p>' +
+                '</div>';
+            collegeList.style.display = 'block';
+        }
+
+        function loadDistrictDataWithTimeout(district) {
+            return new Promise(function(resolve, reject) {
+                // Find state for this district
+                var state = null;
+                for (var stateName in districtMappings) {
+                    var districts = districtMappings[stateName];
+                    for (var i = 0; i < districts.length; i++) {
+                        if (districts[i] === district) {
+                            state = stateName;
+                            break;
+                        }
+                    }
+                    if (state) break;
+                }
+                
+                if (!state) {
+                    console.log('❌ Could not find state for district:', district);
+                    resolve();
+                    return;
+                }
+                
+                // Check if already loaded
+                if (collegeData[state] && collegeData[state][district] && 
+                    collegeData[state][district].length > 0) {
+                    console.log('📊 District data already loaded for', district);
+                    resolve();
+                    return;
+                }
+
+                // Try to load CSV file
+                var possibleFilenames = [
+                    'data/' + district + '.csv',
+                    'data/' + district.replace('-', '') + '.csv',
+                    district + '.csv',
+                    district.replace('-', '') + '.csv'
+                ];
+
+                var loadPromise = Promise.resolve();
+                var csvText = null;
+                var successfulUrl = null;
+
+                for (var i = 0; i < possibleFilenames.length; i++) {
+                    var filename = possibleFilenames[i];
+                    loadPromise = loadPromise.then(function(currentFilename) {
+                        return function() {
+                            if (csvText) return;
+                            
+                            console.log('📁 Trying to load CSV:', currentFilename);
+                            
+                            var timeoutPromise = new Promise(function(_, reject) {
+                                setTimeout(function() {
+                                    reject(new Error('Timeout after 3 seconds'));
+                                }, 3000);
+                            });
+                            
+                            return Promise.race([fetch(currentFilename), timeoutPromise])
+                                .then(function(response) {
+                                    if (response.ok) {
+                                        return response.text().then(function(text) {
+                                            csvText = text;
+                                            successfulUrl = currentFilename;
+                                            console.log('✅ Successfully loaded CSV:', currentFilename);
+                                        });
+                                    }
+                                })
+                                .catch(function(error) {
+                                    console.log('❌ Failed to load ' + currentFilename + ':', error.message);
+                                });
+                        };
+                    }(filename));
+                }
+
+                loadPromise.then(function() {
+                    if (!csvText) {
+                        console.log('❌ No CSV file found for ' + district);
+                        resolve();
+                        return;
+                    }
+
+                    parseCSV(csvText, district).then(function(colleges) {
+                        if (state && colleges) {
+                            if (!collegeData[state]) collegeData[state] = {};
+                            collegeData[state][district] = colleges;
+                            console.log('✅ Loaded CSV data for ' + district + ' from ' + successfulUrl);
+                        }
+                        resolve();
+                    }).catch(function(error) {
+                        console.log('❌ Error parsing CSV:', error);
+                        resolve();
+                    });
+                }).catch(function(error) {
+                    console.log('❌ Error in loadPromise:', error);
+                    resolve();
+                });
+            });
+        }
+
+        function parseCSV(csvText, district) {
+            return new Promise(function(resolve) {
+                console.log('📄 Parsing CSV for district:', district);
+                
+                var lines = csvText.split('\n').filter(function(line) {
+                    return line.trim();
+                });
+                
+                if (lines.length < 2) {
+                    resolve({ within: [], near: [] });
+                    return;
+                }
+
+                var colleges = { within: [], near: [] };
+                var headers = [];
+                var headerRowFound = false;
+
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i].trim().replace(/\r$/, '');
+                    var values = parseCSVLine(line);
+                    
+                    if (values.length === 0 || values.every(function(v) { return !v || v.trim() === ''; })) {
+                        continue;
+                    }
+
+                    if (!headerRowFound) {
+                        headers = values.map(function(h) { return h ? h.trim() : ''; });
+                        console.log('📋 CSV headers found:', headers);
+                        headerRowFound = true;
+                        continue;
+                    }
+
+                    var college = parseCollegeData(values, headers, district);
+                    
+                    if (college && college.name && 
+                        college.lat !== null && college.lng !== null &&
+                        !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng))) {
+                        
+                        // Calculate rating if needed
+                        if (!college.suitability || college.suitability === '') {
+                            college.suitability = calculateDriveRating(college);
+                        }
+                        
+                        if (college.suitability !== 'EXCLUDE') {
+                            var targetSection = college.section === 'near' ? 'near' : 'within';
+                            colleges[targetSection].push(college);
+                            console.log('✅ Added college:', college.name, 'rating:', college.suitability);
+                        }
+                    }
+                }
+
+                console.log('📊 Parsed', colleges.within.length, 'colleges within', district, 'and', colleges.near.length, 'colleges near', district);
+                resolve(colleges);
+            });
+        }
+
+        function parseCSVLine(line) {
+            var result = [];
+            var current = '';
+            var inQuotes = false;
+            var i = 0;
+
+            while (i < line.length) {
+                var char = line[i];
+                
+                if (char === '"') {
+                    if (inQuotes && line[i + 1] === '"') {
+                        current += '"';
+                        i += 2;
+                        continue;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+                i++;
+            }
+            
+            result.push(current.trim());
+            return result.map(function(item) {
+                return item.replace(/^"|"$/g, '');
+            });
+        }
+
+        function parseCollegeData(values, headers, district) {
+            var college = {
+                name: '',
+                district: district,
+                section: 'within',
+                enrollment: '2000',
+                campusSize: null,
+                suitability: '',
+                type: 'College',
+                lat: null,
+                lng: null,
+                notes: '',
+                address: ''
+            };
+
+            for (var j = 0; j < headers.length; j++) {
+                var header = headers[j] ? headers[j].trim() : '';
+                var value = values[j] ? values[j].trim() : '';
+                
+                if (!header) continue;
+
+                var headerLower = header.toLowerCase();
+                
+                if (headerLower === 'section') {
+                    college.section = value.toLowerCase().includes('near') ? 'near' : 'within';
+                } else if (headerLower === 'institution') {
+                    college.name = value;
+                } else if (headerLower === 'type') {
+                    college.type = value;
+                } else if (headerLower === 'address') {
+                    college.address = value;
+                } else if (headerLower === 'latitude') {
+                    var latValue = parseFloat(value);
+                    if (!isNaN(latValue) && latValue >= -90 && latValue <= 90) {
+                        college.lat = latValue;
+                    }
+                } else if (headerLower === 'longitude') {
+                    var lngValue = parseFloat(value);
+                    if (!isNaN(lngValue) && lngValue >= -180 && lngValue <= 180) {
+                        college.lng = lngValue;
+                    }
+                } else if (headerLower === 'enrollment') {
+                    college.enrollment = value;
+                } else if (headerLower === 'campus size') {
+                    var campusSizeValue = parseFloat(value);
+                    if (!isNaN(campusSizeValue)) {
+                        college.campusSize = campusSizeValue;
+                    }
+                } else if (headerLower === 'suitability') {
+                    if (value && value.trim() !== '') {
+                        college.suitability = value.trim();
+                    }
+                } else if (headerLower === 'notes') {
+                    college.notes = value;
+                }
+            }
+
+            return college;
+        }
+
+        function calculateDriveRating(college) {
+            // Simple rating calculation
+            var score = 0;
+            var type = (college.type || '').toLowerCase();
+            var notes = (college.notes || '').toLowerCase();
+            
+            // Check exclusions
+            if (type.includes('online') || type.includes('virtual') || 
+                notes.includes('online') || notes.includes('virtual')) {
+                return 'EXCLUDE';
+            }
+            
+            if (type.includes('building-only') || notes.includes('building-only')) {
+                return 'EXCLUDE';
+            }
+            
+            // Basic scoring
+            var enrollmentStr = String(college.enrollment || '0');
+            var enrollment = parseInt(enrollmentStr.replace(/,/g, '')) || 0;
+            
+            if (enrollment >= 5000) score += 40;
+            else if (enrollment >= 2000) score += 25;
+            else if (enrollment >= 1000) score += 15;
+            
+            if (type.includes('community')) score += 30;
+            else if (type.includes('public')) score += 20;
+            else if (type.includes('university')) score += 15;
+            
+            var campusSize = parseFloat(college.campusSize) || 0;
+            if (campusSize >= 50) score += 20;
+            else if (campusSize >= 25) score += 15;
+            else if (campusSize >= 10) score += 10;
+            
+            if (score >= 60) return 'High';
+            else if (score >= 30) return 'Medium';
+            else return 'Low';
+        }
+
+        function displayCollegeListWithSections(district, withinColleges, nearColleges) {
+            var container = document.getElementById('collegeItems');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            if (withinColleges.length > 0) {
+                var withinSection = document.createElement('div');
+                withinSection.innerHTML = '<h2 style="margin-bottom: 20px; color: white; border-bottom: 2px solid #667eea; padding-bottom: 10px;">COLLEGES IN ' + district + '</h2>';
+                container.appendChild(withinSection);
+
+                for (var i = 0; i < withinColleges.length; i++) {
+                    var collegeElement = createCollegeElement(withinColleges[i]);
+                    container.appendChild(collegeElement);
+                }
+            }
+
+            if (nearColleges.length > 0) {
+                var nearSection = document.createElement('div');
+                nearSection.innerHTML = '<h2 style="margin: 40px 0 20px 0; color: white; border-bottom: 2px solid #764ba2; padding-bottom: 10px;">COLLEGES NEAR ' + district + '</h2>';
+                container.appendChild(nearSection);
+
+                for (var i = 0; i < nearColleges.length; i++) {
+                    var collegeElement = createCollegeElement(nearColleges[i]);
+                    container.appendChild(collegeElement);
+                }
+            }
+        }
+
+        function createCollegeElement(college) {
+            var div = document.createElement('div');
+            div.className = 'college-item';
+            
+            var addressDisplay = college.address || 'Address not available';
+            var district = college.district || 'Unknown';
+            var collegeName = college.name || 'College';
+            var state = district.split('-')[0] || 'XX';
+            var districtCode = district.replace('-', '');
+            
+            div.innerHTML = '<div class="college-name">' + college.name + '</div>' +
+                '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">' +
+                    '<div style="flex: 1; text-align: left;">' +
+                        '<div style="color: #666; font-size: 0.9rem; line-height: 1.3;">' + addressDisplay + '</div>' +
+                    '</div>' +
+                    '<div style="margin-left: 20px; flex-shrink: 0; text-align: right;">' +
+                        '<div style="font-size: 0.8rem; color: #666; font-weight: 600; margin-bottom: 2px;">DRIVE RATING:</div>' +
+                        '<span class="suitability-badge suitability-' + college.suitability.toLowerCase() + '">' + college.suitability + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="college-actions">' +
+                    '<a href="https://www.google.com/maps/search/' + encodeURIComponent(addressDisplay) + '" target="_blank" class="btn btn-primary">🗺️ Directions</a>' +
+                    '<button class="btn btn-tertiary" onclick="openMobilizeWithAutoFill(\'' + district + '\', \'' + collegeName.replace(/'/g, "\\'") + '\', \'' + state + '\', \'' + districtCode + '\')">🗳️ Set Up Voter Drive</button>' +
+                '</div>';
+
+            return div;
+        }
+
+        function openMobilizeWithAutoFill(district, collegeName, state, districtCode) {
+            var title = district + ' - ' + collegeName + ' - Register Democrats to save the world!';
+            
+            window.open('https://www.mobilize.us/dashboard/ft6/event-campaign/699/', '_blank');
+            
+            setTimeout(function() {
+                alert('Drive Scout Tip: After the Mobilize form loads, look for:\n\n' +
+                      '📝 Default title: Paste this text:\n"' + title + '"\n\n' +
+                      '🏷️ Tag options: Add these tags:\n"Drive", "' + state + '", "' + districtCode + '"');
+            }, 1000);
+        }
+
+        function initializeMap() {
+            console.log('🗺️ Basic map initialization');
+            
+            try {
+                if (map) {
+                    map.remove();
+                }
+
+                setTimeout(function() {
+                    if (typeof L !== 'undefined') {
+                        map = L.map('map', {
+                            attributionControl: false,
+                            minZoom: 1,
+                            maxZoom: 15
+                        }).setView([39.8283, -98.5795], 8);
+                        
+                        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                            attribution: '© OpenStreetMap contributors © CARTO',
+                            maxZoom: 15,
+                            minZoom: 1
+                        }).addTo(map);
+
+                        setTimeout(function() {
+                            if (map) {
+                                map.invalidateSize();
+                            }
+                        }, 100);
+                    } else {
+                        console.log('❌ Leaflet not loaded');
+                    }
+                }, 50);
+            } catch (error) {
+                console.log('❌ Error initializing map:', error);
+            }
+        }
+
+        function addMarkersToMap(colleges) {
+            if (!map || !colleges || colleges.length === 0) {
+                console.log('❌ Cannot add markers - missing map or colleges');
+                return;
+            }
+
+            try {
+                clearMarkers();
+                
+                console.log('📍 Adding', colleges.length, 'markers...');
+                var group = L.featureGroup();
+
+                for (var i = 0; i < colleges.length; i++) {
+                    var college = colleges[i];
+                    if (!college.lat || !college.lng) continue;
+
+                    var lat = parseFloat(college.lat);
+                    var lng = parseFloat(college.lng);
+                    
+                    if (isNaN(lat) || isNaN(lng)) continue;
+
+                    var iconColor = getSuitabilityColor(college.suitability);
+                    
+                    var marker = L.marker([lat, lng], {
+                        icon: L.divIcon({
+                            className: 'custom-marker',
+                            html: '<div style="background-color: ' + iconColor + '; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+                            iconSize: [20, 20],
+                            iconAnchor: [10, 10]
+                        })
+                    });
+
+                    var popupContent = '<div style="text-align: center; padding: 4px;">' +
+                        '<div style="font-weight: bold; margin-bottom: 2px; color: #333; font-size: 0.9rem;">' + college.name + '</div>' +
+                        '<div style="font-size: 0.8rem; color: #666;">Rating: <strong>' + college.suitability + '</strong></div>' +
+                        '</div>';
+                    marker.bindPopup(popupContent);
+                    
+                    marker.addTo(map);
+                    group.addLayer(marker);
+                    markers.push(marker);
+                }
+
+                if (group.getLayers().length > 0) {
+                    map.fitBounds(group.getBounds(), { padding: [20, 20] });
+                    console.log('✅ Added', group.getLayers().length, 'markers');
+                }
+            } catch (error) {
+                console.log('❌ Error adding markers:', error);
+            }
+        }
+
+        function getSuitabilityColor(suitability) {
+            switch (suitability) {
+                case 'High': return '#28a745';
+                case 'Medium': return '#ffc107';
+                case 'Low': return '#dc3545';
+                default: return '#6c757d';
+            }
+        }
+
         // Placeholder stubs for functions not yet implemented
         function getUserLocation() {
             console.log('🔄 getUserLocation - placeholder');
@@ -1147,15 +1695,6 @@
         function toggleDistrictBoundaries() {
             console.log('🔄 toggleDistrictBoundaries - placeholder');
             alert('This feature will be restored in the next update!');
-        }
-
-        function displayColleges() {
-            console.log('🔄 displayColleges - placeholder');
-            alert('This feature will be restored in the next update!');
-        }
-
-        function initializeMap() {
-            console.log('🔄 initializeMap - placeholder');
         }
 
         function loadNationalSwingDistricts() {
