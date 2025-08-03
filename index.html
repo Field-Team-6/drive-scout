@@ -1152,11 +1152,12 @@
             }
             
             // Load boundaries from all swing states
-            const statesToLoad = ['Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Nevada'];
+            const statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Nevada'];
             let allBoundariesData = { type: "FeatureCollection", features: [] };
             let loadedStates = 0;
             
             const boundaryFiles = {
+                'Alaska': 'data/boundaries/alaska_districts_119th.json',
                 'Arizona': 'data/boundaries/arizona_districts_119th.json',
                 'California': 'data/boundaries/california_districts_119th.json',
                 'Colorado': 'data/boundaries/colorado_districts_119th.json',
@@ -1372,6 +1373,7 @@
 
         function loadDistrictBoundaries(state) {
             const boundaryFiles = {
+                'Alaska': 'data/boundaries/alaska_districts_119th.json',
                 'Arizona': 'data/boundaries/arizona_districts_119th.json',
                 'California': 'data/boundaries/california_districts_119th.json',
                 'Colorado': 'data/boundaries/colorado_districts_119th.json',
