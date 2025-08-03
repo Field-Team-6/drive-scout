@@ -790,6 +790,10 @@
                             console.log('🗺️ FINAL FIX: Adding FIXED district boundaries for:', district);
                             if (districtBoundaries) {
                                 addDistrictBoundariesToMap(district);
+                                // Force centering after boundaries are added
+                                setTimeout(function() {
+                                    centerMapOnDistrict(district);
+                                }, 300);
                             } else {
                                 console.log('❌ FINAL FIX: No district boundaries available after loading');
                             }
@@ -1845,7 +1849,7 @@
             }, 100);
         });
 
-        console.log("🎯 FINAL FIX: FIXED Drive Scout script completed - blue districts stay blue, no PVI, popups match cards, distance added to popups");
+        console.log("🎯 FINAL FIX: FIXED Drive Scout script completed - blue districts stay blue, no PVI, popups match cards, distance added to popups, CA-13 zoom fixed");
     </script>
 </body>
 </html>
