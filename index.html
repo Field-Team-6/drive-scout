@@ -1294,12 +1294,12 @@
                         opacity = 0.6; // Higher opacity for swing districts
                     }
                     
-                    // HIGHLIGHT SELECTED DISTRICT
+                    // HIGHLIGHT SELECTED DISTRICT - keep party colors
                     if (isSelected) {
                         weight = 5; // Thicker border
                         opacity = 1.0; // Full opacity
                         fillOpacity = 0.15; // Light fill to highlight the area
-                        fillColor = color; // Fill with the same color as border
+                        fillColor = color; // Fill with the SAME party color as border (not red)
                     }
                     
                     return {
@@ -1311,36 +1311,47 @@
                     };
                 }
                 
-                // Create popup content for districts
+                // Create popup content for districts - MATCH DISTRICT CARD FORMAT
                 function onEachDistrict(feature, layer) {
                     const districtId = getDistrictId(feature);
                     const districtInfo = districtData[districtId];
                     const isSelected = selectedDistrict && districtId === selectedDistrict;
                     
-                    let popupContent = '<div style="max-width: 240px; text-align: center; padding: 8px; margin: 0;">';
-                    popupContent += '<div style="font-weight: bold; margin-bottom: 8px; color: #333; font-size: 1rem; line-height: 1.2;">';
-                    popupContent += districtId;
-                    if (isSelected) {
-                        popupContent += '<br><span style="background: #4CAF50; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; margin-top: 4px; display: inline-block;">CURRENT</span>';
-                    }
-                    popupContent += '</div>';
-                    
                     if (districtInfo) {
-                        popupContent += '<div style="font-size: 0.9rem; color: #666; margin-bottom: 12px; line-height: 1.3;">';
-                        popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ')<br>' + districtInfo.action;
+                        // Use EXACT same format as district cards
+                        const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                        const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                        
+                        let popupContent = '<div style="min-width: 200px; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
+                        
+                        // District title - same as district card
+                        popupContent += '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">';
+                        popupContent += 'Swing district: ' + districtId;
+                        if (isSelected) {
+                            popupContent += '<br><span style="background: #4CAF50; color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.8rem; margin-top: 4px; display: inline-block;">CURRENT</span>';
+                        }
                         popupContent += '</div>';
                         
-                        // Add "Show campuses" button for all swing districts
-                        popupContent += '<div style="margin-top: 10px;">';
+                        // District details - same as district card  
+                        popupContent += '<div style="color: #666; margin-bottom: 8px;">';
+                        popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action;
+                        popupContent += '</div>';
+                        
+                        // Show campuses button - same as district card
+                        popupContent += '<div style="text-align: center; margin-top: 8px;">';
                         popupContent += '<button onclick="showDistrictCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
                         popupContent += '</div>';
+                        
+                        popupContent += '</div>';
                     } else {
-                        popupContent += '<div style="font-size: 0.85rem; color: #666;">Not a swing district</div>';
+                        // Non-swing district
+                        let popupContent = '<div style="text-align: center; padding: 8px;">';
+                        popupContent += '<div style="font-weight: bold; color: #333;">' + districtId + '</div>';
+                        popupContent += '<div style="font-size: 0.85rem; color: #666; margin-top: 4px;">Not a swing district</div>';
+                        popupContent += '</div>';
                     }
                     
-                    popupContent += '</div>';
-                    
-                    layer.bindPopup(popupContent, { maxWidth: 260 });
+                    layer.bindPopup(popupContent, { maxWidth: 300 });
                     
                     // Add hover effects for swing districts
                     if (districtInfo) {
@@ -1698,6 +1709,13 @@
             
             // Load and display colleges for this district
             displayColleges(foundState, districtId);
+            
+            // 🎯 NEW: Center map on the selected district
+            if (map && districtData[districtId]) {
+                const districtCenter = districtData[districtId].center;
+                console.log('🗺️ ENHANCED: Centering map on district:', districtId, 'at coordinates:', districtCenter);
+                map.setView([districtCenter[0], districtCenter[1]], 10); // Zoom level 10 for district view
+            }
             
             // Update the map to highlight the selected district
             if (districtBoundaries) {
