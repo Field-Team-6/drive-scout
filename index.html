@@ -2156,16 +2156,23 @@
         function calculateDriveRating(college) {
             console.log('🎯 RATING: Calculating rating for:', college.name);
             
-            // FIXED: Only use manual rating if it's explicitly High or Low (not Medium/empty)
-            if (college.suitability && 
-                college.suitability.trim() !== '' && 
-                college.suitability.trim() !== 'Medium') {
-                console.log('✅ RATING: Using manual CSV rating:', college.suitability, 'for', college.name);
-                return college.suitability;
+            // REAL FIX: Handle null, undefined, empty string, and "Medium" as triggers for calculation
+            const suitabilityValue = college.suitability;
+            const shouldCalculate = (
+                suitabilityValue === null || 
+                suitabilityValue === undefined || 
+                suitabilityValue === '' ||
+                (typeof suitabilityValue === 'string' && suitabilityValue.trim() === '') ||
+                (typeof suitabilityValue === 'string' && suitabilityValue.trim() === 'Medium')
+            );
+            
+            if (!shouldCalculate) {
+                console.log('✅ RATING: Using manual CSV rating:', suitabilityValue, 'for', college.name);
+                return suitabilityValue;
             }
             
-            // If suitability is empty, null, undefined, or "Medium", calculate automatically
-            console.log('🔄 RATING: Calculating automatically for', college.name, '(CSV suitability was:', college.suitability, ')');
+            // Calculate automatically for null/empty/"Medium" values
+            console.log('🔄 RATING: Calculating automatically for', college.name, '(CSV suitability was:', suitabilityValue, ')');
             
             let score = 0;
             let factors = [];
