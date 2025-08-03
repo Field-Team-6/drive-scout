@@ -1444,13 +1444,67 @@
             }, 1000);
         }
 
-        function clearMarkers() {
-            for (let i = 0; i < markers.length; i++) {
-                if (map) {
-                    map.removeLayer(markers[i]);
+        function showDistrictCampusesFromPopup(districtId) {
+            console.log('🔄 showDistrictCampusesFromPopup called for:', districtId);
+            
+            // Close any open popups
+            map.closePopup();
+            
+            // Set this as the current selected district
+            currentSelectedDistrict = districtId;
+            
+            // Find the state for this district
+            const stateKeys = Object.keys(districtMappings);
+            let foundState = null;
+            for (let i = 0; i < stateKeys.length; i++) {
+                if (districtMappings[stateKeys[i]].includes(districtId)) {
+                    foundState = stateKeys[i];
+                    break;
                 }
             }
-            markers = [];
+            
+            if (!foundState) {
+                console.log('❌ Could not find state for district:', districtId);
+                return;
+            }
+            
+            // Update the district card display
+            const resultContainer = document.getElementById('closestCampusesResult');
+            if (resultContainer) {
+                const districtInfo = districtData[districtId];
+                const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                let distanceText = '';
+                if (window.lastUserLocation) {
+                    const distance = calculateDistance(
+                        window.lastUserLocation.lat, 
+                        window.lastUserLocation.lng, 
+                        districtInfo.center[0], 
+                        districtInfo.center[1]
+                    );
+                    distanceText = Math.round(distance) + ' miles away • ';
+                }
+                
+                resultContainer.innerHTML = 
+                    '<div style="background: ' + partyBackgroundColor + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; margin: 6px 0 0 0 !important;">' +
+                        '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">' +
+                            'Swing district: ' + districtId +
+                        '</div>' +
+                        '<div style="color: #666; margin-bottom: 0;">' +
+                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                        '</div>' +
+                    '</div>';
+                resultContainer.style.display = 'block';
+            }
+            
+            // Load and display colleges for this district
+            displayColleges(foundState, districtId);
+            
+            // Update the map to highlight the selected district
+            if (districtBoundaries) {
+                addDistrictBoundariesToMap(districtId);
+            }
         }
 
         function clearAllResults() {
