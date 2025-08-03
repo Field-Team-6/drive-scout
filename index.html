@@ -2195,6 +2195,8 @@
             // Factor 1: Enrollment (40% weight, max 40 points)
             const enrollmentStr = String(college.enrollment || '0'); // Convert to string first
             const enrollment = parseInt(enrollmentStr.replace(/,/g, '')) || 0; // Then remove commas
+            console.log('📊 ENROLLMENT DEBUG for', college.name + ':', 'Raw:', college.enrollment, 'String:', enrollmentStr, 'Parsed:', enrollment);
+            
             let enrollmentScore = 0;
             if (enrollment >= 10000) {
                 enrollmentScore = 40;
@@ -2216,6 +2218,7 @@
                 factors.push("Minimal enrollment (<500)");
             }
             score += enrollmentScore;
+            console.log('📊 ENROLLMENT SCORE for', college.name + ':', enrollmentScore, 'points');
             
             // Factor 2: Campus Size (15% weight, max 15 points)
             const campusSize = parseFloat(college.campusSize) || 0;
