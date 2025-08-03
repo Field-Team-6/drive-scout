@@ -1072,10 +1072,10 @@
                         var html = '';
                         
                         // Add map container with FULL district boundary functionality and proper spacing
-                        html += '<div class="map-container" style="margin: 25px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">';
+                        html += '<div class="map-container" style="margin: 35px 0 25px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">';
                         html += '<div id="' + mapId + '" style="height: 250px; width: 100%; background: #f8f9fa; position: relative;">';
                         html += '<button class="district-toggle-button" onclick="toggleDistrictBoundariesForMap(\'' + mapId + '\', \'' + districtId + '\')" title="Toggle district boundaries" style="position: absolute; bottom: 10px; right: 60px; z-index: 1000; background: #667eea; color: white; border: 2px solid #667eea; border-radius: 6px; padding: 8px 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">Districts</button>';
-                        html += '<button class="location-button" onclick="getUserLocationForMap(\'' + mapId + '\')" title="Find my location" style="position: absolute; bottom: 10px; right: 10px; z-index: 1000; background: white; border: 2px solid #333; border-radius: 6px; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;">📍</button>';
+                        html += '<button class="location-button" onclick="getUserLocationForMap(\'' + mapId + '\')" title="Find my location" style="position: absolute; bottom: 10px; right: 10px; z-index: 1000; background: white; border: 2px solid #333; border-radius: 6px; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><img src="images/icons8-my-location-50.png" style="width: 20px; height: 20px;" alt="Find location"></button>';
                         html += '</div>';
                         html += '</div>';
                         
@@ -1083,14 +1083,14 @@
                         html += '<div style="margin-top: 15px;">';
                         
                         if (withinColleges.length > 0) {
-                            html += '<h3 style="color: #333; margin-bottom: 15px; font-size: 1.1rem;">Colleges in ' + districtId + ' (' + withinColleges.length + ')</h3>';
+                            html += '<h3 style="color: #333; margin-bottom: 15px; font-size: 1.1rem;">Colleges in ' + districtId + '</h3>';
                             for (var i = 0; i < withinColleges.length; i++) {
                                 html += createCollegeCardHTML(withinColleges[i]);
                             }
                         }
                         
                         if (nearColleges.length > 0) {
-                            html += '<h3 style="color: #333; margin: 20px 0 15px 0; font-size: 1.1rem;">Colleges near ' + districtId + ' (' + nearColleges.length + ')</h3>';
+                            html += '<h3 style="color: #333; margin: 20px 0 15px 0; font-size: 1.1rem;">Colleges near ' + districtId + '</h3>';
                             for (var i = 0; i < nearColleges.length; i++) {
                                 html += createCollegeCardHTML(nearColleges[i]);
                             }
@@ -1190,7 +1190,11 @@
                     }
 
                     if (group.getLayers().length > 0) {
-                        districtMap.fitBounds(group.getBounds(), { padding: [15, 15] });
+                        // ZOOM FIX: Start more zoomed out with extra padding so district lines don't touch edges
+                        districtMap.fitBounds(group.getBounds(), { 
+                            padding: [25, 25],
+                            maxZoom: 11  // Reduced from 15 to start more zoomed out
+                        });
                     }
                 }
                 
