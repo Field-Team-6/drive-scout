@@ -1719,14 +1719,24 @@
                 const tempLayer = L.geoJSON(selectedFeatures);
                 const bounds = tempLayer.getBounds();
                 
+                // Special handling for CA-13 which needs to zoom out more
+                let maxZoom = 12; // Default max zoom
+                let padding = [50, 50]; // Default padding
+                
+                if (districtId === 'CA-13') {
+                    maxZoom = 11; // Zoom out one more level for CA-13
+                    padding = [60, 60]; // Extra padding for CA-13
+                    console.log('🎯 FINAL FIX: Using special zoom settings for CA-13');
+                }
+                
                 // Fit the map to the district boundaries with generous padding
                 // This ensures the district boundaries don't touch the map edges
                 map.fitBounds(bounds, { 
-                    padding: [50, 50], // Generous padding so boundaries don't touch edges
-                    maxZoom: 12 // Reasonable max zoom for district viewing
+                    padding: padding,
+                    maxZoom: maxZoom
                 });
                 
-                console.log('✅ FINAL FIX: Map fitted to district', districtId, 'with proper padding');
+                console.log('✅ FINAL FIX: Map fitted to district', districtId, 'with maxZoom:', maxZoom, 'and padding:', padding);
             } else {
                 console.log('⚠️ FINAL FIX: Could not find boundary features for district', districtId);
                 // Fallback to district center coordinates
