@@ -978,8 +978,22 @@
                         parseFloat(college.lat) >= -90 && parseFloat(college.lat) <= 90 &&
                         parseFloat(college.lng) >= -180 && parseFloat(college.lng) <= 180) {
                         
+                        // Calculate automated rating (may override manual CSV rating)
+                        const calculatedRating = calculateDriveRating(college);
+                        
+                        // Exclude colleges that shouldn't be displayed
+                        if (calculatedRating === 'EXCLUDE') {
+                            console.log('❌ RATING: Excluding college:', college.name, '- online/virtual/building-only');
+                            continue;
+                        }
+                        
+                        // Use calculated rating if it's valid
+                        if (calculatedRating && calculatedRating !== 'EXCLUDE') {
+                            college.suitability = calculatedRating;
+                        }
+                        
                         colleges[targetSection].push(college);
-                        console.log('✅ ALASKA FIX: Added college with CSV coordinates:', college.name, 'lat:', college.lat, 'lng:', college.lng);
+                        console.log('✅ ALASKA FIX: Added college with CSV coordinates and rating:', college.name, 'lat:', college.lat, 'lng:', college.lng, 'rating:', college.suitability);
                     } else {
                         console.log('⚠️ ALASKA FIX: Skipped college with invalid CSV coordinates:', institutionName, 'lat:', college ? college.lat : 'missing', 'lng:', college ? college.lng : 'missing');
                     }
@@ -1033,7 +1047,8 @@
                 type: "College",
                 publicPrivate: "Public",
                 lat: null,
-                lng: null
+                lng: null,
+                notes: ''
             };
 
             console.log('🏫 ALASKA FIX: Parsing college data from CSV...');
@@ -1085,7 +1100,10 @@
                         college.campusSize = campusSizeValue;
                     }
                 } else if (headerLower === 'suitability') {
+                    // Store manual CSV rating - will be used if present, otherwise calculated
                     college.suitability = value;
+                } else if (headerLower === 'notes') {
+                    college.notes = value;
                 }
             }
 
@@ -2118,7 +2136,170 @@
             }, 100);
         });
 
-        console.log("🎯 ALASKA FIX: Drive Scout script completed - Alaska zoom fixed to level 3, no PVI references, traditional JavaScript only");
+        // NEW: Drive Scout Rating System
+        function calculateDriveRating(college) {
+            console.log('🎯 RATING: Calculating rating for:', college.name);
+            
+            // If manual rating exists in CSV (any value), use that instead
+            if (college.suitability && college.suitability.trim() !== '') {
+                console.log('✅ RATING: Using manual CSV rating:', college.suitability, 'for', college.name);
+                return college.suitability;
+            }
+            
+            let score = 0;
+            let factors = [];
+            
+            // EXCLUSIONS FIRST - Don't display these at all
+            const type = (college.type || '').toLowerCase();
+            const notes = (college.notes || '').toLowerCase();
+            
+            // Check for exclusion criteria
+            if (type.includes('online') || type.includes('virtual') || notes.includes('online') || notes.includes('virtual')) {
+                console.log('❌ RATING: Excluding online/virtual campus:', college.name);
+                return 'EXCLUDE';
+            }
+            
+            if (type.includes('building-only') || notes.includes('building-only') || notes.includes('suite') || notes.includes('floor')) {
+                console.log('❌ RATING: Excluding building-only location:', college.name);
+                return 'EXCLUDE';
+            }
+            
+            // Factor 1: Enrollment (40% weight, max 40 points)
+            const enrollment = parseInt(college.enrollment) || 0;
+            let enrollmentScore = 0;
+            if (enrollment >= 10000) {
+                enrollmentScore = 40;
+                factors.push("Large enrollment (10,000+)");
+            } else if (enrollment >= 5000) {
+                enrollmentScore = 32;
+                factors.push("Good enrollment (5,000-9,999)");
+            } else if (enrollment >= 2000) {
+                enrollmentScore = 24;
+                factors.push("Moderate enrollment (2,000-4,999)");
+            } else if (enrollment >= 1000) {
+                enrollmentScore = 16;
+                factors.push("Small enrollment (1,000-1,999)");
+            } else if (enrollment >= 500) {
+                enrollmentScore = 8;
+                factors.push("Very small enrollment (500-999)");
+            } else {
+                enrollmentScore = 0;
+                factors.push("Minimal enrollment (<500)");
+            }
+            score += enrollmentScore;
+            
+            // Factor 2: Campus Size (15% weight, max 15 points)
+            const campusSize = parseFloat(college.campusSize) || 0;
+            let campusScore = 0;
+            if (campusSize >= 100) {
+                campusScore = 15;
+                factors.push("Large campus (100+ acres)");
+            } else if (campusSize >= 50) {
+                campusScore = 12;
+                factors.push("Good campus size (50-99 acres)");
+            } else if (campusSize >= 25) {
+                campusScore = 9;
+                factors.push("Medium campus (25-49 acres)");
+            } else if (campusSize >= 10) {
+                campusScore = 6;
+                factors.push("Small campus (10-24 acres)");
+            } else if (campusSize >= 5) {
+                campusScore = 3;
+                factors.push("Very small campus (5-9 acres)");
+            } else {
+                campusScore = 0;
+                factors.push("Minimal campus (<5 acres)");
+            }
+            score += campusScore;
+            
+            // Factor 3: College Type (20% weight, max 20 points)
+            let typeScore = 0;
+            if (type.includes('community')) {
+                typeScore = 20;
+                factors.push("Community college bonus");
+            } else if (type.includes('public')) {
+                typeScore = 14;
+                factors.push("Public institution");
+            } else if (type.includes('state')) {
+                typeScore = 14;
+                factors.push("State institution");
+            } else if (type.includes('university')) {
+                typeScore = 12;
+                factors.push("University");
+            } else if (type.includes('college')) {
+                typeScore = 10;
+                factors.push("College");
+            } else {
+                typeScore = 8;
+                factors.push("Other institution type");
+            }
+            score += typeScore;
+            
+            // Factor 4: Campus Quality (25% weight, max 25 points)
+            let qualityScore = 20; // Base score
+            
+            // Negative Indicators
+            if (type.includes('satellite') || type.includes('branch') || type.includes('extension') || 
+                notes.includes('satellite') || notes.includes('branch') || notes.includes('extension')) {
+                qualityScore -= 20;
+                factors.push("Satellite/branch campus penalty");
+            }
+            
+            if (campusSize > 0 && campusSize < 10 && (notes.includes('downtown') || notes.includes('urban'))) {
+                qualityScore -= 8;
+                factors.push("Urban campus without sufficient space");
+            }
+            
+            if (type.includes('professional') || type.includes('technical') || type.includes('vocational') ||
+                notes.includes('professional') || notes.includes('technical') || notes.includes('vocational')) {
+                qualityScore -= 50; // Much harsher penalty
+                factors.push("Specialized/professional focus penalty");
+            }
+            
+            // Positive Indicators
+            if (notes.includes('quad') || notes.includes('green') || notes.includes('plaza') || 
+                notes.includes('courtyard') || notes.includes('commons') || notes.includes('gathering')) {
+                qualityScore += 10;
+                factors.push("Has gathering spaces");
+            }
+            
+            if (notes.includes('main campus') || notes.includes('flagship') || notes.includes('primary')) {
+                qualityScore += 3;
+                factors.push("Main campus designation");
+            }
+            
+            if (notes.includes('student life') || notes.includes('recreation') || notes.includes('activities')) {
+                qualityScore += 3;
+                factors.push("Active student life facilities");
+            }
+            
+            // Large campus + good enrollment synergy bonus
+            if (campusSize >= 50 && enrollment >= 5000) {
+                qualityScore += 10;
+                factors.push("Large campus with good enrollment synergy");
+            }
+            
+            // Clamp quality score to 0-25 range
+            qualityScore = Math.max(0, Math.min(25, qualityScore));
+            score += qualityScore;
+            
+            // Final rating conversion
+            let rating;
+            if (score >= 70) {
+                rating = 'High';
+            } else if (score >= 40) {
+                rating = 'Medium';
+            } else {
+                rating = 'Low';
+            }
+            
+            console.log('📊 RATING:', college.name, '- Score:', score, '- Rating:', rating);
+            console.log('📋 RATING: Factors:', factors.join(', '));
+            
+            return rating;
+        }
+
+        console.log("🎯 ALASKA FIX: Drive Scout script completed - Alaska zoom fixed to level 3, no PVI references, traditional JavaScript only, rating system added");
     </script>
 </body>
 </html>
