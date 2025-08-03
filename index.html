@@ -1472,7 +1472,13 @@
                     districtId = props.GEOID;
                 }
                 
-                console.log('🔍 ENHANCED: District ID found:', districtId, 'from properties:', Object.keys(props).slice(0, 5));
+                // 🎯 ENHANCED: Convert numeric district to CA-XX format
+                if (districtId && /^\d+$/.test(districtId)) {
+                    districtId = 'CA-' + districtId.padStart(2, '0');
+                    console.log('🔧 ENHANCED: Converted numeric district to CA format:', districtId);
+                }
+                
+                console.log('🔍 ENHANCED: Final district ID:', districtId, 'from properties:', Object.keys(props).slice(0, 5));
                 return districtId;
             }
             
