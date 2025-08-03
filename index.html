@@ -1322,6 +1322,19 @@
                         
                         console.log('🎨 FINAL FIX: Using party colors - bg:', partyBackgroundColor, 'border:', partyBorderColor);
                         
+                        // Calculate distance if user location is available
+                        let distanceText = '';
+                        if (window.lastUserLocation && districtInfo.center) {
+                            const distance = calculateDistance(
+                                window.lastUserLocation.lat, 
+                                window.lastUserLocation.lng, 
+                                districtInfo.center[0], 
+                                districtInfo.center[1]
+                            );
+                            distanceText = Math.round(distance) + ' miles away • ';
+                            console.log('📍 FINAL FIX: Adding distance to popup:', Math.round(distance), 'miles for district', districtId);
+                        }
+                        
                         let popupContent = '<div style="min-width: 200px; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
                         
                         // District title - same as district card
@@ -1332,9 +1345,9 @@
                         }
                         popupContent += '</div>';
                         
-                        // District details - same as district card  
+                        // District details with distance - same as district card  
                         popupContent += '<div style="color: #666; margin-bottom: 8px;">';
-                        popupContent += 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action;
+                        popupContent += '<em>' + distanceText + '</em>Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action;
                         popupContent += '</div>';
                         
                         // Show campuses button - same as district card
@@ -1768,7 +1781,7 @@
             }, 100);
         });
 
-        console.log("🎯 FINAL FIX: FIXED Drive Scout script completed - blue districts stay blue, no PVI, popups match cards");
+        console.log("🎯 FINAL FIX: FIXED Drive Scout script completed - blue districts stay blue, no PVI, popups match cards, distance added to popups");
     </script>
 </body>
 </html>
