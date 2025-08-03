@@ -633,7 +633,9 @@
                     let closestDistrict = null;
                     let shortestDistance = Infinity;
                     
-                    for (const [districtId, data] of Object.entries(districtData)) {
+                    for (const districtEntry of Object.entries(districtData)) {
+                        const districtId = districtEntry[0];
+                        const data = districtEntry[1];
                         const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
                         if (distance < shortestDistance) {
                             shortestDistance = distance;
@@ -659,14 +661,14 @@
                             '</div>';
                         resultContainer.style.display = 'block';
                         
-                        const state = Object.keys(districtMappings).find(s => 
-                            districtMappings[s].includes(closestDistrict)
-                        );
+                        const state = Object.keys(districtMappings).find(function(s) {
+                            return districtMappings[s].includes(closestDistrict);
+                        });
                         
                         if (state) {
                             displayColleges(state, closestDistrict);
                             
-                            setTimeout(() => {
+                            setTimeout(function() {
                                 const advancedText = document.querySelector('div[style*="color: white; font-size: 1.1rem"]');
                                 const fullControlsBtn = document.getElementById('fullControlsBtn');
                                 const advancedControlsSection = document.getElementById('advancedControlsSection');
@@ -788,7 +790,9 @@
                     const userLng = position.coords.longitude;
                     
                     const districtDistances = [];
-                    for (const [districtId, data] of Object.entries(districtData)) {
+                    for (const districtEntry of Object.entries(districtData)) {
+                        const districtId = districtEntry[0];
+                        const data = districtEntry[1];
                         const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
                         districtDistances.push({ district: districtId, distance: distance, data: data });
                     }
@@ -840,7 +844,7 @@
                 initializeMap();
             }
             
-            setTimeout(() => {
+            setTimeout(function() {
                 setupNationalMap();
             }, 300);
         }
@@ -936,16 +940,16 @@
             
             if (title) title.textContent = `Swing district: ${districtId}`;
             if (details) details.innerHTML = `<em>${Math.round(distance)} miles away</em> • Rep. ${districtInfo.rep} (${districtInfo.party}) • ${districtInfo.action}`;
-            if (button) button.onclick = () => showDistrictCampuses(districtId);
+            if (button) button.onclick = function() { showDistrictCampuses(districtId); };
             if (content) content.id = `district-content-${districtId}`;
             
             return cardElement;
         }
 
         function showDistrictCampuses(districtId) {
-            const state = Object.keys(districtMappings).find(s => 
-                districtMappings[s].includes(districtId)
-            );
+            const state = Object.keys(districtMappings).find(function(s) {
+                return districtMappings[s].includes(districtId);
+            });
             
             if (!state) {
                 console.log('❌ Could not find state for district:', districtId);
@@ -974,7 +978,7 @@
             titleDiv.innerHTML = '<h2 style="color: white; font-size: 1.8rem; font-weight: bold; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">Closest Swing Districts</h2>';
             resultsContainer.appendChild(titleDiv);
             
-            districts.forEach((item) => {
+            districts.forEach(function(item) {
                 const cardElement = createDistrictCard(item.data, item.distance, item.district);
                 resultsContainer.appendChild(cardElement);
             });
