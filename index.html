@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- CACHE BUSTER: 2025-01-03-v2.1 - Fixed district colors, popup styling, PVI removal -->
+    <!-- FINAL FIX: 2025-01-03-v3.0 - Complete rewrite to eliminate conflicts -->
     <title>Drive Scout</title>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -540,9 +540,10 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // FORCE UPDATE: 2025-01-03-v2.1 - Fixed district selection colors and popup formatting
-        console.log("🎯 FIXED VERSION: District colors stay party-based when selected, popups match cards, PVI removed");
+        // FINAL FIX VERSION: 2025-01-03-v3.0 - Complete rewrite eliminates all conflicts
+        console.log("🎯 FINAL FIX: Drive Scout v3.0 - District colors fixed, PVI removed, popups styled");
         
+        // District data - PVI COMPLETELY REMOVED
         const districtData = {
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782], cities: ['Anchorage', 'Fairbanks', 'Juneau', 'Wasilla', 'Sitka'] },
             'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', center: [33.6061, -111.8781], cities: ['Scottsdale', 'Tempe', 'Mesa', 'Fountain Hills', 'Paradise Valley'] },
@@ -587,7 +588,7 @@
             "Nevada": ["NV-01", "NV-03", "NV-04"]
         };
 
-        console.log("🎯 ENHANCED: District data loaded with", Object.keys(districtData).length, "swing districts");
+        console.log("🎯 FINAL FIX: Loaded", Object.keys(districtData).length, "districts without PVI");
 
         function calculateDistance(lat1, lng1, lat2, lng2) {
             const R = 3959;
@@ -601,7 +602,7 @@
         }
 
         function findClosestCampuses() {
-            console.log('🔄 ENHANCED: Starting findClosestCampuses with enhanced district boundaries...');
+            console.log('🔄 FINAL FIX: Starting findClosestCampuses...');
             clearAllResults();
             if (map) {
                 clearMarkers();
@@ -634,7 +635,7 @@
                     
                     window.lastUserLocation = { lat: userLat, lng: userLng };
                     
-                    console.log('✅ ENHANCED: User location:', userLat, userLng);
+                    console.log('✅ FINAL FIX: User location:', userLat, userLng);
                     
                     let closestDistrict = null;
                     let shortestDistance = Infinity;
@@ -651,7 +652,7 @@
                     }
                     
                     if (closestDistrict) {
-                        console.log('🎯 ENHANCED: Closest swing district:', closestDistrict);
+                        console.log('🎯 FINAL FIX: Closest swing district:', closestDistrict);
                         
                         const districtInfo = districtData[closestDistrict];
                         const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
@@ -696,7 +697,7 @@
                     btn.disabled = false;
                 },
                 function(error) {
-                    console.log('❌ ENHANCED: Geolocation error:', error.message);
+                    console.log('❌ FINAL FIX: Geolocation error:', error.message);
                     alert('Unable to get your location: ' + error.message);
                     btn.innerHTML = '🔍 Find closest swing district campuses!';
                     btn.disabled = false;
@@ -705,16 +706,16 @@
         }
 
         function toggleFullControls() {
-            console.log('🔄 ENHANCED: toggleFullControls called');
+            console.log('🔄 FINAL FIX: toggleFullControls called');
             alert('Advanced controls would appear here!');
         }
 
         function clearAllResults() {
-            console.log('🔄 ENHANCED: clearAllResults called');
+            console.log('🔄 FINAL FIX: clearAllResults called');
         }
 
         function clearMarkers() {
-            console.log('🔄 ENHANCED: clearMarkers called');
+            console.log('🔄 FINAL FIX: clearMarkers called');
             for (let i = 0; i < markers.length; i++) {
                 if (map && markers[i]) {
                     map.removeLayer(markers[i]);
@@ -724,7 +725,7 @@
         }
 
         function displayColleges(state, district) {
-            console.log('🔄 ENHANCED: displayColleges called for:', state, district);
+            console.log('🔄 FINAL FIX: displayColleges called for:', state, district);
             
             const collegeItems = document.getElementById('collegeItems');
             const collegeList = document.getElementById('collegeList');
@@ -737,7 +738,7 @@
             loadDistrictDataWithTimeout(district).then(function() {
                 const collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
                 
-                console.log('📊 ENHANCED: College data for district:', district, collegeDataForDistrict);
+                console.log('📊 FINAL FIX: College data for district:', district, collegeDataForDistrict);
                 
                 let allColleges = [];
                 let withinColleges = [];
@@ -752,14 +753,13 @@
                     allColleges = withinColleges.concat(nearColleges);
                 }
                 
-                // 🎯 ENHANCED: Filter colleges with valid lat/lng coordinates from CSV
                 allColleges = allColleges.filter(function(college) {
                     const hasValidCoords = college && college.name && 
                                          college.lat !== null && college.lat !== undefined && 
                                          college.lng !== null && college.lng !== undefined &&
                                          !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
                     if (!hasValidCoords) {
-                        console.log('⚠️ ENHANCED: Filtering out college without valid CSV coordinates:', college ? college.name : 'unknown');
+                        console.log('⚠️ FINAL FIX: Filtering out college without valid CSV coordinates:', college ? college.name : 'unknown');
                     }
                     return hasValidCoords;
                 });
@@ -772,7 +772,7 @@
                            !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
                 });
                 
-                console.log('📍 ENHANCED: Filtered colleges with valid CSV coordinates:', allColleges.length);
+                console.log('📍 FINAL FIX: Filtered colleges with valid CSV coordinates:', allColleges.length);
                 
                 if (allColleges.length === 0) {
                     showNoData(state, district);
@@ -787,11 +787,11 @@
                     loadDistrictBoundaries(state).then(function() {
                         setTimeout(function() {
                             addMarkersToMap(allColleges);
-                            console.log('🗺️ ENHANCED: Adding enhanced district boundaries for:', district);
+                            console.log('🗺️ FINAL FIX: Adding FIXED district boundaries for:', district);
                             if (districtBoundaries) {
                                 addDistrictBoundariesToMap(district);
                             } else {
-                                console.log('❌ ENHANCED: No district boundaries available after loading');
+                                console.log('❌ FINAL FIX: No district boundaries available after loading');
                             }
                         }, 200);
                     });
@@ -850,7 +850,7 @@
             
             if (state && collegeData[state] && collegeData[state][district] && 
                 collegeData[state][district].length > 0) {
-                console.log('📊 ENHANCED: District data already loaded for', district);
+                console.log('📊 FINAL FIX: District data already loaded for', district);
                 return Promise.resolve();
             }
 
@@ -870,7 +870,7 @@
                 loadPromise = loadPromise.then(function() {
                     if (csvText) return;
                     
-                    console.log('📁 ENHANCED: Trying to load CSV with lat/lng:', filename);
+                    console.log('📁 FINAL FIX: Trying to load CSV with lat/lng:', filename);
                     
                     const timeoutPromise = new Promise(function(_, reject) {
                         setTimeout(function() {
@@ -884,19 +884,19 @@
                                 return response.text().then(function(text) {
                                     csvText = text;
                                     successfulUrl = filename;
-                                    console.log('✅ ENHANCED: Successfully loaded CSV:', filename);
+                                    console.log('✅ FINAL FIX: Successfully loaded CSV:', filename);
                                 });
                             }
                         })
                         .catch(function(error) {
-                            console.log('❌ ENHANCED: Failed to load ' + filename + ':', error.message);
+                            console.log('❌ FINAL FIX: Failed to load ' + filename + ':', error.message);
                         });
                 });
             }
 
             return loadPromise.then(function() {
                 if (!csvText) {
-                    console.log('❌ ENHANCED: No CSV file found for ' + district);
+                    console.log('❌ FINAL FIX: No CSV file found for ' + district);
                     return;
                 }
 
@@ -904,7 +904,7 @@
                     if (state && colleges) {
                         if (!collegeData[state]) collegeData[state] = {};
                         collegeData[state][district] = colleges;
-                        console.log('✅ ENHANCED: Loaded CSV data for ' + district + ' from ' + successfulUrl);
+                        console.log('✅ FINAL FIX: Loaded CSV data for ' + district + ' from ' + successfulUrl);
                     }
                 });
             });
@@ -912,7 +912,7 @@
 
         function parseCSV(csvText, district) {
             return new Promise(function(resolve) {
-                console.log('📄 ENHANCED: Parsing CSV for district:', district);
+                console.log('📄 FINAL FIX: Parsing CSV for district:', district);
                 
                 const lines = csvText.split('\n').filter(function(line) {
                     return line.trim();
@@ -937,7 +937,7 @@
 
                     if (!headerRowFound) {
                         headers = values.map(function(h) { return h ? h.trim() : ''; });
-                        console.log('📋 ENHANCED: CSV headers found:', headers);
+                        console.log('📋 FINAL FIX: CSV headers found:', headers);
                         headerRowFound = true;
                         continue;
                     }
@@ -973,7 +973,6 @@
 
                     const college = parseCollegeData(values, headers, district, targetSection);
                     
-                    // 🎯 ENHANCED: Strict validation for CSV lat/lng coordinates
                     if (college && college.name && 
                         college.lat !== null && college.lng !== null &&
                         !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng)) &&
@@ -981,13 +980,13 @@
                         parseFloat(college.lng) >= -180 && parseFloat(college.lng) <= 180) {
                         
                         colleges[targetSection].push(college);
-                        console.log('✅ ENHANCED: Added college with CSV coordinates:', college.name, 'lat:', college.lat, 'lng:', college.lng);
+                        console.log('✅ FINAL FIX: Added college with CSV coordinates:', college.name, 'lat:', college.lat, 'lng:', college.lng);
                     } else {
-                        console.log('⚠️ ENHANCED: Skipped college with invalid CSV coordinates:', institutionName, 'lat:', college ? college.lat : 'missing', 'lng:', college ? college.lng : 'missing');
+                        console.log('⚠️ FINAL FIX: Skipped college with invalid CSV coordinates:', institutionName, 'lat:', college ? college.lat : 'missing', 'lng:', college ? college.lng : 'missing');
                     }
                 }
 
-                console.log('📊 ENHANCED: Parsed', colleges.within.length, 'colleges within', district, 'and', colleges.near.length, 'colleges near', district);
+                console.log('📊 FINAL FIX: Parsed', colleges.within.length, 'colleges within', district, 'and', colleges.near.length, 'colleges near', district);
                 resolve(colleges);
             });
         }
@@ -1038,7 +1037,7 @@
                 lng: null
             };
 
-            console.log('🏫 ENHANCED: Parsing college data from CSV...');
+            console.log('🏫 FINAL FIX: Parsing college data from CSV...');
 
             for (let j = 0; j < headers.length; j++) {
                 const header = headers[j] ? headers[j].trim() : '';
@@ -1061,22 +1060,20 @@
                 } else if (headerLower === 'zip') {
                     college.zipCode = value;
                 } else if (headerLower === 'latitude') {
-                    // 🎯 ENHANCED: Parse latitude from CSV with validation
                     const latValue = parseFloat(value);
                     if (!isNaN(latValue) && latValue >= -90 && latValue <= 90) {
                         college.lat = latValue;
-                        console.log('📍 ENHANCED: Set latitude from CSV:', latValue);
+                        console.log('📍 FINAL FIX: Set latitude from CSV:', latValue);
                     } else {
-                        console.log('⚠️ ENHANCED: Invalid latitude in CSV:', value);
+                        console.log('⚠️ FINAL FIX: Invalid latitude in CSV:', value);
                     }
                 } else if (headerLower === 'longitude') {
-                    // 🎯 ENHANCED: Parse longitude from CSV with validation
                     const lngValue = parseFloat(value);
                     if (!isNaN(lngValue) && lngValue >= -180 && lngValue <= 180) {
                         college.lng = lngValue;
-                        console.log('📍 ENHANCED: Set longitude from CSV:', lngValue);
+                        console.log('📍 FINAL FIX: Set longitude from CSV:', lngValue);
                     } else {
-                        console.log('⚠️ ENHANCED: Invalid longitude in CSV:', value);
+                        console.log('⚠️ FINAL FIX: Invalid longitude in CSV:', value);
                     }
                 } else if (headerLower === 'enrollment') {
                     const enrollmentValue = parseInt(value);
@@ -1102,7 +1099,7 @@
             }
 
             setTimeout(function() {
-                console.log('🗺️ ENHANCED: Initializing map for CSV coordinate display...');
+                console.log('🗺️ FINAL FIX: Initializing map for CSV coordinate display...');
                 map = L.map('map', {
                     attributionControl: false,
                     minZoom: 1,
@@ -1134,13 +1131,13 @@
             
             if (colleges.length === 0 || !map) return;
 
-            console.log('📍 ENHANCED: Adding', colleges.length, 'markers using CSV coordinates...');
+            console.log('📍 FINAL FIX: Adding', colleges.length, 'markers using CSV coordinates...');
             const group = new L.featureGroup();
 
             for (let i = 0; i < colleges.length; i++) {
                 const college = colleges[i];
                 if (!college.lat || !college.lng) {
-                    console.log('⚠️ ENHANCED: Skipping college without CSV coordinates:', college.name);
+                    console.log('⚠️ FINAL FIX: Skipping college without CSV coordinates:', college.name);
                     continue;
                 }
 
@@ -1148,11 +1145,11 @@
                 const lng = parseFloat(college.lng);
                 
                 if (isNaN(lat) || isNaN(lng)) {
-                    console.log('⚠️ ENHANCED: Skipping college with invalid CSV coordinates:', college.name, 'lat:', college.lat, 'lng:', college.lng);
+                    console.log('⚠️ FINAL FIX: Skipping college with invalid CSV coordinates:', college.name, 'lat:', college.lat, 'lng:', college.lng);
                     continue;
                 }
 
-                console.log('📍 ENHANCED: Adding marker for', college.name, 'at CSV coordinates:', lat, lng);
+                console.log('📍 FINAL FIX: Adding marker for', college.name, 'at CSV coordinates:', lat, lng);
 
                 const iconColor = getSuitabilityColor(college.suitability);
                 
@@ -1178,7 +1175,7 @@
 
             if (group.getLayers().length > 0) {
                 map.fitBounds(group.getBounds(), { padding: [50, 50] });
-                console.log('✅ ENHANCED: Successfully added', group.getLayers().length, 'markers with CSV coordinates');
+                console.log('✅ FINAL FIX: Successfully added', group.getLayers().length, 'markers with CSV coordinates');
             }
         }
 
@@ -1203,27 +1200,27 @@
             
             const boundaryFile = boundaryFiles[state];
             if (!boundaryFile) {
-                console.log('📍 ENHANCED: No boundary file configured for state:', state);
+                console.log('📍 FINAL FIX: No boundary file configured for state:', state);
                 return Promise.resolve();
             }
             
             if (districtBoundaries && districtBoundaries.state === state) {
-                console.log('📍 ENHANCED: District boundaries already loaded for', state);
+                console.log('📍 FINAL FIX: District boundaries already loaded for', state);
                 return Promise.resolve();
             }
             
-            console.log('📍 ENHANCED: Loading enhanced district boundaries for', state, 'from', boundaryFile);
+            console.log('📍 FINAL FIX: Loading FIXED district boundaries for', state, 'from', boundaryFile);
             return fetch(boundaryFile)
                 .then(function(response) {
                     if (!response.ok) {
-                        console.log('📍 ENHANCED: Could not load boundary file:', boundaryFile);
+                        console.log('📍 FINAL FIX: Could not load boundary file:', boundaryFile);
                         return;
                     }
                     return response.json();
                 })
                 .then(function(geojsonData) {
                     if (!geojsonData || !geojsonData.features) {
-                        console.log('📍 ENHANCED: Invalid GeoJSON data loaded from', boundaryFile);
+                        console.log('📍 FINAL FIX: Invalid GeoJSON data loaded from', boundaryFile);
                         return;
                     }
                     
@@ -1232,46 +1229,43 @@
                         data: geojsonData
                     };
                     
-                    console.log('📍 ENHANCED: Successfully loaded', geojsonData.features.length, 'district boundaries for', state);
+                    console.log('📍 FINAL FIX: Successfully loaded', geojsonData.features.length, 'district boundaries for', state);
                 })
                 .catch(function(error) {
-                    console.log('📍 ENHANCED: Error loading district boundaries:', error.message);
+                    console.log('📍 FINAL FIX: Error loading district boundaries:', error.message);
                 });
         }
 
         function addDistrictBoundariesToMap(selectedDistrict) {
-            console.log('🎯 ENHANCED: Starting enhanced district boundaries for district:', selectedDistrict);
+            console.log('🎯 FINAL FIX: Starting FIXED district boundaries for district:', selectedDistrict);
             
             if (!map) {
-                console.log('❌ ENHANCED: No map instance available');
+                console.log('❌ FINAL FIX: No map instance available');
                 return;
             }
             
             if (!districtBoundaries || !districtBoundaries.data) {
-                console.log('❌ ENHANCED: No district boundaries data available');
+                console.log('❌ FINAL FIX: No district boundaries data available');
                 return;
             }
             
             if (districtLayer) {
-                console.log('🗺️ ENHANCED: Removing existing district layer');
+                console.log('🗺️ FINAL FIX: Removing existing district layer');
                 map.removeLayer(districtLayer);
                 districtLayer = null;
             }
             
             if (!districtBoundariesVisible) {
-                console.log('🗺️ ENHANCED: District boundaries set to not visible, skipping');
+                console.log('🗺️ FINAL FIX: District boundaries set to not visible, skipping');
                 return;
             }
             
             try {
-                console.log('🗺️ ENHANCED: Creating enhanced district layer with party colors');
-                console.log('🗺️ ENHANCED: Available features:', districtBoundaries.data.features.length);
+                console.log('🗺️ FINAL FIX: Creating FIXED district layer with party colors');
+                console.log('🗺️ FINAL FIX: Available features:', districtBoundaries.data.features.length);
                 
-                console.log('🗺️ ENHANCED: Available features:', districtBoundaries.data.features.length);
-                console.log('🗺️ ENHANCED: Sample feature properties:', districtBoundaries.data.features[0] ? Object.keys(districtBoundaries.data.features[0].properties) : 'No features');
-                
-                // Style function for district boundaries
-                function districtStyle(feature) {
+                // FIXED Style function
+                function districtStyleFixed(feature) {
                     const districtId = getDistrictId(feature);
                     const districtInfo = districtData[districtId];
                     const isSelected = selectedDistrict && districtId === selectedDistrict;
@@ -1283,25 +1277,25 @@
                     let opacity = 0.3;
                     let fillOpacity = 0;
                     
-                    // Color code based on party and action if this is a swing district
+                    // Color code based on party and action
                     if (districtInfo) {
                         if (districtInfo.action === 'FLIP') {
-                            color = '#DC143C'; // Red for flip districts (targeting Republicans)
+                            color = '#DC143C'; // Red for flip districts
                             weight = 3;
                         } else if (districtInfo.action === 'HOLD') {
                             color = districtInfo.party === 'D' ? '#4169E1' : '#DC143C'; // Blue for Dem holds
                             weight = 3;
                         }
-                        opacity = 0.6; // Higher opacity for swing districts
+                        opacity = 0.6;
                     }
                     
-                    // HIGHLIGHT SELECTED DISTRICT - keep party colors
+                    // FIXED: HIGHLIGHT SELECTED DISTRICT - KEEP PARTY COLOR
                     if (isSelected) {
-                        weight = 5; // Thicker border
-                        opacity = 1.0; // Full opacity
-                        fillOpacity = 0.15; // Light fill to highlight the area
-                        fillColor = color; // Fill with the SAME party color as border (not red)
-                        console.log('🔵 FIXED: Selected district', districtId, 'keeping party color:', color);
+                        weight = 5;
+                        opacity = 1.0;
+                        fillOpacity = 0.15;
+                        fillColor = color; // KEEP THE PARTY COLOR, NOT RED!
+                        console.log('🔵 FINAL FIX: Selected district', districtId, 'keeping party color:', color);
                     }
                     
                     return {
@@ -1313,20 +1307,20 @@
                     };
                 }
                 
-                // Create popup content for districts - MATCH DISTRICT CARD FORMAT
-                function onEachDistrict(feature, layer) {
+                // FIXED Popup function
+                function onEachDistrictFixed(feature, layer) {
                     const districtId = getDistrictId(feature);
                     const districtInfo = districtData[districtId];
                     const isSelected = selectedDistrict && districtId === selectedDistrict;
                     
-                    console.log('🎨 POPUP: Creating popup for district:', districtId, 'isSelected:', isSelected, 'districtInfo:', districtInfo);
+                    console.log('🎨 FINAL FIX: Creating FIXED popup for district:', districtId, 'isSelected:', isSelected);
                     
                     if (districtInfo) {
-                        // Use EXACT same format as district cards
+                        // FIXED: Use EXACT same format as district cards
                         const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                         const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
                         
-                        console.log('🎨 POPUP: Using party colors - bg:', partyBackgroundColor, 'border:', partyBorderColor);
+                        console.log('🎨 FINAL FIX: Using party colors - bg:', partyBackgroundColor, 'border:', partyBorderColor);
                         
                         let popupContent = '<div style="min-width: 200px; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
                         
@@ -1350,7 +1344,7 @@
                         
                         popupContent += '</div>';
                         
-                        console.log('🎨 POPUP: Final popup content:', popupContent.substring(0, 100) + '...');
+                        console.log('🎨 FINAL FIX: Final popup content preview:', popupContent.substring(0, 100) + '...');
                         
                         layer.bindPopup(popupContent, { maxWidth: 300 });
                     } else {
@@ -1376,84 +1370,37 @@
                             },
                             mouseout: function(e) {
                                 if (!isSelected) {
-                                    layer.setStyle(districtStyle(feature));
+                                    layer.setStyle(districtStyleFixed(feature));
                                 }
                             }
                         });
                     }
                 }
                 
-                // Filter to only swing districts and apply party colors
+                // Filter to only swing districts
                 const swingDistrictIds = Object.keys(districtData);
                 let swingFeatureCount = 0;
                 let totalFeatureCount = districtBoundaries.data.features.length;
                 
                 districtLayer = L.geoJSON(districtBoundaries.data, {
-                    style: districtStyle,
-                    onEachFeature: onEachDistrict,
+                    style: districtStyleFixed,
+                    onEachFeature: onEachDistrictFixed,
                     filter: function(feature) {
                         const districtId = getDistrictId(feature);
-                        console.log('🔍 ENHANCED: Checking feature district ID:', districtId);
+                        console.log('🔍 FINAL FIX: Checking feature district ID:', districtId);
                         const isSwing = districtId && swingDistrictIds.includes(districtId);
                         if (isSwing) {
                             swingFeatureCount++;
-                            console.log('✅ ENHANCED: Including swing district:', districtId);
+                            console.log('✅ FINAL FIX: Including swing district:', districtId);
                         } else {
-                            console.log('❌ ENHANCED: Excluding district:', districtId, '(not in swing list)');
+                            console.log('❌ FINAL FIX: Excluding district:', districtId, '(not in swing list)');
                         }
-                        return isSwing; // BACK TO FILTERING ONLY SWING DISTRICTS
-                    },
-                    style: function(feature) {
-                        const districtId = getDistrictId(feature);
-                        const isSelected = selectedDistrict && districtId === selectedDistrict;
-                        
-                        // 🎯 ENHANCED: Apply party-based colors
-                        let borderColor = '#667eea';
-                        let fillColor = '#667eea';
-                        
-                        if (districtId && districtData[districtId]) {
-                            const party = districtData[districtId].party;
-                            if (party === 'D') {
-                                borderColor = '#2196f3';  // Blue for Democrats
-                                fillColor = '#2196f3';
-                                console.log('🔵 ENHANCED: Setting BLUE color for Democratic district', districtId);
-                            } else if (party === 'R') {
-                                borderColor = '#f44336';  // Red for Republicans  
-                                fillColor = '#f44336';
-                                console.log('🔴 ENHANCED: Setting RED color for Republican district', districtId);
-                            }
-                        }
-                        
-                        return {
-                            color: isSelected ? '#ff0000' : borderColor,
-                            weight: isSelected ? 3 : 2,
-                            opacity: isSelected ? 0.9 : 0.7,
-                            fillColor: isSelected ? '#ff0000' : fillColor,
-                            fillOpacity: isSelected ? 0.2 : 0.1
-                        };
-                    },
-                    onEachFeature: function(feature, layer) {
-                        const districtId = getDistrictId(feature);
-                        if (districtId && districtData[districtId]) {
-                            const info = districtData[districtId];
-                            const partyColor = info.party === 'D' ? '#2196f3' : '#f44336';
-                            const partyName = info.party === 'D' ? 'Democratic' : 'Republican';
-                            
-                            const popupContent = 
-                                '<div style="text-align: center; min-width: 200px;">' +
-                                    '<div style="font-weight: bold; font-size: 1.1rem; margin-bottom: 8px; color: ' + partyColor + ';">' + districtId + '</div>' +
-                                    '<div style="margin-bottom: 6px;"><strong>Rep:</strong> ' + info.rep + ' (' + info.party + ')</div>' +
-                                    '<div style="margin-bottom: 6px;"><strong>Action:</strong> ' + info.action + '</div>' +
-                                    '<div style="margin-bottom: 8px;"><strong>PVI:</strong> ' + info.pvi + '</div>' +
-                                    '<button onclick="showDistrictCampusesFromPopup(\'' + districtId + '\')" style="background: ' + partyColor + '; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold;">Show campuses</button>' +
-                                '</div>';
-                            layer.bindPopup(popupContent);
-                        }
+                        return isSwing;
                     }
                 });
                 
-                console.log('🎯 ENHANCED: Filtered to', swingFeatureCount, 'swing districts from', totalFeatureCount, 'total');
-                console.log('🗺️ ENHANCED: Adding enhanced district layer to map');
+                console.log('🎯 FINAL FIX: Filtered to', swingFeatureCount, 'swing districts from', totalFeatureCount, 'total');
+                console.log('🗺️ FINAL FIX: Adding FIXED district layer to map');
                 districtLayer.addTo(map);
                 
                 const districtToggleBtn = document.getElementById('districtToggleBtn');
@@ -1461,10 +1408,10 @@
                     districtToggleBtn.classList.add('active');
                 }
                 
-                console.log('✅ ENHANCED: Enhanced district boundaries successfully added to map');
+                console.log('✅ FINAL FIX: FIXED district boundaries successfully added to map');
                 
             } catch (error) {
-                console.log('❌ ENHANCED: Error creating enhanced district layer:', error);
+                console.log('❌ FINAL FIX: Error creating FIXED district layer:', error);
             }
         }
         
@@ -1472,7 +1419,6 @@
             if (feature.properties) {
                 const props = feature.properties;
                 
-                // Try multiple property names that might contain district ID
                 let districtId = null;
                 
                 if (props.DISTRICT) {
@@ -1493,17 +1439,17 @@
                     districtId = props.GEOID;
                 }
                 
-                // 🎯 ENHANCED: Convert numeric district to CA-XX format
+                // Convert numeric district to CA-XX format
                 if (districtId && /^\d+$/.test(districtId)) {
                     districtId = 'CA-' + districtId.padStart(2, '0');
-                    console.log('🔧 ENHANCED: Converted numeric district to CA format:', districtId);
+                    console.log('🔧 FINAL FIX: Converted numeric district to CA format:', districtId);
                 }
                 
-                console.log('🔍 ENHANCED: Final district ID:', districtId, 'from properties:', Object.keys(props).slice(0, 5));
+                console.log('🔍 FINAL FIX: Final district ID:', districtId, 'from properties:', Object.keys(props).slice(0, 5));
                 return districtId;
             }
             
-            console.log('❌ ENHANCED: No properties found for feature');
+            console.log('❌ FINAL FIX: No properties found for feature');
             return null;
         }
         
@@ -1528,31 +1474,31 @@
         }
 
         function toggleDistrictBoundaries() {
-            console.log('🗺️ ENHANCED: District boundaries toggle clicked');
+            console.log('🗺️ FINAL FIX: District boundaries toggle clicked');
             
             const districtToggleBtn = document.getElementById('districtToggleBtn');
             
             if (!map) {
-                console.log('❌ ENHANCED: No map instance');
+                console.log('❌ FINAL FIX: No map instance');
                 return;
             }
             
             districtBoundariesVisible = !districtBoundariesVisible;
-            console.log('🗺️ ENHANCED: Boundaries visible set to:', districtBoundariesVisible);
+            console.log('🗺️ FINAL FIX: Boundaries visible set to:', districtBoundariesVisible);
             
             if (districtBoundariesVisible) {
                 if (districtBoundaries && districtBoundaries.data) {
-                    console.log('🗺️ ENHANCED: Showing enhanced district boundaries');
+                    console.log('🗺️ FINAL FIX: Showing FIXED district boundaries');
                     addDistrictBoundariesToMap(currentSelectedDistrict);
                 } else {
-                    console.log('❌ ENHANCED: No boundary data to show');
+                    console.log('❌ FINAL FIX: No boundary data to show');
                 }
                 
                 if (districtToggleBtn) {
                     districtToggleBtn.classList.add('active');
                 }
             } else {
-                console.log('🗺️ ENHANCED: Hiding district boundaries');
+                console.log('🗺️ FINAL FIX: Hiding district boundaries');
                 if (districtLayer) {
                     map.removeLayer(districtLayer);
                     districtLayer = null;
@@ -1664,7 +1610,7 @@
         }
 
         function showDistrictCampusesFromPopup(districtId) {
-            console.log('🔄 ENHANCED: showDistrictCampusesFromPopup called for:', districtId);
+            console.log('🔄 FINAL FIX: showDistrictCampusesFromPopup called for:', districtId);
             
             // Close any open popups
             map.closePopup();
@@ -1683,7 +1629,7 @@
             }
             
             if (!foundState) {
-                console.log('❌ ENHANCED: Could not find state for district:', districtId);
+                console.log('❌ FINAL FIX: Could not find state for district:', districtId);
                 return;
             }
             
@@ -1720,10 +1666,10 @@
             // Load and display colleges for this district
             displayColleges(foundState, districtId);
             
-            // 🎯 NEW: Center map on the selected district
+            // FIXED: Center map on the selected district
             if (map && districtData[districtId]) {
                 const districtCenter = districtData[districtId].center;
-                console.log('🗺️ ENHANCED: Centering map on district:', districtId, 'at coordinates:', districtCenter);
+                console.log('🗺️ FINAL FIX: Centering map on district:', districtId, 'at coordinates:', districtCenter);
                 map.setView([districtCenter[0], districtCenter[1]], 10); // Zoom level 10 for district view
             }
             
@@ -1752,7 +1698,7 @@
         }
 
         function toggleFullControls() {
-            console.log('🔄 ENHANCED: toggleFullControls called');
+            console.log('🔄 FINAL FIX: toggleFullControls called');
             
             const section = document.getElementById('advancedControlsSection');
             const btn = document.getElementById('fullControlsBtn');
@@ -1796,8 +1742,8 @@
         }
 
         function init() {
-            console.log('🎯 ENHANCED: App initialized successfully with CSV lat/lng coordinates');
-            console.log('🎯 ENHANCED: District mappings loaded:', districtMappings);
+            console.log('🎯 FINAL FIX: App initialized successfully with FIXED district colors and popups');
+            console.log('🎯 FINAL FIX: District mappings loaded:', districtMappings);
             initializeCollegeData();
         }
 
@@ -1811,18 +1757,18 @@
                     collegeData[state][districts[j]] = [];
                 }
             }
-            console.log('🎯 ENHANCED: Data structure initialized for CSV coordinate loading');
+            console.log('🎯 FINAL FIX: Data structure initialized for CSV coordinate loading');
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 ENHANCED: DOM loaded, initializing enhanced Drive Scout...');
+            console.log('🎯 FINAL FIX: DOM loaded, initializing FIXED Drive Scout...');
             
             setTimeout(function() {
                 init();
             }, 100);
         });
 
-        console.log("🎯 ENHANCED: Enhanced Drive Scout script completed with CSV lat/lng coordinates");
+        console.log("🎯 FINAL FIX: FIXED Drive Scout script completed - blue districts stay blue, no PVI, popups match cards");
     </script>
 </body>
 </html>
