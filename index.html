@@ -1447,13 +1447,27 @@
             var state = district.split('-')[0] || 'XX';
             var districtCode = district.replace('-', '');
             
+            // Calculate distance if user location available
+            var distanceText = '';
+            if (window.lastUserLocation && college.lat && college.lng) {
+                var distance = calculateDistance(
+                    window.lastUserLocation.lat, 
+                    window.lastUserLocation.lng, 
+                    parseFloat(college.lat), 
+                    parseFloat(college.lng)
+                );
+                distanceText = '<div style="color: #666; font-size: 0.75rem; font-style: italic; margin-top: 2px;"><em>' + Math.round(distance) + ' miles away</em></div>';
+            }
+            
             var html = '<div style="background: white; border: 1px solid #e1e5e9; border-radius: 6px; padding: 8px 12px; margin-bottom: 6px; font-size: 0.9rem;">';
             html += '<div style="display: flex; justify-content: space-between; align-items: flex-start;">';
             html += '<div style="flex: 1;">';
             html += '<div style="font-weight: bold; color: #333; margin-bottom: 3px; font-size: 0.95rem;">' + college.name + '</div>';
             html += '<div style="color: #666; font-size: 0.8rem; line-height: 1.2;">' + addressDisplay + '</div>';
+            html += distanceText;
             html += '</div>';
             html += '<div style="margin-left: 12px; text-align: right;">';
+            html += '<div style="font-size: 0.7rem; color: #666; font-weight: 600; margin-bottom: 2px;">DRIVE RATING:</div>';
             html += '<span class="suitability-badge suitability-' + college.suitability.toLowerCase() + '" style="font-size: 0.7rem; padding: 2px 6px;">' + college.suitability + '</span>';
             html += '</div>';
             html += '</div>';
@@ -2786,12 +2800,26 @@
             var state = district.split('-')[0] || 'XX';
             var districtCode = district.replace('-', '');
             
+            // Calculate distance if user location available
+            var distanceText = '';
+            if (window.lastUserLocation && college.lat && college.lng) {
+                var distance = calculateDistance(
+                    window.lastUserLocation.lat, 
+                    window.lastUserLocation.lng, 
+                    parseFloat(college.lat), 
+                    parseFloat(college.lng)
+                );
+                distanceText = '<div style="color: #666; font-size: 0.8rem; font-style: italic; margin-top: 2px;"><em>' + Math.round(distance) + ' miles away</em></div>';
+            }
+            
             div.innerHTML = '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin-bottom: 4px;">' + college.name + '</div>' +
                 '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">' +
                     '<div style="flex: 1; text-align: left;">' +
                         '<div style="color: #666; font-size: 0.85rem; line-height: 1.2;">' + addressDisplay + '</div>' +
+                        distanceText +
                     '</div>' +
                     '<div style="margin-left: 15px; flex-shrink: 0; text-align: right;">' +
+                        '<div style="font-size: 0.75rem; color: #666; font-weight: 600; margin-bottom: 2px;">DRIVE RATING:</div>' +
                         '<span class="suitability-badge suitability-' + college.suitability.toLowerCase() + '" style="font-size: 0.75rem; padding: 3px 8px;">' + college.suitability + '</span>' +
                     '</div>' +
                 '</div>' +
