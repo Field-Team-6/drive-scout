@@ -539,6 +539,13 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        console.log("TEST: Script started loading");
+        function testFunction() {
+            console.log("TEST: Function works");
+        }
+        console.log("TEST: Script finished loading");
+    </script>
+    <script>
         const districtData = {
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', pvi: 'R+8', center: [64.0685, -152.2782], cities: ['Anchorage', 'Fairbanks', 'Juneau', 'Wasilla', 'Sitka'] },
             'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', pvi: 'R+2', center: [33.6061, -111.8781], cities: ['Scottsdale', 'Tempe', 'Mesa', 'Fountain Hills', 'Paradise Valley'] },
