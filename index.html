@@ -548,19 +548,185 @@
     <script>
         console.log("MAIN: Starting main script");
         
-        // Test basic variables first
         const districtData = {
-            'CA-27': { rep: 'George Whitesides', party: 'D', action: 'HOLD', pvi: 'D+4', center: [34.2411, -118.5289], cities: ['Santa Clarita', 'Palmdale', 'Lancaster', 'Simi Valley', 'Moorpark'] }
+            'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', pvi: 'R+8', center: [64.0685, -152.2782], cities: ['Anchorage', 'Fairbanks', 'Juneau', 'Wasilla', 'Sitka'] },
+            'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', pvi: 'R+2', center: [33.6061, -111.8781], cities: ['Scottsdale', 'Tempe', 'Mesa', 'Fountain Hills', 'Paradise Valley'] },
+            'AZ-02': { rep: 'Eli Crane', party: 'R', action: 'FLIP', pvi: 'R+7', center: [35.1983, -111.6513], cities: ['Flagstaff', 'Prescott', 'Sedona', 'Cottonwood', 'Show Low'] },
+            'AZ-04': { rep: 'Greg Stanton', party: 'D', action: 'HOLD', pvi: 'D+2', center: [33.4152, -111.8315], cities: ['Phoenix', 'Chandler', 'Ahwatukee', 'South Mountain', 'Laveen'] },
+            'AZ-06': { rep: 'Juan Ciscomani', party: 'R', action: 'FLIP', pvi: 'R+1', center: [32.2319, -110.9501], cities: ['Tucson', 'Sierra Vista', 'Oro Valley', 'Marana', 'Sahuarita'] },
+            'CA-09': { rep: 'Josh Harder', party: 'D', action: 'HOLD', pvi: 'D+5', center: [37.6391, -121.0018], cities: ['Stockton', 'Lodi', 'Tracy', 'Manteca', 'Mountain House'] },
+            'CA-13': { rep: 'Adam Gray', party: 'D', action: 'HOLD', pvi: 'EVEN', center: [37.3022, -120.4832], cities: ['Modesto', 'Turlock', 'Merced', 'Los Banos', 'Ceres'] },
+            'CA-21': { rep: 'Jim Costa', party: 'D', action: 'HOLD', pvi: 'D+5', center: [36.7315, -119.7985], cities: ['Fresno', 'Hanford', 'Tulare', 'Visalia', 'Dinuba'] },
+            'CA-22': { rep: 'David Valadao', party: 'R', action: 'FLIP', pvi: 'D+5', center: [35.3733, -119.0187], cities: ['Bakersfield', 'Delano', 'Wasco', 'Shafter', 'Taft'] },
+            'CA-27': { rep: 'George Whitesides', party: 'D', action: 'HOLD', pvi: 'D+4', center: [34.2411, -118.5289], cities: ['Santa Clarita', 'Palmdale', 'Lancaster', 'Simi Valley', 'Moorpark'] },
+            'CA-41': { rep: 'Ken Calvert', party: 'R', action: 'FLIP', pvi: 'R+3', center: [33.9735, -117.3298], cities: ['Riverside', 'Corona', 'Murrieta', 'Temecula', 'Norco'] },
+            'CA-45': { rep: 'Derek Tran', party: 'D', action: 'HOLD', pvi: 'D+2', center: [33.6405, -117.8443], cities: ['Irvine', 'Tustin', 'Lake Forest', 'Mission Viejo', 'Laguna Hills'] },
+            'CA-47': { rep: 'Dave Min', party: 'D', action: 'HOLD', pvi: 'D+3', center: [33.7838, -118.1141], cities: ['Huntington Beach', 'Garden Grove', 'Westminster', 'Fountain Valley', 'Seal Beach'] },
+            'CA-49': { rep: 'Mike Levin', party: 'D', action: 'HOLD', pvi: 'D+3', center: [33.1281, -117.3078], cities: ['Oceanside', 'Vista', 'Carlsbad', 'Encinitas', 'San Marcos'] },
+            'CO-03': { rep: 'Jeff Hurd', party: 'R', action: 'FLIP', pvi: 'R+7', center: [39.5501, -107.7996], cities: ['Grand Junction', 'Pueblo', 'Montrose', 'Durango', 'Glenwood Springs'] },
+            'CO-08': { rep: 'Gabe Evans', party: 'R', action: 'FLIP', pvi: 'D+1', center: [39.8561, -104.6737], cities: ['Thornton', 'Westminster', 'Northglenn', 'Commerce City', 'Brighton'] },
+            'CT-05': { rep: 'Jahana Hayes', party: 'D', action: 'HOLD', pvi: 'D+1', center: [41.5834, -73.0877], cities: ['Waterbury', 'Danbury', 'New Britain', 'Meriden', 'Torrington'] },
+            'FL-23': { rep: 'Jared Moskowitz', party: 'D', action: 'HOLD', pvi: 'D+6', center: [26.1224, -80.1373], cities: ['Boca Raton', 'Delray Beach', 'Boynton Beach', 'Coral Springs', 'Coconut Creek'] },
+            'FL-25': { rep: 'Debbie Wasserman Schultz', party: 'D', action: 'HOLD', pvi: 'R+2', center: [25.6761, -80.3200], cities: ['Hialeah', 'Homestead', 'Florida City', 'Doral', 'Sweetwater'] },
+            'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', pvi: 'D+9', center: [36.1699, -115.1398], cities: ['Las Vegas', 'Paradise', 'Winchester', 'Enterprise', 'Spring Valley'] },
+            'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', pvi: 'D+1', center: [36.0395, -115.1656], cities: ['Henderson', 'Boulder City', 'Summerlin', 'Green Valley', 'Seven Hills'] },
+            'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', pvi: 'D+3', center: [36.2277, -115.2640], cities: ['North Las Vegas', 'Sunrise Manor', 'Nellis AFB', 'Laughlin', 'Mesquite'] }
         };
-        
+
+        let map;
+        let markers = [];
+        let userLocationMarker;
+        let collegeData = {};
+        let districtBoundaries = null;
+        let districtBoundariesVisible = true;
+        let districtLayer = null;
+        let currentSelectedDistrict = null;
+
+        const districtMappings = {
+            "Alaska": ["AK-AL"],
+            "Arizona": ["AZ-01", "AZ-02", "AZ-04", "AZ-06"],
+            "California": ["CA-09", "CA-13", "CA-21", "CA-22", "CA-27", "CA-41", "CA-45", "CA-47", "CA-49"],
+            "Colorado": ["CO-03", "CO-08"],
+            "Connecticut": ["CT-05"],
+            "Florida": ["FL-23", "FL-25"],
+            "Nevada": ["NV-01", "NV-03", "NV-04"]
+        };
+
         console.log("MAIN: districtData defined");
-        
-        // Test basic function
-        function findClosestCampuses() {
-            console.log("MAIN: findClosestCampuses called");
-            alert("Test function works!");
+
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            const R = 3959;
+            const dLat = (lat2 - lat1) * Math.PI / 180;
+            const dLng = (lng2 - lng1) * Math.PI / 180;
+            const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLng/2) * Math.sin(dLng/2);
+            const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
         }
-        
+
+        function findClosestCampuses() {
+            console.log('🔄 Starting findClosestCampuses...');
+            clearAllResults();
+            if (map) {
+                clearMarkers();
+                if (districtLayer) {
+                    map.removeLayer(districtLayer);
+                    districtLayer = null;
+                }
+                map.setView([39.8283, -98.5795], 4);
+            }
+            window.lastUserLocation = null;
+            
+            const btn = document.getElementById('findClosestCampusesBtn');
+            const resultContainer = document.getElementById('closestCampusesResult');
+            
+            btn.innerHTML = '🔍 Finding closest swing district...';
+            btn.disabled = true;
+            resultContainer.style.display = 'none';
+            
+            if (!navigator.geolocation) {
+                alert('Geolocation is not supported by your browser');
+                btn.innerHTML = '🔍 Find closest swing district campuses!';
+                btn.disabled = false;
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+                    
+                    window.lastUserLocation = { lat: userLat, lng: userLng };
+                    
+                    console.log('✅ User location:', userLat, userLng);
+                    
+                    let closestDistrict = null;
+                    let shortestDistance = Infinity;
+                    
+                    const districtEntries = Object.entries(districtData);
+                    for (let i = 0; i < districtEntries.length; i++) {
+                        const districtId = districtEntries[i][0];
+                        const data = districtEntries[i][1];
+                        const distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                        if (distance < shortestDistance) {
+                            shortestDistance = distance;
+                            closestDistrict = districtId;
+                        }
+                    }
+                    
+                    if (closestDistrict) {
+                        console.log('🎯 Closest district:', closestDistrict);
+                        
+                        const districtInfo = districtData[closestDistrict];
+                        const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                        const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                        
+                        resultContainer.innerHTML = 
+                            '<div style="background: ' + partyBackgroundColor + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; margin: 6px 0 0 0 !important;">' +
+                                '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">' +
+                                    'Swing district: ' + closestDistrict +
+                                '</div>' +
+                                '<div style="color: #666; margin-bottom: 0;">' +
+                                    '<em>' + Math.round(shortestDistance) + ' miles away</em> • Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                                '</div>' +
+                            '</div>';
+                        resultContainer.style.display = 'block';
+                        
+                        const stateKeys = Object.keys(districtMappings);
+                        let foundState = null;
+                        for (let i = 0; i < stateKeys.length; i++) {
+                            if (districtMappings[stateKeys[i]].includes(closestDistrict)) {
+                                foundState = stateKeys[i];
+                                break;
+                            }
+                        }
+                        
+                        if (foundState) {
+                            displayColleges(foundState, closestDistrict);
+                            
+                            setTimeout(function() {
+                                const advancedText = document.querySelector('div[style*="color: white; font-size: 1.1rem"]');
+                                const fullControlsBtn = document.getElementById('fullControlsBtn');
+                                const advancedControlsSection = document.getElementById('advancedControlsSection');
+                                
+                                if (advancedText) advancedText.style.display = 'none';
+                                if (fullControlsBtn) fullControlsBtn.style.display = 'none';
+                                if (advancedControlsSection) advancedControlsSection.style.display = 'none';
+                            }, 500);
+                        }
+                    }
+                    
+                    btn.innerHTML = '🔍 Find closest swing district campuses!';
+                    btn.disabled = false;
+                },
+                function(error) {
+                    console.log('❌ Geolocation error:', error.message);
+                    alert('Unable to get your location: ' + error.message);
+                    btn.innerHTML = '🔍 Find closest swing district campuses!';
+                    btn.disabled = false;
+                }
+            );
+        }
+
+        function toggleFullControls() {
+            console.log('🔄 toggleFullControls called');
+            alert('Advanced controls would appear here!');
+        }
+
+        function clearAllResults() {
+            console.log('🔄 clearAllResults called');
+        }
+
+        function clearMarkers() {
+            console.log('🔄 clearMarkers called');
+        }
+
+        function displayColleges(state, district) {
+            console.log('🔄 displayColleges called for:', state, district);
+            alert('Would display colleges for ' + district + ' in ' + state);
+        }
+
         console.log("MAIN: findClosestCampuses defined");
         console.log("MAIN: Main script finished");
     </script>
