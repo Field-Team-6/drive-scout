@@ -543,28 +543,28 @@
         console.log("🎯 ENHANCED: Starting Drive Scout with enhanced features and CSV coordinates");
         
         const districtData = {
-            'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', pvi: 'R+8', center: [64.0685, -152.2782], cities: ['Anchorage', 'Fairbanks', 'Juneau', 'Wasilla', 'Sitka'] },
-            'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', pvi: 'R+2', center: [33.6061, -111.8781], cities: ['Scottsdale', 'Tempe', 'Mesa', 'Fountain Hills', 'Paradise Valley'] },
-            'AZ-02': { rep: 'Eli Crane', party: 'R', action: 'FLIP', pvi: 'R+7', center: [35.1983, -111.6513], cities: ['Flagstaff', 'Prescott', 'Sedona', 'Cottonwood', 'Show Low'] },
-            'AZ-04': { rep: 'Greg Stanton', party: 'D', action: 'HOLD', pvi: 'D+2', center: [33.4152, -111.8315], cities: ['Phoenix', 'Chandler', 'Ahwatukee', 'South Mountain', 'Laveen'] },
-            'AZ-06': { rep: 'Juan Ciscomani', party: 'R', action: 'FLIP', pvi: 'R+1', center: [32.2319, -110.9501], cities: ['Tucson', 'Sierra Vista', 'Oro Valley', 'Marana', 'Sahuarita'] },
-            'CA-09': { rep: 'Josh Harder', party: 'D', action: 'HOLD', pvi: 'D+5', center: [37.6391, -121.0018], cities: ['Stockton', 'Lodi', 'Tracy', 'Manteca', 'Mountain House'] },
-            'CA-13': { rep: 'Adam Gray', party: 'D', action: 'HOLD', pvi: 'EVEN', center: [37.3022, -120.4832], cities: ['Modesto', 'Turlock', 'Merced', 'Los Banos', 'Ceres'] },
-            'CA-21': { rep: 'Jim Costa', party: 'D', action: 'HOLD', pvi: 'D+5', center: [36.7315, -119.7985], cities: ['Fresno', 'Hanford', 'Tulare', 'Visalia', 'Dinuba'] },
-            'CA-22': { rep: 'David Valadao', party: 'R', action: 'FLIP', pvi: 'D+5', center: [35.3733, -119.0187], cities: ['Bakersfield', 'Delano', 'Wasco', 'Shafter', 'Taft'] },
-            'CA-27': { rep: 'George Whitesides', party: 'D', action: 'HOLD', pvi: 'D+4', center: [34.2411, -118.5289], cities: ['Santa Clarita', 'Palmdale', 'Lancaster', 'Simi Valley', 'Moorpark'] },
-            'CA-41': { rep: 'Ken Calvert', party: 'R', action: 'FLIP', pvi: 'R+3', center: [33.9735, -117.3298], cities: ['Riverside', 'Corona', 'Murrieta', 'Temecula', 'Norco'] },
-            'CA-45': { rep: 'Derek Tran', party: 'D', action: 'HOLD', pvi: 'D+2', center: [33.6405, -117.8443], cities: ['Irvine', 'Tustin', 'Lake Forest', 'Mission Viejo', 'Laguna Hills'] },
-            'CA-47': { rep: 'Dave Min', party: 'D', action: 'HOLD', pvi: 'D+3', center: [33.7838, -118.1141], cities: ['Huntington Beach', 'Garden Grove', 'Westminster', 'Fountain Valley', 'Seal Beach'] },
-            'CA-49': { rep: 'Mike Levin', party: 'D', action: 'HOLD', pvi: 'D+3', center: [33.1281, -117.3078], cities: ['Oceanside', 'Vista', 'Carlsbad', 'Encinitas', 'San Marcos'] },
-            'CO-03': { rep: 'Jeff Hurd', party: 'R', action: 'FLIP', pvi: 'R+7', center: [39.5501, -107.7996], cities: ['Grand Junction', 'Pueblo', 'Montrose', 'Durango', 'Glenwood Springs'] },
-            'CO-08': { rep: 'Gabe Evans', party: 'R', action: 'FLIP', pvi: 'D+1', center: [39.8561, -104.6737], cities: ['Thornton', 'Westminster', 'Northglenn', 'Commerce City', 'Brighton'] },
-            'CT-05': { rep: 'Jahana Hayes', party: 'D', action: 'HOLD', pvi: 'D+1', center: [41.5834, -73.0877], cities: ['Waterbury', 'Danbury', 'New Britain', 'Meriden', 'Torrington'] },
-            'FL-23': { rep: 'Jared Moskowitz', party: 'D', action: 'HOLD', pvi: 'D+6', center: [26.1224, -80.1373], cities: ['Boca Raton', 'Delray Beach', 'Boynton Beach', 'Coral Springs', 'Coconut Creek'] },
-            'FL-25': { rep: 'Debbie Wasserman Schultz', party: 'D', action: 'HOLD', pvi: 'R+2', center: [25.6761, -80.3200], cities: ['Hialeah', 'Homestead', 'Florida City', 'Doral', 'Sweetwater'] },
-            'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', pvi: 'D+9', center: [36.1699, -115.1398], cities: ['Las Vegas', 'Paradise', 'Winchester', 'Enterprise', 'Spring Valley'] },
-            'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', pvi: 'D+1', center: [36.0395, -115.1656], cities: ['Henderson', 'Boulder City', 'Summerlin', 'Green Valley', 'Seven Hills'] },
-            'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', pvi: 'D+3', center: [36.2277, -115.2640], cities: ['North Las Vegas', 'Sunrise Manor', 'Nellis AFB', 'Laughlin', 'Mesquite'] }
+            'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782], cities: ['Anchorage', 'Fairbanks', 'Juneau', 'Wasilla', 'Sitka'] },
+            'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', center: [33.6061, -111.8781], cities: ['Scottsdale', 'Tempe', 'Mesa', 'Fountain Hills', 'Paradise Valley'] },
+            'AZ-02': { rep: 'Eli Crane', party: 'R', action: 'FLIP', center: [35.1983, -111.6513], cities: ['Flagstaff', 'Prescott', 'Sedona', 'Cottonwood', 'Show Low'] },
+            'AZ-04': { rep: 'Greg Stanton', party: 'D', action: 'HOLD', center: [33.4152, -111.8315], cities: ['Phoenix', 'Chandler', 'Ahwatukee', 'South Mountain', 'Laveen'] },
+            'AZ-06': { rep: 'Juan Ciscomani', party: 'R', action: 'FLIP', center: [32.2319, -110.9501], cities: ['Tucson', 'Sierra Vista', 'Oro Valley', 'Marana', 'Sahuarita'] },
+            'CA-09': { rep: 'Josh Harder', party: 'D', action: 'HOLD', center: [37.6391, -121.0018], cities: ['Stockton', 'Lodi', 'Tracy', 'Manteca', 'Mountain House'] },
+            'CA-13': { rep: 'Adam Gray', party: 'D', action: 'HOLD', center: [37.3022, -120.4832], cities: ['Modesto', 'Turlock', 'Merced', 'Los Banos', 'Ceres'] },
+            'CA-21': { rep: 'Jim Costa', party: 'D', action: 'HOLD', center: [36.7315, -119.7985], cities: ['Fresno', 'Hanford', 'Tulare', 'Visalia', 'Dinuba'] },
+            'CA-22': { rep: 'David Valadao', party: 'R', action: 'FLIP', center: [35.3733, -119.0187], cities: ['Bakersfield', 'Delano', 'Wasco', 'Shafter', 'Taft'] },
+            'CA-27': { rep: 'George Whitesides', party: 'D', action: 'HOLD', center: [34.2411, -118.5289], cities: ['Santa Clarita', 'Palmdale', 'Lancaster', 'Simi Valley', 'Moorpark'] },
+            'CA-41': { rep: 'Ken Calvert', party: 'R', action: 'FLIP', center: [33.9735, -117.3298], cities: ['Riverside', 'Corona', 'Murrieta', 'Temecula', 'Norco'] },
+            'CA-45': { rep: 'Derek Tran', party: 'D', action: 'HOLD', center: [33.6405, -117.8443], cities: ['Irvine', 'Tustin', 'Lake Forest', 'Mission Viejo', 'Laguna Hills'] },
+            'CA-47': { rep: 'Dave Min', party: 'D', action: 'HOLD', center: [33.7838, -118.1141], cities: ['Huntington Beach', 'Garden Grove', 'Westminster', 'Fountain Valley', 'Seal Beach'] },
+            'CA-49': { rep: 'Mike Levin', party: 'D', action: 'HOLD', center: [33.1281, -117.3078], cities: ['Oceanside', 'Vista', 'Carlsbad', 'Encinitas', 'San Marcos'] },
+            'CO-03': { rep: 'Jeff Hurd', party: 'R', action: 'FLIP', center: [39.5501, -107.7996], cities: ['Grand Junction', 'Pueblo', 'Montrose', 'Durango', 'Glenwood Springs'] },
+            'CO-08': { rep: 'Gabe Evans', party: 'R', action: 'FLIP', center: [39.8561, -104.6737], cities: ['Thornton', 'Westminster', 'Northglenn', 'Commerce City', 'Brighton'] },
+            'CT-05': { rep: 'Jahana Hayes', party: 'D', action: 'HOLD', center: [41.5834, -73.0877], cities: ['Waterbury', 'Danbury', 'New Britain', 'Meriden', 'Torrington'] },
+            'FL-23': { rep: 'Jared Moskowitz', party: 'D', action: 'HOLD', center: [26.1224, -80.1373], cities: ['Boca Raton', 'Delray Beach', 'Boynton Beach', 'Coral Springs', 'Coconut Creek'] },
+            'FL-25': { rep: 'Debbie Wasserman Schultz', party: 'D', action: 'HOLD', center: [25.6761, -80.3200], cities: ['Hialeah', 'Homestead', 'Florida City', 'Doral', 'Sweetwater'] },
+            'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398], cities: ['Las Vegas', 'Paradise', 'Winchester', 'Enterprise', 'Spring Valley'] },
+            'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656], cities: ['Henderson', 'Boulder City', 'Summerlin', 'Green Valley', 'Seven Hills'] },
+            'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640], cities: ['North Las Vegas', 'Sunrise Manor', 'Nellis AFB', 'Laughlin', 'Mesquite'] }
         };
 
         let map;
@@ -1332,7 +1332,7 @@
                         
                         // Add "Show campuses" button for all swing districts
                         popupContent += '<div style="margin-top: 10px;">';
-                        popupContent += '<button onclick="showDistrictCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 6px; font-size: 0.85rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
+                        popupContent += '<button onclick="showDistrictCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
                         popupContent += '</div>';
                     } else {
                         popupContent += '<div style="font-size: 0.85rem; color: #666;">Not a swing district</div>';
