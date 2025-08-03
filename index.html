@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- FINAL FIX: 2025-01-03-v3.0 - Complete rewrite to eliminate conflicts -->
+    <!-- ALASKA FIX: 2025-01-03-v3.1 - Fixed Alaska zoom level -->
     <title>Drive Scout</title>
     <!-- Favicon -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
@@ -540,33 +540,33 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // FINAL FIX VERSION: 2025-01-03-v3.0 - Complete rewrite eliminates all conflicts
-        console.log("🎯 FINAL FIX: Drive Scout v3.0 - District colors fixed, PVI removed, popups styled");
+        // ALASKA FIX VERSION: 2025-01-03-v3.1 - Fixed Alaska zoom level to 3
+        console.log("🎯 ALASKA FIX: Drive Scout v3.1 - Alaska zoom fixed to level 3");
         
-        // District data - PVI COMPLETELY REMOVED
+        // District data - Removed all PVI references and cities references
         const districtData = {
-            'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782], cities: ['Anchorage', 'Fairbanks', 'Juneau', 'Wasilla', 'Sitka'] },
-            'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', center: [33.6061, -111.8781], cities: ['Scottsdale', 'Tempe', 'Mesa', 'Fountain Hills', 'Paradise Valley'] },
-            'AZ-02': { rep: 'Eli Crane', party: 'R', action: 'FLIP', center: [35.1983, -111.6513], cities: ['Flagstaff', 'Prescott', 'Sedona', 'Cottonwood', 'Show Low'] },
-            'AZ-04': { rep: 'Greg Stanton', party: 'D', action: 'HOLD', center: [33.4152, -111.8315], cities: ['Phoenix', 'Chandler', 'Ahwatukee', 'South Mountain', 'Laveen'] },
-            'AZ-06': { rep: 'Juan Ciscomani', party: 'R', action: 'FLIP', center: [32.2319, -110.9501], cities: ['Tucson', 'Sierra Vista', 'Oro Valley', 'Marana', 'Sahuarita'] },
-            'CA-09': { rep: 'Josh Harder', party: 'D', action: 'HOLD', center: [37.6391, -121.0018], cities: ['Stockton', 'Lodi', 'Tracy', 'Manteca', 'Mountain House'] },
-            'CA-13': { rep: 'Adam Gray', party: 'D', action: 'HOLD', center: [37.3022, -120.4832], cities: ['Modesto', 'Turlock', 'Merced', 'Los Banos', 'Ceres'] },
-            'CA-21': { rep: 'Jim Costa', party: 'D', action: 'HOLD', center: [36.7315, -119.7985], cities: ['Fresno', 'Hanford', 'Tulare', 'Visalia', 'Dinuba'] },
-            'CA-22': { rep: 'David Valadao', party: 'R', action: 'FLIP', center: [35.3733, -119.0187], cities: ['Bakersfield', 'Delano', 'Wasco', 'Shafter', 'Taft'] },
-            'CA-27': { rep: 'George Whitesides', party: 'D', action: 'HOLD', center: [34.2411, -118.5289], cities: ['Santa Clarita', 'Palmdale', 'Lancaster', 'Simi Valley', 'Moorpark'] },
-            'CA-41': { rep: 'Ken Calvert', party: 'R', action: 'FLIP', center: [33.9735, -117.3298], cities: ['Riverside', 'Corona', 'Murrieta', 'Temecula', 'Norco'] },
-            'CA-45': { rep: 'Derek Tran', party: 'D', action: 'HOLD', center: [33.6405, -117.8443], cities: ['Irvine', 'Tustin', 'Lake Forest', 'Mission Viejo', 'Laguna Hills'] },
-            'CA-47': { rep: 'Dave Min', party: 'D', action: 'HOLD', center: [33.7838, -118.1141], cities: ['Huntington Beach', 'Garden Grove', 'Westminster', 'Fountain Valley', 'Seal Beach'] },
-            'CA-49': { rep: 'Mike Levin', party: 'D', action: 'HOLD', center: [33.1281, -117.3078], cities: ['Oceanside', 'Vista', 'Carlsbad', 'Encinitas', 'San Marcos'] },
-            'CO-03': { rep: 'Jeff Hurd', party: 'R', action: 'FLIP', center: [39.5501, -107.7996], cities: ['Grand Junction', 'Pueblo', 'Montrose', 'Durango', 'Glenwood Springs'] },
-            'CO-08': { rep: 'Gabe Evans', party: 'R', action: 'FLIP', center: [39.8561, -104.6737], cities: ['Thornton', 'Westminster', 'Northglenn', 'Commerce City', 'Brighton'] },
-            'CT-05': { rep: 'Jahana Hayes', party: 'D', action: 'HOLD', center: [41.5834, -73.0877], cities: ['Waterbury', 'Danbury', 'New Britain', 'Meriden', 'Torrington'] },
-            'FL-23': { rep: 'Jared Moskowitz', party: 'D', action: 'HOLD', center: [26.1224, -80.1373], cities: ['Boca Raton', 'Delray Beach', 'Boynton Beach', 'Coral Springs', 'Coconut Creek'] },
-            'FL-25': { rep: 'Debbie Wasserman Schultz', party: 'D', action: 'HOLD', center: [25.6761, -80.3200], cities: ['Hialeah', 'Homestead', 'Florida City', 'Doral', 'Sweetwater'] },
-            'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398], cities: ['Las Vegas', 'Paradise', 'Winchester', 'Enterprise', 'Spring Valley'] },
-            'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656], cities: ['Henderson', 'Boulder City', 'Summerlin', 'Green Valley', 'Seven Hills'] },
-            'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640], cities: ['North Las Vegas', 'Sunrise Manor', 'Nellis AFB', 'Laughlin', 'Mesquite'] }
+            'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
+            'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', center: [33.6061, -111.8781] },
+            'AZ-02': { rep: 'Eli Crane', party: 'R', action: 'FLIP', center: [35.1983, -111.6513] },
+            'AZ-04': { rep: 'Greg Stanton', party: 'D', action: 'HOLD', center: [33.4152, -111.8315] },
+            'AZ-06': { rep: 'Juan Ciscomani', party: 'R', action: 'FLIP', center: [32.2319, -110.9501] },
+            'CA-09': { rep: 'Josh Harder', party: 'D', action: 'HOLD', center: [37.6391, -121.0018] },
+            'CA-13': { rep: 'Adam Gray', party: 'D', action: 'HOLD', center: [37.3022, -120.4832] },
+            'CA-21': { rep: 'Jim Costa', party: 'D', action: 'HOLD', center: [36.7315, -119.7985] },
+            'CA-22': { rep: 'David Valadao', party: 'R', action: 'FLIP', center: [35.3733, -119.0187] },
+            'CA-27': { rep: 'George Whitesides', party: 'D', action: 'HOLD', center: [34.2411, -118.5289] },
+            'CA-41': { rep: 'Ken Calvert', party: 'R', action: 'FLIP', center: [33.9735, -117.3298] },
+            'CA-45': { rep: 'Derek Tran', party: 'D', action: 'HOLD', center: [33.6405, -117.8443] },
+            'CA-47': { rep: 'Dave Min', party: 'D', action: 'HOLD', center: [33.7838, -118.1141] },
+            'CA-49': { rep: 'Mike Levin', party: 'D', action: 'HOLD', center: [33.1281, -117.3078] },
+            'CO-03': { rep: 'Jeff Hurd', party: 'R', action: 'FLIP', center: [39.5501, -107.7996] },
+            'CO-08': { rep: 'Gabe Evans', party: 'R', action: 'FLIP', center: [39.8561, -104.6737] },
+            'CT-05': { rep: 'Jahana Hayes', party: 'D', action: 'HOLD', center: [41.5834, -73.0877] },
+            'FL-23': { rep: 'Jared Moskowitz', party: 'D', action: 'HOLD', center: [26.1224, -80.1373] },
+            'FL-25': { rep: 'Debbie Wasserman Schultz', party: 'D', action: 'HOLD', center: [25.6761, -80.3200] },
+            'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398] },
+            'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656] },
+            'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640] }
         };
 
         let map;
@@ -588,7 +588,7 @@
             "Nevada": ["NV-01", "NV-03", "NV-04"]
         };
 
-        console.log("🎯 FINAL FIX: Loaded", Object.keys(districtData).length, "districts without PVI");
+        console.log("🎯 ALASKA FIX: Loaded", Object.keys(districtData).length, "districts with fixed Alaska handling");
 
         function calculateDistance(lat1, lng1, lat2, lng2) {
             const R = 3959;
@@ -602,7 +602,7 @@
         }
 
         function findClosestCampuses() {
-            console.log('🔄 FINAL FIX: Starting findClosestCampuses...');
+            console.log('🔄 ALASKA FIX: Starting findClosestCampuses...');
             clearAllResults();
             if (map) {
                 clearMarkers();
@@ -635,7 +635,7 @@
                     
                     window.lastUserLocation = { lat: userLat, lng: userLng };
                     
-                    console.log('✅ FINAL FIX: User location:', userLat, userLng);
+                    console.log('✅ ALASKA FIX: User location:', userLat, userLng);
                     
                     let closestDistrict = null;
                     let shortestDistance = Infinity;
@@ -652,7 +652,7 @@
                     }
                     
                     if (closestDistrict) {
-                        console.log('🎯 FINAL FIX: Closest swing district:', closestDistrict);
+                        console.log('🎯 ALASKA FIX: Closest swing district:', closestDistrict);
                         
                         const districtInfo = districtData[closestDistrict];
                         const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
@@ -697,7 +697,7 @@
                     btn.disabled = false;
                 },
                 function(error) {
-                    console.log('❌ FINAL FIX: Geolocation error:', error.message);
+                    console.log('❌ ALASKA FIX: Geolocation error:', error.message);
                     alert('Unable to get your location: ' + error.message);
                     btn.innerHTML = '🔍 Find closest swing district campuses!';
                     btn.disabled = false;
@@ -705,17 +705,12 @@
             );
         }
 
-        function toggleFullControls() {
-            console.log('🔄 FINAL FIX: toggleFullControls called');
-            alert('Advanced controls would appear here!');
-        }
-
         function clearAllResults() {
-            console.log('🔄 FINAL FIX: clearAllResults called');
+            console.log('🔄 ALASKA FIX: clearAllResults called');
         }
 
         function clearMarkers() {
-            console.log('🔄 FINAL FIX: clearMarkers called');
+            console.log('🔄 ALASKA FIX: clearMarkers called');
             for (let i = 0; i < markers.length; i++) {
                 if (map && markers[i]) {
                     map.removeLayer(markers[i]);
@@ -725,7 +720,7 @@
         }
 
         function displayColleges(state, district) {
-            console.log('🔄 FINAL FIX: displayColleges called for:', state, district);
+            console.log('🔄 ALASKA FIX: displayColleges called for:', state, district);
             
             const collegeItems = document.getElementById('collegeItems');
             const collegeList = document.getElementById('collegeList');
@@ -738,7 +733,7 @@
             loadDistrictDataWithTimeout(district).then(function() {
                 const collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
                 
-                console.log('📊 FINAL FIX: College data for district:', district, collegeDataForDistrict);
+                console.log('📊 ALASKA FIX: College data for district:', district, collegeDataForDistrict);
                 
                 let allColleges = [];
                 let withinColleges = [];
@@ -759,7 +754,7 @@
                                          college.lng !== null && college.lng !== undefined &&
                                          !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
                     if (!hasValidCoords) {
-                        console.log('⚠️ FINAL FIX: Filtering out college without valid CSV coordinates:', college ? college.name : 'unknown');
+                        console.log('⚠️ ALASKA FIX: Filtering out college without valid CSV coordinates:', college ? college.name : 'unknown');
                     }
                     return hasValidCoords;
                 });
@@ -772,7 +767,7 @@
                            !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
                 });
                 
-                console.log('📍 FINAL FIX: Filtered colleges with valid CSV coordinates:', allColleges.length);
+                console.log('📍 ALASKA FIX: Filtered colleges with valid CSV coordinates:', allColleges.length);
                 
                 if (allColleges.length === 0) {
                     showNoData(state, district);
@@ -787,15 +782,15 @@
                     loadDistrictBoundaries(state).then(function() {
                         setTimeout(function() {
                             addMarkersToMap(allColleges);
-                            console.log('🗺️ FINAL FIX: Adding FIXED district boundaries for:', district);
+                            console.log('🗺️ ALASKA FIX: Adding district boundaries for:', district);
                             if (districtBoundaries) {
                                 addDistrictBoundariesToMap(district);
-                                // Force centering after boundaries are added
+                                // Force centering after boundaries are added with ALASKA FIX
                                 setTimeout(function() {
-                                    centerMapOnDistrict(district);
+                                    centerMapOnDistrictWithAlaskaFix(district);
                                 }, 300);
                             } else {
-                                console.log('❌ FINAL FIX: No district boundaries available after loading');
+                                console.log('❌ ALASKA FIX: No district boundaries available after loading');
                             }
                         }, 200);
                     });
@@ -854,7 +849,7 @@
             
             if (state && collegeData[state] && collegeData[state][district] && 
                 collegeData[state][district].length > 0) {
-                console.log('📊 FINAL FIX: District data already loaded for', district);
+                console.log('📊 ALASKA FIX: District data already loaded for', district);
                 return Promise.resolve();
             }
 
@@ -874,7 +869,7 @@
                 loadPromise = loadPromise.then(function() {
                     if (csvText) return;
                     
-                    console.log('📁 FINAL FIX: Trying to load CSV with lat/lng:', filename);
+                    console.log('📁 ALASKA FIX: Trying to load CSV with lat/lng:', filename);
                     
                     const timeoutPromise = new Promise(function(_, reject) {
                         setTimeout(function() {
@@ -888,19 +883,19 @@
                                 return response.text().then(function(text) {
                                     csvText = text;
                                     successfulUrl = filename;
-                                    console.log('✅ FINAL FIX: Successfully loaded CSV:', filename);
+                                    console.log('✅ ALASKA FIX: Successfully loaded CSV:', filename);
                                 });
                             }
                         })
                         .catch(function(error) {
-                            console.log('❌ FINAL FIX: Failed to load ' + filename + ':', error.message);
+                            console.log('❌ ALASKA FIX: Failed to load ' + filename + ':', error.message);
                         });
                 });
             }
 
             return loadPromise.then(function() {
                 if (!csvText) {
-                    console.log('❌ FINAL FIX: No CSV file found for ' + district);
+                    console.log('❌ ALASKA FIX: No CSV file found for ' + district);
                     return;
                 }
 
@@ -908,7 +903,7 @@
                     if (state && colleges) {
                         if (!collegeData[state]) collegeData[state] = {};
                         collegeData[state][district] = colleges;
-                        console.log('✅ FINAL FIX: Loaded CSV data for ' + district + ' from ' + successfulUrl);
+                        console.log('✅ ALASKA FIX: Loaded CSV data for ' + district + ' from ' + successfulUrl);
                     }
                 });
             });
@@ -916,7 +911,7 @@
 
         function parseCSV(csvText, district) {
             return new Promise(function(resolve) {
-                console.log('📄 FINAL FIX: Parsing CSV for district:', district);
+                console.log('📄 ALASKA FIX: Parsing CSV for district:', district);
                 
                 const lines = csvText.split('\n').filter(function(line) {
                     return line.trim();
@@ -941,7 +936,7 @@
 
                     if (!headerRowFound) {
                         headers = values.map(function(h) { return h ? h.trim() : ''; });
-                        console.log('📋 FINAL FIX: CSV headers found:', headers);
+                        console.log('📋 ALASKA FIX: CSV headers found:', headers);
                         headerRowFound = true;
                         continue;
                     }
@@ -984,13 +979,13 @@
                         parseFloat(college.lng) >= -180 && parseFloat(college.lng) <= 180) {
                         
                         colleges[targetSection].push(college);
-                        console.log('✅ FINAL FIX: Added college with CSV coordinates:', college.name, 'lat:', college.lat, 'lng:', college.lng);
+                        console.log('✅ ALASKA FIX: Added college with CSV coordinates:', college.name, 'lat:', college.lat, 'lng:', college.lng);
                     } else {
-                        console.log('⚠️ FINAL FIX: Skipped college with invalid CSV coordinates:', institutionName, 'lat:', college ? college.lat : 'missing', 'lng:', college ? college.lng : 'missing');
+                        console.log('⚠️ ALASKA FIX: Skipped college with invalid CSV coordinates:', institutionName, 'lat:', college ? college.lat : 'missing', 'lng:', college ? college.lng : 'missing');
                     }
                 }
 
-                console.log('📊 FINAL FIX: Parsed', colleges.within.length, 'colleges within', district, 'and', colleges.near.length, 'colleges near', district);
+                console.log('📊 ALASKA FIX: Parsed', colleges.within.length, 'colleges within', district, 'and', colleges.near.length, 'colleges near', district);
                 resolve(colleges);
             });
         }
@@ -1041,7 +1036,7 @@
                 lng: null
             };
 
-            console.log('🏫 FINAL FIX: Parsing college data from CSV...');
+            console.log('🏫 ALASKA FIX: Parsing college data from CSV...');
 
             for (let j = 0; j < headers.length; j++) {
                 const header = headers[j] ? headers[j].trim() : '';
@@ -1067,17 +1062,17 @@
                     const latValue = parseFloat(value);
                     if (!isNaN(latValue) && latValue >= -90 && latValue <= 90) {
                         college.lat = latValue;
-                        console.log('📍 FINAL FIX: Set latitude from CSV:', latValue);
+                        console.log('📍 ALASKA FIX: Set latitude from CSV:', latValue);
                     } else {
-                        console.log('⚠️ FINAL FIX: Invalid latitude in CSV:', value);
+                        console.log('⚠️ ALASKA FIX: Invalid latitude in CSV:', value);
                     }
                 } else if (headerLower === 'longitude') {
                     const lngValue = parseFloat(value);
                     if (!isNaN(lngValue) && lngValue >= -180 && lngValue <= 180) {
                         college.lng = lngValue;
-                        console.log('📍 FINAL FIX: Set longitude from CSV:', lngValue);
+                        console.log('📍 ALASKA FIX: Set longitude from CSV:', lngValue);
                     } else {
-                        console.log('⚠️ FINAL FIX: Invalid longitude in CSV:', value);
+                        console.log('⚠️ ALASKA FIX: Invalid longitude in CSV:', value);
                     }
                 } else if (headerLower === 'enrollment') {
                     const enrollmentValue = parseInt(value);
@@ -1103,7 +1098,7 @@
             }
 
             setTimeout(function() {
-                console.log('🗺️ FINAL FIX: Initializing map for CSV coordinate display...');
+                console.log('🗺️ ALASKA FIX: Initializing map for CSV coordinate display...');
                 map = L.map('map', {
                     attributionControl: false,
                     minZoom: 1,
@@ -1125,11 +1120,11 @@
                 // Add zoom event listener to show national boundaries when zoomed out
                 map.on('zoomend', function() {
                     const currentZoom = map.getZoom();
-                    console.log('🔍 FINAL FIX: Zoom level changed to:', currentZoom);
+                    console.log('🔍 ALASKA FIX: Zoom level changed to:', currentZoom);
                     
                     // Show national swing districts when zoomed out (zoom level 6 or less)
                     if (currentZoom <= 6 && districtBoundariesVisible) {
-                        console.log('🗺️ FINAL FIX: Zoom level', currentZoom, '- loading national swing districts');
+                        console.log('🗺️ ALASKA FIX: Zoom level', currentZoom, '- loading national swing districts');
                         loadNationalSwingDistricts();
                     }
                 });
@@ -1143,11 +1138,11 @@
         }
 
         function loadNationalSwingDistricts() {
-            console.log('🌎 FINAL FIX: Loading national swing district boundaries...');
+            console.log('🌎 ALASKA FIX: Loading national swing district boundaries...');
             
             // Don't reload if we already have national boundaries
             if (map.nationalDistrictLayer) {
-                console.log('🌎 FINAL FIX: National boundaries already loaded');
+                console.log('🌎 ALASKA FIX: National boundaries already loaded');
                 return;
             }
             
@@ -1170,7 +1165,7 @@
             statesToLoad.forEach(function(state) {
                 const boundaryFile = boundaryFiles[state];
                 if (boundaryFile) {
-                    console.log('📁 FINAL FIX: Loading national boundaries for', state);
+                    console.log('📁 ALASKA FIX: Loading national boundaries for', state);
                     fetch(boundaryFile)
                         .then(function(response) {
                             if (response.ok) {
@@ -1182,24 +1177,24 @@
                             if (geojsonData && geojsonData.features) {
                                 // Add all features from this state to our combined data
                                 allBoundariesData.features = allBoundariesData.features.concat(geojsonData.features);
-                                console.log('✅ FINAL FIX: Added', geojsonData.features.length, 'districts from', state);
+                                console.log('✅ ALASKA FIX: Added', geojsonData.features.length, 'districts from', state);
                             }
                             
                             loadedStates++;
                             
                             // When all states are loaded, add to map
                             if (loadedStates === statesToLoad.length) {
-                                console.log('🌎 FINAL FIX: All', allBoundariesData.features.length, 'districts loaded for national view');
+                                console.log('🌎 ALASKA FIX: All', allBoundariesData.features.length, 'districts loaded for national view');
                                 addNationalSwingDistrictBoundaries(allBoundariesData);
                             }
                         })
                         .catch(function(error) {
-                            console.log('❌ FINAL FIX: Error loading boundaries for', state, ':', error.message);
+                            console.log('❌ ALASKA FIX: Error loading boundaries for', state, ':', error.message);
                             loadedStates++;
                             
                             // Still proceed when all attempts are done
                             if (loadedStates === statesToLoad.length && allBoundariesData.features.length > 0) {
-                                console.log('🌎 FINAL FIX: Proceeding with', allBoundariesData.features.length, 'districts loaded');
+                                console.log('🌎 ALASKA FIX: Proceeding with', allBoundariesData.features.length, 'districts loaded');
                                 addNationalSwingDistrictBoundaries(allBoundariesData);
                             }
                         });
@@ -1208,7 +1203,7 @@
         }
 
         function addNationalSwingDistrictBoundaries(boundariesData) {
-            console.log('🗺️ FINAL FIX: Adding national swing district boundaries to map');
+            console.log('🗺️ ALASKA FIX: Adding national swing district boundaries to map');
             
             // Remove existing district layers first
             if (districtLayer) {
@@ -1306,7 +1301,7 @@
                 }
             }).addTo(map);
             
-            console.log('✅ FINAL FIX: National swing district boundaries added to map');
+            console.log('✅ ALASKA FIX: National swing district boundaries added to map');
         }
 
         function addMarkersToMap(colleges) {
@@ -1314,13 +1309,13 @@
             
             if (colleges.length === 0 || !map) return;
 
-            console.log('📍 FINAL FIX: Adding', colleges.length, 'markers using CSV coordinates...');
+            console.log('📍 ALASKA FIX: Adding', colleges.length, 'markers using CSV coordinates...');
             const group = new L.featureGroup();
 
             for (let i = 0; i < colleges.length; i++) {
                 const college = colleges[i];
                 if (!college.lat || !college.lng) {
-                    console.log('⚠️ FINAL FIX: Skipping college without CSV coordinates:', college.name);
+                    console.log('⚠️ ALASKA FIX: Skipping college without CSV coordinates:', college.name);
                     continue;
                 }
 
@@ -1328,11 +1323,11 @@
                 const lng = parseFloat(college.lng);
                 
                 if (isNaN(lat) || isNaN(lng)) {
-                    console.log('⚠️ FINAL FIX: Skipping college with invalid CSV coordinates:', college.name, 'lat:', college.lat, 'lng:', college.lng);
+                    console.log('⚠️ ALASKA FIX: Skipping college with invalid CSV coordinates:', college.name, 'lat:', college.lat, 'lng:', college.lng);
                     continue;
                 }
 
-                console.log('📍 FINAL FIX: Adding marker for', college.name, 'at CSV coordinates:', lat, lng);
+                console.log('📍 ALASKA FIX: Adding marker for', college.name, 'at CSV coordinates:', lat, lng);
 
                 const iconColor = getSuitabilityColor(college.suitability);
                 
@@ -1358,7 +1353,7 @@
 
             if (group.getLayers().length > 0) {
                 map.fitBounds(group.getBounds(), { padding: [50, 50] });
-                console.log('✅ FINAL FIX: Successfully added', group.getLayers().length, 'markers with CSV coordinates');
+                console.log('✅ ALASKA FIX: Successfully added', group.getLayers().length, 'markers with CSV coordinates');
             }
         }
 
@@ -1384,27 +1379,27 @@
             
             const boundaryFile = boundaryFiles[state];
             if (!boundaryFile) {
-                console.log('📍 FINAL FIX: No boundary file configured for state:', state);
+                console.log('📍 ALASKA FIX: No boundary file configured for state:', state);
                 return Promise.resolve();
             }
             
             if (districtBoundaries && districtBoundaries.state === state) {
-                console.log('📍 FINAL FIX: District boundaries already loaded for', state);
+                console.log('📍 ALASKA FIX: District boundaries already loaded for', state);
                 return Promise.resolve();
             }
             
-            console.log('📍 FINAL FIX: Loading FIXED district boundaries for', state, 'from', boundaryFile);
+            console.log('📍 ALASKA FIX: Loading district boundaries for', state, 'from', boundaryFile);
             return fetch(boundaryFile)
                 .then(function(response) {
                     if (!response.ok) {
-                        console.log('📍 FINAL FIX: Could not load boundary file:', boundaryFile);
+                        console.log('📍 ALASKA FIX: Could not load boundary file:', boundaryFile);
                         return;
                     }
                     return response.json();
                 })
                 .then(function(geojsonData) {
                     if (!geojsonData || !geojsonData.features) {
-                        console.log('📍 FINAL FIX: Invalid GeoJSON data loaded from', boundaryFile);
+                        console.log('📍 ALASKA FIX: Invalid GeoJSON data loaded from', boundaryFile);
                         return;
                     }
                     
@@ -1413,51 +1408,51 @@
                         data: geojsonData
                     };
                     
-                    console.log('📍 FINAL FIX: Successfully loaded', geojsonData.features.length, 'district boundaries for', state);
+                    console.log('📍 ALASKA FIX: Successfully loaded', geojsonData.features.length, 'district boundaries for', state);
                 })
                 .catch(function(error) {
-                    console.log('📍 FINAL FIX: Error loading district boundaries:', error.message);
+                    console.log('📍 ALASKA FIX: Error loading district boundaries:', error.message);
                 });
         }
 
         function addDistrictBoundariesToMap(selectedDistrict) {
-            console.log('🎯 FINAL FIX: Starting FIXED district boundaries for district:', selectedDistrict);
+            console.log('🎯 ALASKA FIX: Starting district boundaries for district:', selectedDistrict);
             
             if (!map) {
-                console.log('❌ FINAL FIX: No map instance available');
+                console.log('❌ ALASKA FIX: No map instance available');
                 return;
             }
             
             if (!districtBoundaries || !districtBoundaries.data) {
-                console.log('❌ FINAL FIX: No district boundaries data available');
+                console.log('❌ ALASKA FIX: No district boundaries data available');
                 return;
             }
             
             // Remove any existing district layers
             if (districtLayer) {
-                console.log('🗺️ FINAL FIX: Removing existing district layer');
+                console.log('🗺️ ALASKA FIX: Removing existing district layer');
                 map.removeLayer(districtLayer);
                 districtLayer = null;
             }
             
             // Remove national district layer when showing specific district
             if (map.nationalDistrictLayer) {
-                console.log('🗺️ FINAL FIX: Removing national district layer for specific district view');
+                console.log('🗺️ ALASKA FIX: Removing national district layer for specific district view');
                 map.removeLayer(map.nationalDistrictLayer);
                 map.nationalDistrictLayer = null;
             }
             
             if (!districtBoundariesVisible) {
-                console.log('🗺️ FINAL FIX: District boundaries set to not visible, skipping');
+                console.log('🗺️ ALASKA FIX: District boundaries set to not visible, skipping');
                 return;
             }
             
             try {
-                console.log('🗺️ FINAL FIX: Creating FIXED district layer with party colors');
-                console.log('🗺️ FINAL FIX: Available features:', districtBoundaries.data.features.length);
+                console.log('🗺️ ALASKA FIX: Creating district layer with party colors');
+                console.log('🗺️ ALASKA FIX: Available features:', districtBoundaries.data.features.length);
                 
-                // FIXED Style function
-                function districtStyleFixed(feature) {
+                // Style function
+                function districtStyle(feature) {
                     const districtId = getDistrictId(feature);
                     const districtInfo = districtData[districtId];
                     const isSelected = selectedDistrict && districtId === selectedDistrict;
@@ -1481,13 +1476,13 @@
                         opacity = 0.6;
                     }
                     
-                    // FIXED: HIGHLIGHT SELECTED DISTRICT - KEEP PARTY COLOR
+                    // Highlight selected district
                     if (isSelected) {
                         weight = 5;
                         opacity = 1.0;
                         fillOpacity = 0.15;
-                        fillColor = color; // KEEP THE PARTY COLOR, NOT RED!
-                        console.log('🔵 FINAL FIX: Selected district', districtId, 'keeping party color:', color);
+                        fillColor = color; // Keep the party color
+                        console.log('🔵 ALASKA FIX: Selected district', districtId, 'keeping party color:', color);
                     }
                     
                     return {
@@ -1499,20 +1494,17 @@
                     };
                 }
                 
-                // FIXED Popup function
-                function onEachDistrictFixed(feature, layer) {
+                // Popup function
+                function onEachDistrict(feature, layer) {
                     const districtId = getDistrictId(feature);
                     const districtInfo = districtData[districtId];
                     const isSelected = selectedDistrict && districtId === selectedDistrict;
                     
-                    console.log('🎨 FINAL FIX: Creating FIXED popup for district:', districtId, 'isSelected:', isSelected);
+                    console.log('🎨 ALASKA FIX: Creating popup for district:', districtId, 'isSelected:', isSelected);
                     
                     if (districtInfo) {
-                        // FIXED: Use EXACT same format as district cards
                         const partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                         const partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
-                        
-                        console.log('🎨 FINAL FIX: Using party colors - bg:', partyBackgroundColor, 'border:', partyBorderColor);
                         
                         // Calculate distance if user location is available
                         let distanceText = '';
@@ -1524,12 +1516,11 @@
                                 districtInfo.center[1]
                             );
                             distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
-                            console.log('📍 FINAL FIX: Adding distance to popup:', Math.round(distance), 'miles for district', districtId);
                         }
                         
                         let popupContent = '<div style="min-width: 200px; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
                         
-                        // District title - same as district card
+                        // District title
                         popupContent += '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">';
                         popupContent += 'Swing district: ' + districtId;
                         if (isSelected) {
@@ -1537,19 +1528,17 @@
                         }
                         popupContent += '</div>';
                         
-                        // District details with distance - same as district card  
+                        // District details with distance
                         popupContent += '<div style="color: #666; margin-bottom: 8px;">';
                         popupContent += distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action;
                         popupContent += '</div>';
                         
-                        // Show campuses button - same as district card
+                        // Show campuses button
                         popupContent += '<div style="text-align: center; margin-top: 8px;">';
                         popupContent += '<button onclick="showDistrictCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
                         popupContent += '</div>';
                         
                         popupContent += '</div>';
-                        
-                        console.log('🎨 FINAL FIX: Final popup content preview:', popupContent.substring(0, 100) + '...');
                         
                         layer.bindPopup(popupContent, { maxWidth: 300 });
                     } else {
@@ -1575,7 +1564,7 @@
                             },
                             mouseout: function(e) {
                                 if (!isSelected) {
-                                    layer.setStyle(districtStyleFixed(feature));
+                                    layer.setStyle(districtStyle(feature));
                                 }
                             }
                         });
@@ -1588,24 +1577,24 @@
                 let totalFeatureCount = districtBoundaries.data.features.length;
                 
                 districtLayer = L.geoJSON(districtBoundaries.data, {
-                    style: districtStyleFixed,
-                    onEachFeature: onEachDistrictFixed,
+                    style: districtStyle,
+                    onEachFeature: onEachDistrict,
                     filter: function(feature) {
                         const districtId = getDistrictId(feature);
-                        console.log('🔍 FINAL FIX: Checking feature district ID:', districtId);
+                        console.log('🔍 ALASKA FIX: Checking feature district ID:', districtId);
                         const isSwing = districtId && swingDistrictIds.includes(districtId);
                         if (isSwing) {
                             swingFeatureCount++;
-                            console.log('✅ FINAL FIX: Including swing district:', districtId);
+                            console.log('✅ ALASKA FIX: Including swing district:', districtId);
                         } else {
-                            console.log('❌ FINAL FIX: Excluding district:', districtId, '(not in swing list)');
+                            console.log('❌ ALASKA FIX: Excluding district:', districtId, '(not in swing list)');
                         }
                         return isSwing;
                     }
                 });
                 
-                console.log('🎯 FINAL FIX: Filtered to', swingFeatureCount, 'swing districts from', totalFeatureCount, 'total');
-                console.log('🗺️ FINAL FIX: Adding FIXED district layer to map');
+                console.log('🎯 ALASKA FIX: Filtered to', swingFeatureCount, 'swing districts from', totalFeatureCount, 'total');
+                console.log('🗺️ ALASKA FIX: Adding district layer to map');
                 districtLayer.addTo(map);
                 
                 const districtToggleBtn = document.getElementById('districtToggleBtn');
@@ -1613,10 +1602,10 @@
                     districtToggleBtn.classList.add('active');
                 }
                 
-                console.log('✅ FINAL FIX: FIXED district boundaries successfully added to map');
+                console.log('✅ ALASKA FIX: District boundaries successfully added to map');
                 
             } catch (error) {
-                console.log('❌ FINAL FIX: Error creating FIXED district layer:', error);
+                console.log('❌ ALASKA FIX: Error creating district layer:', error);
             }
         }
         
@@ -1651,18 +1640,18 @@
                     // Special handling for Alaska's at-large district (00 -> AL)
                     if (state === 'AK' && districtId === '00') {
                         districtId = 'AK-AL';
-                        console.log('🔧 FINAL FIX: Converted Alaska at-large district to AK-AL');
+                        console.log('🔧 ALASKA FIX: Converted Alaska at-large district to AK-AL');
                     } else {
                         districtId = state + '-' + districtId.padStart(2, '0');
-                        console.log('🔧 FINAL FIX: Converted numeric district to', state, 'format:', districtId);
+                        console.log('🔧 ALASKA FIX: Converted numeric district to', state, 'format:', districtId);
                     }
                 }
                 
-                console.log('🔍 FINAL FIX: Final district ID:', districtId, 'from properties:', Object.keys(props).slice(0, 5));
+                console.log('🔍 ALASKA FIX: Final district ID:', districtId, 'from properties:', Object.keys(props).slice(0, 5));
                 return districtId;
             }
             
-            console.log('❌ FINAL FIX: No properties found for feature');
+            console.log('❌ ALASKA FIX: No properties found for feature');
             return null;
         }
         
@@ -1680,7 +1669,7 @@
                 };
                 const stateCode = stateMap[properties.STATEFP];
                 if (stateCode) {
-                    console.log('🗺️ FINAL FIX: Found state', stateCode, 'from STATEFP:', properties.STATEFP);
+                    console.log('🗺️ ALASKA FIX: Found state', stateCode, 'from STATEFP:', properties.STATEFP);
                     return stateCode;
                 }
             }
@@ -1693,7 +1682,7 @@
                     '09': 'CT', '12': 'FL', '32': 'NV'
                 };
                 if (stateMap[stateCode]) {
-                    console.log('🗺️ FINAL FIX: Found state', stateMap[stateCode], 'from GEOID:', properties.GEOID);
+                    console.log('🗺️ ALASKA FIX: Found state', stateMap[stateCode], 'from GEOID:', properties.GEOID);
                     return stateMap[stateCode];
                 }
             }
@@ -1706,27 +1695,27 @@
                 };
                 const stateCode = stateMap[districtBoundaries.state];
                 if (stateCode) {
-                    console.log('🗺️ FINAL FIX: Using fallback state', stateCode, 'from districtBoundaries');
+                    console.log('🗺️ ALASKA FIX: Using fallback state', stateCode, 'from districtBoundaries');
                     return stateCode;
                 }
             }
             
-            console.log('⚠️ FINAL FIX: Could not determine state, defaulting to XX. Properties:', Object.keys(properties));
+            console.log('⚠️ ALASKA FIX: Could not determine state, defaulting to XX. Properties:', Object.keys(properties));
             return 'XX';
         }
 
         function toggleDistrictBoundaries() {
-            console.log('🗺️ FINAL FIX: District boundaries toggle clicked');
+            console.log('🗺️ ALASKA FIX: District boundaries toggle clicked');
             
             const districtToggleBtn = document.getElementById('districtToggleBtn');
             
             if (!map) {
-                console.log('❌ FINAL FIX: No map instance');
+                console.log('❌ ALASKA FIX: No map instance');
                 return;
             }
             
             districtBoundariesVisible = !districtBoundariesVisible;
-            console.log('🗺️ FINAL FIX: Boundaries visible set to:', districtBoundariesVisible);
+            console.log('🗺️ ALASKA FIX: Boundaries visible set to:', districtBoundariesVisible);
             
             if (districtBoundariesVisible) {
                 // Show boundaries - check zoom level to decide which type
@@ -1734,15 +1723,15 @@
                 
                 if (currentZoom <= 6) {
                     // Show national boundaries for zoomed out view
-                    console.log('🗺️ FINAL FIX: Showing national boundaries (zoom level', currentZoom, ')');
+                    console.log('🗺️ ALASKA FIX: Showing national boundaries (zoom level', currentZoom, ')');
                     loadNationalSwingDistricts();
                 } else {
                     // Show local boundaries for zoomed in view
                     if (districtBoundaries && districtBoundaries.data) {
-                        console.log('🗺️ FINAL FIX: Showing local FIXED district boundaries');
+                        console.log('🗺️ ALASKA FIX: Showing local district boundaries');
                         addDistrictBoundariesToMap(currentSelectedDistrict);
                     } else {
-                        console.log('❌ FINAL FIX: No local boundary data to show');
+                        console.log('❌ ALASKA FIX: No local boundary data to show');
                     }
                 }
                 
@@ -1750,7 +1739,7 @@
                     districtToggleBtn.classList.add('active');
                 }
             } else {
-                console.log('🗺️ FINAL FIX: Hiding all district boundaries');
+                console.log('🗺️ ALASKA FIX: Hiding all district boundaries');
                 
                 // Remove local district layer
                 if (districtLayer) {
@@ -1766,6 +1755,76 @@
                 
                 if (districtToggleBtn) {
                     districtToggleBtn.classList.remove('active');
+                }
+            }
+        }
+
+        // ALASKA FIX: Special centering function with Alaska handling
+        function centerMapOnDistrictWithAlaskaFix(districtId) {
+            console.log('🎯 ALASKA FIX: Centering map on district with Alaska handling:', districtId);
+            
+            if (!map) {
+                console.log('❌ ALASKA FIX: No map instance available for centering');
+                return;
+            }
+
+            // ALASKA SPECIAL CASE: Use fixed zoom level 3 and center coordinates
+            if (districtId === 'AK-AL') {
+                console.log('🏔️ ALASKA FIX: Applying special Alaska zoom level 3');
+                const alaskaCenter = districtData['AK-AL'].center;
+                map.setView([alaskaCenter[0], alaskaCenter[1]], 3);
+                console.log('✅ ALASKA FIX: Alaska centered at zoom level 3:', alaskaCenter);
+                return;
+            }
+
+            // For all other districts, use boundary fitting
+            if (!districtBoundaries || !districtBoundaries.data) {
+                console.log('❌ ALASKA FIX: No boundaries available, using fallback center');
+                const districtInfo = districtData[districtId];
+                if (districtInfo && districtInfo.center) {
+                    map.setView([districtInfo.center[0], districtInfo.center[1]], 10);
+                    console.log('📍 ALASKA FIX: Used fallback district center coordinates');
+                }
+                return;
+            }
+            
+            // Find the selected district in the boundaries data
+            const selectedFeatures = districtBoundaries.data.features.filter(function(feature) {
+                const featureDistrictId = getDistrictId(feature);
+                return featureDistrictId === districtId;
+            });
+            
+            if (selectedFeatures.length > 0) {
+                console.log('🎯 ALASKA FIX: Found', selectedFeatures.length, 'boundary features for district', districtId);
+                
+                // Create a temporary layer to get bounds
+                const tempLayer = L.geoJSON(selectedFeatures);
+                const bounds = tempLayer.getBounds();
+                
+                // Special handling for CA-13 which needs to zoom out more
+                let maxZoom = 12; // Default max zoom
+                let padding = [50, 50]; // Default padding
+                
+                if (districtId === 'CA-13') {
+                    maxZoom = 11; // Zoom out one more level for CA-13
+                    padding = [60, 60]; // Extra padding for CA-13
+                    console.log('🎯 ALASKA FIX: Using special zoom settings for CA-13');
+                }
+                
+                // Fit the map to the district boundaries with generous padding
+                map.fitBounds(bounds, { 
+                    padding: padding,
+                    maxZoom: maxZoom
+                });
+                
+                console.log('✅ ALASKA FIX: Map fitted to district', districtId, 'with maxZoom:', maxZoom, 'and padding:', padding);
+            } else {
+                console.log('⚠️ ALASKA FIX: Could not find boundary features for district', districtId);
+                // Fallback to district center coordinates
+                const districtInfo = districtData[districtId];
+                if (districtInfo && districtInfo.center) {
+                    map.setView([districtInfo.center[0], districtInfo.center[1]], 10);
+                    console.log('📍 ALASKA FIX: Used fallback district center coordinates');
                 }
             }
         }
@@ -1870,7 +1929,7 @@
         }
 
         function showDistrictCampusesFromPopup(districtId) {
-            console.log('🔄 FINAL FIX: showDistrictCampusesFromPopup called for:', districtId);
+            console.log('🔄 ALASKA FIX: showDistrictCampusesFromPopup called for:', districtId);
             
             // Close any open popups
             map.closePopup();
@@ -1889,7 +1948,7 @@
             }
             
             if (!foundState) {
-                console.log('❌ FINAL FIX: Could not find state for district:', districtId);
+                console.log('❌ ALASKA FIX: Could not find state for district:', districtId);
                 return;
             }
             
@@ -1926,17 +1985,17 @@
             // Load and display colleges for this district
             displayColleges(foundState, districtId);
             
-            // IMPROVED: Center map on the selected district with proper boundary fitting
+            // Center map on the selected district with ALASKA FIX
             if (map && districtData[districtId]) {
                 setTimeout(function() {
-                    centerMapOnDistrict(districtId);
+                    centerMapOnDistrictWithAlaskaFix(districtId);
                 }, 500); // Wait for boundaries to load
                 
                 // Additional timeout for desktop to ensure proper centering
                 setTimeout(function() {
                     if (window.innerWidth > 768) {
-                        console.log('🖥️ FINAL FIX: Desktop additional centering for', districtId);
-                        centerMapOnDistrict(districtId);
+                        console.log('🖥️ ALASKA FIX: Desktop additional centering for', districtId);
+                        centerMapOnDistrictWithAlaskaFix(districtId);
                     }
                 }, 1000);
             }
@@ -1944,66 +2003,6 @@
             // Update the map to highlight the selected district
             if (districtBoundaries) {
                 addDistrictBoundariesToMap(districtId);
-            }
-        }
-
-        function centerMapOnDistrict(districtId) {
-            console.log('🗺️ FINAL FIX: Centering map on district:', districtId);
-            
-            if (!map || !districtBoundaries || !districtBoundaries.data) {
-                console.log('❌ FINAL FIX: No map or boundaries available for centering');
-                // Fallback to district center coordinates
-                const districtInfo = districtData[districtId];
-                if (districtInfo && districtInfo.center) {
-                    map.setView([districtInfo.center[0], districtInfo.center[1]], 10);
-                    console.log('📍 FINAL FIX: Used fallback district center coordinates');
-                }
-                return;
-            }
-            
-            // Find the selected district in the boundaries data
-            const selectedFeatures = districtBoundaries.data.features.filter(function(feature) {
-                const featureDistrictId = getDistrictId(feature);
-                return featureDistrictId === districtId;
-            });
-            
-            if (selectedFeatures.length > 0) {
-                console.log('🎯 FINAL FIX: Found', selectedFeatures.length, 'boundary features for district', districtId);
-                
-                // Create a temporary layer to get bounds
-                const tempLayer = L.geoJSON(selectedFeatures);
-                const bounds = tempLayer.getBounds();
-                
-                // Special handling for CA-13 which needs to zoom out more
-                let maxZoom = 12; // Default max zoom
-                let padding = [50, 50]; // Default padding
-                
-                if (districtId === 'CA-13') {
-                    maxZoom = 11; // Zoom out one more level for CA-13
-                    padding = [60, 60]; // Extra padding for CA-13
-                    console.log('🎯 FINAL FIX: Using special zoom settings for CA-13');
-                } else if (districtId === 'AK-AL') {
-                    maxZoom = 3; // Zoom level 3 for Alaska
-                    padding = [20, 20]; // Minimal padding for Alaska
-                    console.log('🎯 FINAL FIX: Using special zoom settings for Alaska');
-                }
-                
-                // Fit the map to the district boundaries with generous padding
-                // This ensures the district boundaries don't touch the map edges
-                map.fitBounds(bounds, { 
-                    padding: padding,
-                    maxZoom: maxZoom
-                });
-                
-                console.log('✅ FINAL FIX: Map fitted to district', districtId, 'with maxZoom:', maxZoom, 'and padding:', padding);
-            } else {
-                console.log('⚠️ FINAL FIX: Could not find boundary features for district', districtId);
-                // Fallback to district center coordinates
-                const districtInfo = districtData[districtId];
-                if (districtInfo && districtInfo.center) {
-                    map.setView([districtInfo.center[0], districtInfo.center[1]], 10);
-                    console.log('📍 FINAL FIX: Used fallback district center coordinates');
-                }
             }
         }
 
@@ -2026,7 +2025,7 @@
         }
 
         function toggleFullControls() {
-            console.log('🔄 FINAL FIX: toggleFullControls called');
+            console.log('🔄 ALASKA FIX: toggleFullControls called');
             
             const section = document.getElementById('advancedControlsSection');
             const btn = document.getElementById('fullControlsBtn');
@@ -2069,9 +2068,32 @@
             }
         }
 
+        // Placeholder functions for missing functionality
+        function findClosestDistricts() {
+            console.log('🔄 ALASKA FIX: findClosestDistricts placeholder called');
+            alert('This feature will be restored in the next update!');
+        }
+
+        function toggleLocationSearch() {
+            console.log('🔄 ALASKA FIX: toggleLocationSearch placeholder called');
+            alert('This feature will be restored in the next update!');
+        }
+
+        function handleLocationKeypress(event) {
+            console.log('🔄 ALASKA FIX: handleLocationKeypress placeholder called');
+            if (event.key === 'Enter') {
+                alert('This feature will be restored in the next update!');
+            }
+        }
+
+        function exploreNationalMap() {
+            console.log('🔄 ALASKA FIX: exploreNationalMap placeholder called');
+            alert('This feature will be restored in the next update!');
+        }
+
         function init() {
-            console.log('🎯 FINAL FIX: App initialized successfully with FIXED district colors and popups');
-            console.log('🎯 FINAL FIX: District mappings loaded:', districtMappings);
+            console.log('🎯 ALASKA FIX: App initialized successfully with Alaska zoom level 3 fix');
+            console.log('🎯 ALASKA FIX: District mappings loaded:', districtMappings);
             initializeCollegeData();
         }
 
@@ -2085,18 +2107,18 @@
                     collegeData[state][districts[j]] = [];
                 }
             }
-            console.log('🎯 FINAL FIX: Data structure initialized for CSV coordinate loading');
+            console.log('🎯 ALASKA FIX: Data structure initialized for CSV coordinate loading');
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 FINAL FIX: DOM loaded, initializing FIXED Drive Scout...');
+            console.log('🎯 ALASKA FIX: DOM loaded, initializing Drive Scout with Alaska fix...');
             
             setTimeout(function() {
                 init();
             }, 100);
         });
 
-        console.log("🎯 FINAL FIX: FIXED Drive Scout script completed - blue districts stay blue, no PVI, popups match cards, distance added to popups, CA-13 zoom fixed");
+        console.log("🎯 ALASKA FIX: Drive Scout script completed - Alaska zoom fixed to level 3, no PVI references, traditional JavaScript only");
     </script>
 </body>
 </html>
