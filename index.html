@@ -568,8 +568,8 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // ALASKA FIX VERSION: 2025-01-03-v3.1 - Fixed Alaska zoom level to 3
-        console.log("🎯 ALASKA FIX: Drive Scout v3.1 - Alaska zoom fixed to level 3");
+        // LOCATE BUTTON FIX VERSION: 2025-01-03-v3.2 - Fixed location button to not move boundaries
+        console.log("🎯 LOCATE FIX: Drive Scout v3.2 - Location button no longer affects boundaries");
         
         // Global variables
         var map;
@@ -617,11 +617,11 @@
             "Nevada": ["NV-01", "NV-03", "NV-04"]
         };
 
-        console.log("🎯 ALASKA FIX: Loaded", Object.keys(districtData).length, "districts with fixed Alaska handling");
+        console.log("🎯 LOCATE FIX: Loaded", Object.keys(districtData).length, "districts with fixed location handling");
 
         // Main function - Find closest campuses
         function findClosestCampuses() {
-            console.log('🔄 ALASKA FIX: Starting findClosestCampuses...');
+            console.log('🔄 LOCATE FIX: Starting findClosestCampuses...');
             
             try {
                 clearAllResults();
@@ -639,7 +639,7 @@
                 var resultContainer = document.getElementById('closestCampusesResult');
                 
                 if (!btn || !resultContainer) {
-                    console.log('❌ ALASKA FIX: Required elements not found');
+                    console.log('❌ LOCATE FIX: Required elements not found');
                     return;
                 }
                 
@@ -661,7 +661,7 @@
                         
                         window.lastUserLocation = { lat: userLat, lng: userLng };
                         
-                        console.log('✅ ALASKA FIX: User location:', userLat, userLng);
+                        console.log('✅ LOCATE FIX: User location:', userLat, userLng);
                         
                         var closestDistrict = null;
                         var shortestDistance = Infinity;
@@ -676,7 +676,7 @@
                         }
                         
                         if (closestDistrict) {
-                            console.log('🎯 ALASKA FIX: Closest swing district:', closestDistrict);
+                            console.log('🎯 LOCATE FIX: Closest swing district:', closestDistrict);
                             
                             var districtInfo = districtData[closestDistrict];
                             var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
@@ -724,14 +724,14 @@
                         btn.disabled = false;
                     },
                     function(error) {
-                        console.log('❌ ALASKA FIX: Geolocation error:', error.message);
+                        console.log('❌ LOCATE FIX: Geolocation error:', error.message);
                         alert('Unable to get your location: ' + error.message);
                         btn.innerHTML = '🔍 Find closest swing district campuses!';
                         btn.disabled = false;
                     }
                 );
             } catch (error) {
-                console.log('❌ ALASKA FIX: Error in findClosestCampuses:', error);
+                console.log('❌ LOCATE FIX: Error in findClosestCampuses:', error);
                 alert('An error occurred. Please refresh the page and try again.');
             }
         }
@@ -1563,9 +1563,9 @@
             }
         }
 
-        // Enhanced user location functionality - FIXED to not auto-recenter
+        // FIXED: Enhanced user location functionality - NO automatic recentering or boundary reloading
         function getUserLocation() {
-            console.log('🔄 ENHANCED: getUserLocation called');
+            console.log('🔄 LOCATE FIX: getUserLocation called - FIXED VERSION');
             
             try {
                 var btn = document.getElementById('locationBtn');
@@ -1583,7 +1583,7 @@
                         var userLng = position.coords.longitude;
                         
                         window.lastUserLocation = { lat: userLat, lng: userLng };
-                        console.log('✅ ENHANCED: Got user location:', userLat, userLng);
+                        console.log('✅ LOCATE FIX: Got user location:', userLat, userLng);
                         
                         if (map) {
                             // Remove existing user location marker
@@ -1603,52 +1603,32 @@
                             
                             userLocationMarker.bindPopup('<div style="text-align: center; padding: 8px;"><strong>Your Location</strong></div>');
                             
-                            // Center map on user location WITHOUT triggering boundary reload
+                            // FIXED: Only center map on user location, DO NOT reload boundaries or trigger zoom events
                             var currentZoom = map.getZoom();
                             var targetZoom = Math.max(currentZoom, 10);
                             
-                            // Temporarily disable zoom events to prevent boundary reloading
-                            map.off('zoomend');
-                            
+                            console.log('🗺️ LOCATE FIX: Centering map WITHOUT affecting boundaries');
                             map.setView([userLat, userLng], targetZoom);
                             
-                            // Re-enable zoom events after a short delay
-                            setTimeout(function() {
-                                if (map && map.selectedDistrict && map.selectedState) {
-                                    map.on('zoomend', function() {
-                                        var currentZoom = map.getZoom();
-                                        console.log('🔍 PRIORITY: Zoom level changed to:', currentZoom);
-                                        
-                                        // Show national swing districts when zoomed out (zoom level 6 or less)
-                                        if (currentZoom <= 6 && districtBoundariesVisible) {
-                                            console.log('🗺️ PRIORITY: Zoom level', currentZoom, '- loading national swing districts');
-                                            loadNationalSwingDistrictsOnMainMap();
-                                        } else if (currentZoom > 6 && districtBoundariesVisible) {
-                                            // Show local boundaries when zoomed in
-                                            if (map.selectedDistrict && map.selectedState) {
-                                                loadMainMapDistrictBoundaries(map.selectedDistrict, map.selectedState);
-                                            }
-                                        }
-                                    });
-                                }
-                            }, 1000);
+                            // DO NOT reload boundaries - they should stay as they are
+                            console.log('✅ LOCATE FIX: Location shown, boundaries unchanged');
                         }
                         
                         if (btn) btn.classList.remove('loading');
                     },
                     function(error) {
-                        console.log('❌ ENHANCED: Geolocation error:', error.message);
+                        console.log('❌ LOCATE FIX: Geolocation error:', error.message);
                         alert('Unable to get your location: ' + error.message);
                         if (btn) btn.classList.remove('loading');
                     }
                 );
             } catch (error) {
-                console.log('❌ ENHANCED: Error in getUserLocation:', error);
+                console.log('❌ LOCATE FIX: Error in getUserLocation:', error);
             }
         }
 
         function getUserLocationForMap(mapId) {
-            console.log('🔄 ENHANCED: getUserLocationForMap called for:', mapId);
+            console.log('🔄 LOCATE FIX: getUserLocationForMap called for:', mapId);
             
             try {
                 var districtMap = window['map_' + mapId];
@@ -1732,41 +1712,6 @@
                 }
             } catch (error) {
                 console.log('❌ Error in toggleDistrictBoundaries:', error);
-            }
-        }
-
-        function toggleDistrictBoundariesForMap(mapId) {
-            console.log('🔄 ENHANCED: toggleDistrictBoundariesForMap called for:', mapId);
-            
-            try {
-                var districtMap = window['map_' + mapId];
-                if (!districtMap) {
-                    console.log('❌ Map not found:', mapId);
-                    return;
-                }
-                
-                var btn = document.querySelector('#' + mapId + ' .district-toggle-button');
-                if (!btn) return;
-                
-                // Toggle the boundaries for this specific map
-                if (btn.classList.contains('active')) {
-                    // Hide boundaries
-                    if (districtMap.districtLayer) {
-                        districtMap.removeLayer(districtMap.districtLayer);
-                        districtMap.districtLayer = null;
-                    }
-                    btn.classList.remove('active');
-                    btn.style.background = 'white';
-                    btn.style.color = 'black';
-                } else {
-                    // Show boundaries
-                    loadDistrictBoundariesForMap(districtMap, null);
-                    btn.classList.add('active');
-                    btn.style.background = '#667eea';
-                    btn.style.color = 'white';
-                }
-            } catch (error) {
-                console.log('❌ Error in toggleDistrictBoundariesForMap:', error);
             }
         }
 
@@ -1990,7 +1935,7 @@
         }
 
         function clearAllResults() {
-            console.log('🔄 ALASKA FIX: clearAllResults called');
+            console.log('🔄 LOCATE FIX: clearAllResults called');
             
             var closestDistrictsResults = document.getElementById('closestDistrictsResults');
             if (closestDistrictsResults) {
@@ -2011,7 +1956,7 @@
         }
 
         function clearMarkers() {
-            console.log('🔄 ALASKA FIX: clearMarkers called');
+            console.log('🔄 LOCATE FIX: clearMarkers called');
             for (var i = 0; i < markers.length; i++) {
                 if (map && markers[i]) {
                     map.removeLayer(markers[i]);
@@ -2137,21 +2082,11 @@
                         // Load district boundaries immediately
                         loadMainMapDistrictBoundaries(selectedDistrict, state);
 
-                        // Add zoom event listener to show national boundaries when zoomed out
+                        // LOCATE FIX: Simplified zoom event listener - NO automatic boundary switching
                         map.on('zoomend', function() {
                             var currentZoom = map.getZoom();
-                            console.log('🔍 PRIORITY: Zoom level changed to:', currentZoom);
-                            
-                            // Show national swing districts when zoomed out (zoom level 6 or less)
-                            if (currentZoom <= 6 && districtBoundariesVisible) {
-                                console.log('🗺️ PRIORITY: Zoom level', currentZoom, '- loading national swing districts');
-                                loadNationalSwingDistrictsOnMainMap();
-                            } else if (currentZoom > 6 && districtBoundariesVisible) {
-                                // Show local boundaries when zoomed in
-                                if (map.selectedDistrict && map.selectedState) {
-                                    loadMainMapDistrictBoundaries(map.selectedDistrict, map.selectedState);
-                                }
-                            }
+                            console.log('🔍 LOCATE FIX: Zoom level changed to:', currentZoom, '- boundaries stay stable');
+                            // DO NOTHING - let boundaries stay as they are
                         });
                     } else {
                         console.log('❌ PRIORITY: Leaflet not loaded');
@@ -3231,8 +3166,8 @@
 
         // Initialize the app
         function init() {
-            console.log('🎯 RESTORED: App initialized - main buttons working');
-            console.log('🎯 RESTORED: District mappings loaded:', districtMappings);
+            console.log('🎯 LOCATE FIX: App initialized - location button fixed');
+            console.log('🎯 LOCATE FIX: District mappings loaded:', districtMappings);
             
             // Initialize college data structure
             for (var state in districtMappings) {
@@ -3242,19 +3177,19 @@
                     collegeData[state][districts[i]] = [];
                 }
             }
-            console.log('🎯 RESTORED: Data structure initialized');
+            console.log('🎯 LOCATE FIX: Data structure initialized');
         }
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 RESTORED: DOM loaded, initializing Drive Scout...');
+            console.log('🎯 LOCATE FIX: DOM loaded, initializing Drive Scout...');
             
             setTimeout(function() {
                 init();
             }, 100);
         });
 
-        console.log("🎯 RESTORED: Drive Scout script loaded - main buttons should work, advanced features are placeholders");
+        console.log("🎯 LOCATE FIX: Drive Scout script loaded - location button fixed to not move boundaries");
     </script>
 </body>
 </html>
