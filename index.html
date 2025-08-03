@@ -1563,7 +1563,7 @@
             }
         }
 
-        // Enhanced user location functionality
+        // Enhanced user location functionality - FIXED to not auto-recenter
         function getUserLocation() {
             console.log('🔄 ENHANCED: getUserLocation called');
             
@@ -1603,8 +1603,35 @@
                             
                             userLocationMarker.bindPopup('<div style="text-align: center; padding: 8px;"><strong>Your Location</strong></div>');
                             
-                            // Center map on user location
-                            map.setView([userLat, userLng], Math.max(map.getZoom(), 10));
+                            // Center map on user location WITHOUT triggering boundary reload
+                            var currentZoom = map.getZoom();
+                            var targetZoom = Math.max(currentZoom, 10);
+                            
+                            // Temporarily disable zoom events to prevent boundary reloading
+                            map.off('zoomend');
+                            
+                            map.setView([userLat, userLng], targetZoom);
+                            
+                            // Re-enable zoom events after a short delay
+                            setTimeout(function() {
+                                if (map && map.selectedDistrict && map.selectedState) {
+                                    map.on('zoomend', function() {
+                                        var currentZoom = map.getZoom();
+                                        console.log('🔍 PRIORITY: Zoom level changed to:', currentZoom);
+                                        
+                                        // Show national swing districts when zoomed out (zoom level 6 or less)
+                                        if (currentZoom <= 6 && districtBoundariesVisible) {
+                                            console.log('🗺️ PRIORITY: Zoom level', currentZoom, '- loading national swing districts');
+                                            loadNationalSwingDistrictsOnMainMap();
+                                        } else if (currentZoom > 6 && districtBoundariesVisible) {
+                                            // Show local boundaries when zoomed in
+                                            if (map.selectedDistrict && map.selectedState) {
+                                                loadMainMapDistrictBoundaries(map.selectedDistrict, map.selectedState);
+                                            }
+                                        }
+                                    });
+                                }
+                            }, 1000);
                         }
                         
                         if (btn) btn.classList.remove('loading');
