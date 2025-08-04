@@ -1602,10 +1602,26 @@
         }
 
         function fitMapToSelectedDistrict(selectedDistrict) {
-            console.log('🎯 SIMPLIFIED: Fitting map to selected district:', selectedDistrict);
+            console.log('🎯 SIMPLIFIED: Fitting map to selected district with proper padding:', selectedDistrict);
             
-            if (!map) {
-                console.log('❌ SIMPLIFIED: No map available');
+            if (!map || !districtLayer) {
+                console.log('❌ SIMPLIFIED: No map or district layer available, using fallback');
+                
+                // Fallback to center-based zoom with more padding
+                if (selectedDistrict && districtData[selectedDistrict]) {
+                    var districtInfo = districtData[selectedDistrict];
+                    
+                    // Special handling for Alaska
+                    if (selectedDistrict === 'AK-AL') {
+                        map.setView([districtInfo.center[0], districtInfo.center[1]], 3);
+                        console.log('✅ SIMPLIFIED: Alaska centered at zoom level 3');
+                        return;
+                    }
+                    
+                    // Use more zoomed out view for other districts
+                    map.setView([districtInfo.center[0], districtInfo.center[1]], 9);
+                    console.log('✅ SIMPLIFIED: Map centered on district', selectedDistrict, 'at zoom 9');
+                }
                 return;
             }
             
@@ -1618,14 +1634,53 @@
                     return;
                 }
                 
-                // Use fallback center for other districts
-                var districtInfo = districtData[selectedDistrict];
-                if (districtInfo && districtInfo.center) {
-                    map.setView([districtInfo.center[0], districtInfo.center[1]], 10);
-                    console.log('✅ SIMPLIFIED: Map centered on district', selectedDistrict);
+                // Find the selected district layer and fit bounds with generous padding
+                var selectedFeatures = [];
+                districtLayer.eachLayer(function(layer) {
+                    if (layer.feature && layer.feature.properties) {
+                        var featureDistrictId = getDistrictId(layer.feature);
+                        if (featureDistrictId === selectedDistrict) {
+                            selectedFeatures.push(layer);
+                        }
+                    }
+                });
+                
+                if (selectedFeatures.length > 0) {
+                    var group = L.featureGroup(selectedFeatures);
+                    var bounds = group.getBounds();
+                    
+                    // Generous padding to ensure district boundaries don't touch edges
+                    var padding = [50, 50]; // Increased padding
+                    var maxZoom = 11; // Start more zoomed out
+                    
+                    // Special handling for large districts that need even more zoom out
+                    if (selectedDistrict === 'CA-13' || selectedDistrict === 'CO-03') {
+                        maxZoom = 10;
+                        padding = [60, 60];
+                        console.log('🎯 SIMPLIFIED: Using extra zoom out for large district:', selectedDistrict);
+                    }
+                    
+                    map.fitBounds(bounds, { 
+                        padding: padding,
+                        maxZoom: maxZoom
+                    });
+                    
+                    console.log('✅ SIMPLIFIED: Map fitted to district', selectedDistrict, 'with generous padding');
+                } else {
+                    console.log('⚠️ SIMPLIFIED: Could not find district features, using fallback center');
+                    var districtInfo = districtData[selectedDistrict];
+                    if (districtInfo && districtInfo.center) {
+                        map.setView([districtInfo.center[0], districtInfo.center[1]], 9);
+                    }
                 }
             } catch (error) {
                 console.log('❌ SIMPLIFIED: Error fitting map to district:', error);
+                
+                // Fallback to center-based zoom
+                var districtInfo = districtData[selectedDistrict];
+                if (districtInfo && districtInfo.center) {
+                    map.setView([districtInfo.center[0], districtInfo.center[1]], 9);
+                }
             }
         }
 
