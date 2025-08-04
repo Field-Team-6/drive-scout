@@ -992,7 +992,7 @@
         }
 
         function showDistrictCampusesInCard(districtId) {
-            console.log('🔄 ENHANCED: showDistrictCampusesInCard called for:', districtId);
+            console.log('🔄 MAP FIX: showDistrictCampusesInCard called for:', districtId);
             
             try {
                 // Hide all district cards except the selected one
@@ -1067,20 +1067,20 @@
                     if (allColleges.length === 0) {
                         contentDiv.innerHTML = '<div style="text-align: center; padding: 20px; color: #666;"><p><strong>No college data found for ' + districtId + '</strong></p><p style="font-size: 0.9rem; margin-top: 10px;">Add a ' + districtId + '.csv file to your data/ folder with college information.</p></div>';
                     } else {
-                        // Create map container for this specific district
+                        // Create map container for this specific district with FIXED SPACING
                         var mapId = 'map-' + districtId.replace('-', '');
                         var html = '';
                         
-                        // Add map container with FULL district boundary functionality and proper spacing
-                        html += '<div class="map-container" style="margin: 35px 0 25px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">';
-                        html += '<div id="' + mapId + '" style="height: 250px; width: 100%; background: #f8f9fa; position: relative;">';
+                        // FIXED: Add proper spacing around map container to prevent overlap
+                        html += '<div class="map-container" style="margin: 40px 0 40px 0; border-radius: 10px; overflow: hidden; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">';
+                        html += '<div id="' + mapId + '" style="height: 280px; width: 100%; background: #f8f9fa; position: relative;">';
                         html += '<button class="district-toggle-button" onclick="toggleDistrictBoundariesForMap(\'' + mapId + '\', \'' + districtId + '\')" title="Toggle district boundaries" style="position: absolute; bottom: 10px; right: 60px; z-index: 1000; background: #667eea; color: white; border: 2px solid #667eea; border-radius: 6px; padding: 8px 12px; cursor: pointer; font-size: 0.8rem; font-weight: bold;">Districts</button>';
                         html += '<button class="location-button" onclick="getUserLocationForMap(\'' + mapId + '\')" title="Find my location" style="position: absolute; bottom: 10px; right: 10px; z-index: 1000; background: white; border: 2px solid #333; border-radius: 6px; width: 40px; height: 40px; cursor: pointer; display: flex; align-items: center; justify-content: center;"><img src="images/icons8-my-location-50.png" style="width: 20px; height: 20px;" alt="Find location"></button>';
                         html += '</div>';
                         html += '</div>';
                         
                         // Add college list
-                        html += '<div style="margin-top: 15px;">';
+                        html += '<div style="margin-top: 20px;">';
                         
                         if (withinColleges.length > 0) {
                             html += '<h3 style="color: #333; margin-bottom: 15px; font-size: 1.1rem;">Colleges in ' + districtId + '</h3>';
@@ -1100,7 +1100,7 @@
                         
                         contentDiv.innerHTML = html;
                         
-                        // Initialize map for this district with full boundaries
+                        // Initialize map for this district with FIXED ZOOM SETTINGS
                         setTimeout(function() {
                             initializeDistrictMapWithBoundaries(mapId, allColleges, districtId, foundState);
                         }, 100);
@@ -1115,7 +1115,7 @@
         }
 
         function initializeDistrictMapWithBoundaries(mapId, colleges, districtId, state) {
-            console.log('🗺️ ENHANCED: Initializing district map with full boundaries:', mapId, districtId);
+            console.log('🗺️ MAP FIX: Initializing district map with FIXED zoom settings:', mapId, districtId);
             
             try {
                 if (typeof L === 'undefined') {
@@ -1190,10 +1190,10 @@
                     }
 
                     if (group.getLayers().length > 0) {
-                        // ZOOM FIX: Start more zoomed out with extra padding so district lines don't touch edges
+                        // ZOOM FIX: Start MORE zoomed out with extra padding so district lines don't touch edges
                         districtMap.fitBounds(group.getBounds(), { 
-                            padding: [25, 25],
-                            maxZoom: 11  // Reduced from 15 to start more zoomed out
+                            padding: [40, 40],   // Increased from [25, 25] to [40, 40]
+                            maxZoom: 10          // Reduced from 11 to 10 to start more zoomed out
                         });
                     }
                 }
@@ -3186,11 +3186,16 @@
             alert('Location search will be restored in the next update!');
         }
 
+        function loadNationalSwingDistricts() {
+            console.log('🔄 loadNationalSwingDistricts - placeholder');
+            // This will be implemented when needed
+        }
+
         // Initialize the app
         function init() {
-            console.log('🎯 ZOOM FIX: App initialized - enhanced zoom-based district loading');
-            console.log('🎯 ZOOM FIX: District mappings loaded:', districtMappings);
-            console.log('🌎 ZOOM FIX: Zoom <= 6 shows ALL swing districts | Zoom > 6 shows local districts');
+            console.log('🎯 MAP FIX: App initialized - fixed map spacing and zoom settings');
+            console.log('🎯 MAP FIX: District mappings loaded:', districtMappings);
+            console.log('🗺️ MAP FIX: Fixed overlap issues and improved zoom levels for district cards');
             
             // Initialize college data structure
             for (var state in districtMappings) {
@@ -3200,19 +3205,19 @@
                     collegeData[state][districts[i]] = [];
                 }
             }
-            console.log('🎯 ZOOM FIX: Data structure initialized');
+            console.log('🎯 MAP FIX: Data structure initialized');
         }
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 ZOOM FIX: DOM loaded, initializing Drive Scout...');
+            console.log('🎯 MAP FIX: DOM loaded, initializing Drive Scout...');
             
             setTimeout(function() {
                 init();
             }, 100);
         });
 
-        console.log("🎯 ZOOM FIX: Drive Scout script loaded - enhanced with zoom-based national district loading");
+        console.log("🎯 MAP FIX: Drive Scout script loaded - fixed map spacing and zoom issues for district cards");
     </script>
 </body>
 </html>
