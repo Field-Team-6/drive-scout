@@ -896,8 +896,118 @@
             }
         }
 
+        // WORKING location search functionality
         function searchByLocation(locationQuery) {
-            alert('Location search will be restored in the next update!');
+            console.log('🔄 LOCATION SEARCH: Starting search for:', locationQuery);
+            
+            var resultsContainer = document.getElementById('closestDistrictsResults');
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding swing districts near ' + locationQuery + '...</h3><p>Searching for location and calculating distances.</p></div>';
+            resultsContainer.style.display = 'block';
+            
+            // Try to geocode the location using Nominatim
+            var geocodeUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(locationQuery + ', USA');
+            
+            fetch(geocodeUrl)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data && data.length > 0) {
+                        var location = data[0];
+                        var userLat = parseFloat(location.lat);
+                        var userLng = parseFloat(location.lon);
+                        
+                        console.log('✅ LOCATION SEARCH: Found location:', location.display_name, userLat, userLng);
+                        
+                        // Store this as the user location for distance calculations
+                        window.lastUserLocation = { lat: userLat, lng: userLng };
+                        
+                        // Calculate distances to all districts (same as findClosestDistricts)
+                        var districtDistances = [];
+                        for (var districtId in districtData) {
+                            var data = districtData[districtId];
+                            var distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                            districtDistances.push({
+                                id: districtId,
+                                distance: distance,
+                                data: data
+                            });
+                        }
+                        
+                        // Sort by distance
+                        districtDistances.sort(function(a, b) {
+                            return a.distance - b.distance;
+                        });
+                        
+                        // Store for "show more" functionality
+                        window.allDistrictsByDistance = districtDistances;
+                        window.currentlyDisplayed = 0;
+                        
+                        // Display results using SAME format as district list
+                        displayLocationSearchResults(locationQuery, location.display_name, 0, 5);
+                    } else {
+                        resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Location Not Found</h3><p>Could not find "' + locationQuery + '". Try a different city, state, or zip code.</p></div>';
+                    }
+                })
+                .catch(function(error) {
+                    console.log('❌ LOCATION SEARCH: Error:', error);
+                    resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Search Error</h3><p>Unable to search for "' + locationQuery + '". Please try again.</p></div>';
+                });
+        }
+
+        // Display location search results using SAME format as district results
+        function displayLocationSearchResults(searchQuery, foundLocation, startIndex, count) {
+            var resultsContainer = document.getElementById('closestDistrictsResults');
+            var endIndex = Math.min(startIndex + count, window.allDistrictsByDistance.length);
+            var districts = window.allDistrictsByDistance.slice(startIndex, endIndex);
+            
+            window.currentlyDisplayed = endIndex;
+            
+            var html = '';
+            
+            if (startIndex === 0) {
+                html += '<div class="district-results-container">';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 15px;">🎯 Swing Districts Near "' + searchQuery + '"</h2>';
+                html += '<div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: white; text-align: center; margin-bottom: 20px; font-size: 0.9rem;">';
+                html += '<strong>Found:</strong> ' + foundLocation;
+                html += '</div>';
+            } else {
+                html += '<div class="district-results-container">';
+            }
+            
+            // Use EXACT same district card format as findClosestDistricts
+            for (var i = 0; i < districts.length; i++) {
+                var district = districts[i];
+                var partyBackgroundColor = district.data.party === 'D' ? '#e3f2fd' : '#ffebee';
+                var partyBorderColor = district.data.party === 'D' ? '#2196f3' : '#f44336';
+                
+                html += '<div class="district-card" style="border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
+                html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
+                html += '<div>';
+                html += '<div style="font-weight: bold; font-size: 1.2rem; color: #333;">' + district.id + '</div>';
+                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> • Rep. ' + district.data.rep + ' (' + district.data.party + ') • ' + district.data.action + '</div>';
+                html += '</div>';
+                html += '<div>';
+                html += '<button onclick="showDistrictCampusesSimplified(\'' + district.id + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
+                html += '</div>';
+                html += '</div>';
+                html += '</div>';
+            }
+            
+            // Add "Show 5 more districts" button if there are more
+            if (window.currentlyDisplayed < window.allDistrictsByDistance.length) {
+                var remaining = window.allDistrictsByDistance.length - window.currentlyDisplayed;
+                var nextBatch = Math.min(5, remaining);
+                html += '<div style="text-align: center; margin-top: 20px;">';
+                html += '<button onclick="showMoreDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">Show ' + nextBatch + ' more districts</button>';
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            
+            if (startIndex === 0) {
+                resultsContainer.innerHTML = html;
+            }
         }
 
         function exploreNationalMap() {
