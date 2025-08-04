@@ -1159,29 +1159,208 @@
         }
 
         function loadDistrictBoundariesForMap(targetMap, selectedDistrict) {
-            console.log('🗺️ SIMPLIFIED: Loading district boundaries for map');
+            console.log('🗺️ SIMPLIFIED: Loading REAL district boundaries for map:', selectedDistrict);
             
             try {
-                // For now, add a simple placeholder boundary
-                console.log('🔄 District boundaries loading - placeholder');
-                
-                // Add a simple circle as a placeholder boundary
-                if (selectedDistrict && districtData[selectedDistrict]) {
-                    var center = districtData[selectedDistrict].center;
-                    var circle = L.circle(center, {
-                        color: districtData[selectedDistrict].party === 'D' ? '#4169E1' : '#DC143C',
-                        fillColor: districtData[selectedDistrict].party === 'D' ? '#4169E1' : '#DC143C',
-                        fillOpacity: 0.1,
-                        radius: 20000 // 20km radius as placeholder
-                    }).addTo(targetMap);
-                    
-                    targetMap.districtLayer = circle;
-                    
-                    circle.bindPopup('<div style="text-align: center; padding: 8px;"><strong>' + selectedDistrict + '</strong><br>Placeholder boundary</div>');
+                // Find the state for this district
+                var state = null;
+                for (var stateName in districtMappings) {
+                    var districts = districtMappings[stateName];
+                    for (var i = 0; i < districts.length; i++) {
+                        if (districts[i] === selectedDistrict) {
+                            state = stateName;
+                            break;
+                        }
+                    }
+                    if (state) break;
                 }
+                
+                if (!state) {
+                    console.log('❌ SIMPLIFIED: No state found for district:', selectedDistrict);
+                    return;
+                }
+                
+                // Load the actual GeoJSON boundary file for the state
+                var boundaryFiles = {
+                    'Alaska': 'data/boundaries/alaska_districts_119th.json',
+                    'Arizona': 'data/boundaries/arizona_districts_119th.json',
+                    'California': 'data/boundaries/california_districts_119th.json',
+                    'Colorado': 'data/boundaries/colorado_districts_119th.json',
+                    'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
+                    'Florida': 'data/boundaries/florida_districts_119th.json',
+                    'Nevada': 'data/boundaries/nevada_districts_119th.json'
+                };
+                
+                var boundaryFile = boundaryFiles[state];
+                if (!boundaryFile) {
+                    console.log('❌ SIMPLIFIED: No boundary file for state:', state);
+                    return;
+                }
+                
+                console.log('📁 SIMPLIFIED: Loading boundary file:', boundaryFile);
+                
+                fetch(boundaryFile)
+                    .then(function(response) {
+                        if (!response.ok) {
+                            throw new Error('Could not load boundary file: ' + response.status);
+                        }
+                        return response.json();
+                    })
+                    .then(function(geojsonData) {
+                        if (!geojsonData || !geojsonData.features) {
+                            console.log('❌ SIMPLIFIED: Invalid GeoJSON data');
+                            return;
+                        }
+                        
+                        console.log('✅ SIMPLIFIED: Loaded', geojsonData.features.length, 'boundary features for', state);
+                        
+                        // Style function for districts
+                        function districtStyle(feature) {
+                            var featureDistrictId = getDistrictId(feature);
+                            var districtInfo = districtData[featureDistrictId];
+                            var isSelected = selectedDistrict && featureDistrictId === selectedDistrict;
+                            
+                            // Only show swing districts
+                            if (!districtInfo) {
+                                return { opacity: 0, fillOpacity: 0 };
+                            }
+                            
+                            var color = '#666666';
+                            var fillColor = 'transparent';
+                            var weight = 2;
+                            var opacity = 0.7;
+                            var fillOpacity = 0.1;
+                            
+                            // Color based on party and action
+                            if (districtInfo.action === 'FLIP') {
+                                color = '#DC143C'; // Red for flip districts
+                                weight = 3;
+                            } else if (districtInfo.action === 'HOLD') {
+                                color = '#4169E1'; // Blue for holds
+                                weight = 3;
+                            }
+                            
+                            // Highlight selected district
+                            if (isSelected) {
+                                weight = 5;
+                                opacity = 1.0;
+                                fillOpacity = 0.25;
+                                fillColor = color;
+                                console.log('🔵 SIMPLIFIED: Highlighting selected district:', featureDistrictId);
+                            }
+                            
+                            return {
+                                color: color,
+                                weight: weight,
+                                opacity: opacity,
+                                fillColor: fillColor,
+                                fillOpacity: fillOpacity
+                            };
+                        }
+                        
+                        // Popup function
+                        function onEachDistrict(feature, layer) {
+                            var featureDistrictId = getDistrictId(feature);
+                            var districtInfo = districtData[featureDistrictId];
+                            
+                            if (districtInfo) {
+                                var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                                var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                                
+                                var popupContent = '<div style="padding: 8px; border-left: 3px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
+                                popupContent += '<div style="font-weight: bold; color: #333;">' + featureDistrictId + '</div>';
+                                popupContent += '<div style="font-size: 0.9rem; color: #666;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
+                                popupContent += '</div>';
+                                
+                                layer.bindPopup(popupContent, { maxWidth: 250 });
+                            }
+                        }
+                        
+                        // Create the district layer
+                        districtLayer = L.geoJSON(geojsonData, {
+                            style: districtStyle,
+                            onEachFeature: onEachDistrict,
+                            filter: function(feature) {
+                                // Only show swing districts
+                                var featureDistrictId = getDistrictId(feature);
+                                return districtData.hasOwnProperty(featureDistrictId);
+                            }
+                        }).addTo(targetMap);
+                        
+                        // Store the layer on the map
+                        targetMap.districtLayer = districtLayer;
+                        
+                        console.log('✅ SIMPLIFIED: Real district boundaries added to map');
+                        
+                    })
+                    .catch(function(error) {
+                        console.log('❌ SIMPLIFIED: Error loading district boundaries:', error.message);
+                        console.log('❌ SIMPLIFIED: Using fallback - boundaries required for production');
+                    });
             } catch (error) {
-                console.log('❌ SIMPLIFIED: Error loading district boundaries:', error);
+                console.log('❌ SIMPLIFIED: Error in loadDistrictBoundariesForMap:', error);
             }
+        }
+        
+        function getDistrictId(feature) {
+            if (!feature.properties) return null;
+            
+            var props = feature.properties;
+            var districtId = null;
+            
+            if (props.DISTRICT) {
+                districtId = props.DISTRICT;
+            } else if (props.CD118FP) {
+                districtId = props.CD118FP;
+            } else if (props.CD119FP) {
+                districtId = props.CD119FP;
+            } else if (props.NAMELSAD) {
+                var match = props.NAMELSAD.match(/Congressional District (\d+)/);
+                if (match) {
+                    var state = getStateAbbreviation(props);
+                    districtId = state + '-' + match[1].padStart(2, '0');
+                }
+            } else if (props.NAME) {
+                districtId = props.NAME;
+            } else if (props.GEOID) {
+                districtId = props.GEOID;
+            }
+            
+            // Convert numeric district to proper state format based on STATEFP
+            if (districtId && /^\d+$/.test(districtId)) {
+                var state = getStateAbbreviation(props);
+                
+                // Special handling for Alaska's at-large district (00 -> AL)
+                if (state === 'AK' && districtId === '00') {
+                    districtId = 'AK-AL';
+                } else {
+                    districtId = state + '-' + districtId.padStart(2, '0');
+                }
+            }
+            
+            return districtId;
+        }
+        
+        function getStateAbbreviation(properties) {
+            // State mapping from FIPS codes
+            if (properties.STATEFP) {
+                var stateMap = {
+                    '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
+                    '09': 'CT', '12': 'FL', '32': 'NV'
+                };
+                return stateMap[properties.STATEFP] || 'XX';
+            }
+            
+            if (properties.GEOID && properties.GEOID.length >= 2) {
+                var stateCode = properties.GEOID.substring(0, 2);
+                var stateMap = {
+                    '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
+                    '09': 'CT', '12': 'FL', '32': 'NV'
+                };
+                return stateMap[stateCode] || 'XX';
+            }
+            
+            return 'XX';
         }
 
         // Toggle location search
