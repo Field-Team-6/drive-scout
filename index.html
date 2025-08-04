@@ -27,15 +27,12 @@
             min-height: 100vh;
             margin: 0;
             padding: 0;
-            overflow-x: hidden;
         }
 
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
-            position: relative;
-            z-index: 1;
         }
 
         .header {
@@ -375,16 +372,6 @@
             border: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-
-        /* CRITICAL: Hide any script content that might leak */
-        script {
-            display: none !important;
-            visibility: hidden !important;
-            height: 0 !important;
-            overflow: hidden !important;
-            position: absolute !important;
-            left: -9999px !important;
-        }
     </style>
 </head>
 <body>
@@ -452,22 +439,21 @@
         </div>
     </div>
 
-    <div style="margin-top: 150px; text-align: center; padding-bottom: 200px; position: relative; z-index: 10; background: #5f6360; width: 100%; min-height: 200px;">
+    <div style="margin-top: 150px; text-align: center;">
         <button style="background: #03013c; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; margin-bottom: 20px;">
             FAQ
         </button>
         
-        <div style="text-align: center; color: black; font-size: 0.9rem; line-height: 1.4; margin-bottom: 150px;">
+        <div style="text-align: center; color: black; font-size: 0.9rem; line-height: 1.4; margin-bottom: 20px;">
             ©2025 Drive Scout<br>
             PRIVACY NOTICE: Drive Scout does not collect any data from you.<br>
             Paid for by Field Team 6. www.fieldteam6.org.<br>
             Not authorized by any candidate or candidate's committee.
         </div>
     </div>
-</body>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
         console.log("🎯 FRESH START: Drive Scout - All functions properly defined");
         
         // Global variables
@@ -695,6 +681,7 @@
         }
 
         function showMoreDistricts() {
+            // Implementation for showing more districts
             if (!window.allDistrictsByDistance || !window.currentlyDisplayed) return;
             
             var remaining = window.allDistrictsByDistance.length - window.currentlyDisplayed;
@@ -883,23 +870,26 @@
             }
         }
 
-        // FIXED: Location search functions
+        // FIXED: Toggle location search - button text stays the same, clears results when opened
         function toggleLocationSearch() {
             var section = document.getElementById('locationInputSection');
-            
-            // Clear previous district results when showing location search
-            var closestDistrictsResults = document.getElementById('closestDistrictsResults');
-            if (closestDistrictsResults) {
-                closestDistrictsResults.innerHTML = '';
-                closestDistrictsResults.style.display = 'none';
-            }
+            var btn = document.getElementById('locationSearchBtn');
             
             if (section.style.display === 'none') {
+                // Clear previous district results when opening location search
+                var closestDistrictsResults = document.getElementById('closestDistrictsResults');
+                if (closestDistrictsResults) {
+                    closestDistrictsResults.innerHTML = '';
+                    closestDistrictsResults.style.display = 'none';
+                }
+                
                 section.style.display = 'block';
-                // Button text stays the same - no change!
+                // Button text stays the same - DO NOT change it to "Hide location search"
+                var input = document.getElementById('locationInput');
+                if (input) input.focus();
             } else {
                 section.style.display = 'none';
-                // Button text stays the same - no change!
+                // Button text stays the same
             }
         }
 
@@ -1113,7 +1103,7 @@
                     map.selectedDistrict = selectedDistrict;
                     map.selectedState = state;
 
-                    // Load ALL swing districts from the start
+                    // ENHANCEMENT: Load ALL swing districts from the start
                     loadAllSwingDistrictBoundaries();
                     
                     // Also load local district boundaries for highlighting
@@ -1218,6 +1208,7 @@
                         };
                     }
                     
+                    // POPUP FIX: Use same compact popup style as national districts
                     function onEachDistrict(feature, layer) {
                         var featureDistrictId = getDistrictId(feature);
                         var districtInfo = districtData[featureDistrictId];
@@ -1227,6 +1218,7 @@
                             var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                             var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
                             
+                            // Calculate distance if user location available
                             var distanceText = '';
                             if (window.lastUserLocation && districtInfo.center) {
                                 var distance = calculateDistance(
@@ -1238,6 +1230,7 @@
                                 distanceText = '<div style="color: #666; font-size: 0.85rem; font-style: italic; margin: 2px 0 6px 0;">' + Math.round(distance) + ' miles away</div>';
                             }
                             
+                            // Use same ULTRA-COMPACT popup style as national districts
                             var popupContent = '<div style="padding: 8px 12px; border-left: 4px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + '; margin: 0; line-height: 1.2;">';
                             popupContent += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin: 0 0 2px 0;">' + featureDistrictId;
                             if (isSelected) {
@@ -1250,6 +1243,7 @@
                             popupContent += '<button onclick="showCampusesFromPopup(\'' + featureDistrictId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
                             popupContent += '</div></div>';
                             
+                            // Configure popup with zero padding
                             layer.bindPopup(popupContent, { 
                                 maxWidth: 200, 
                                 className: 'compact-popup',
@@ -1258,6 +1252,7 @@
                                 offset: [0, -5]
                             });
                             
+                            // Add hover effects for non-selected districts
                             if (!isSelected) {
                                 layer.on({
                                     mouseover: function(e) {
@@ -1288,10 +1283,12 @@
         }
 
         function loadAllSwingDistrictBoundaries() {
+            // Don't reload if we already have national boundaries, unless forced
             if (map.allSwingDistrictLayer && arguments[0] !== 'force') {
                 return;
             }
             
+            // Remove existing national layer if reloading
             if (map.allSwingDistrictLayer) {
                 map.removeLayer(map.allSwingDistrictLayer);
                 map.allSwingDistrictLayer = null;
@@ -1386,6 +1383,7 @@
                     var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                     var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
                     
+                    // Calculate distance if user location available
                     var distanceText = '';
                     if (window.lastUserLocation && districtInfo.center) {
                         var distance = calculateDistance(
@@ -1397,6 +1395,7 @@
                         distanceText = '<div style="color: #666; font-size: 0.85rem; font-style: italic; margin: 2px 0 6px 0;">' + Math.round(distance) + ' miles away</div>';
                     }
                     
+                    // ULTRA-COMPACT popup with zero padding
                     var popupContent = '<div style="padding: 8px 12px; border-left: 4px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + '; margin: 0; line-height: 1.2;">';
                     popupContent += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin: 0 0 2px 0;">' + districtId + '</div>';
                     popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
@@ -1405,6 +1404,7 @@
                     popupContent += '<button onclick="showCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
                     popupContent += '</div></div>';
                     
+                    // Configure popup with zero padding
                     layer.bindPopup(popupContent, { 
                         maxWidth: 200, 
                         className: 'compact-popup',
@@ -1436,6 +1436,242 @@
                     return districtData.hasOwnProperty(districtId);
                 }
             }).addTo(map);
+        }
+
+        // New function for popup campuses - GLOBAL SCOPE
+        window.showCampusesFromPopup = function(districtId) {
+            if (map) map.closePopup();
+            
+            var foundState = null;
+            for (var state in districtMappings) {
+                var districts = districtMappings[state];
+                for (var i = 0; i < districts.length; i++) {
+                    if (districts[i] === districtId) {
+                        foundState = state;
+                        break;
+                    }
+                }
+                if (foundState) break;
+            }
+            
+            if (!foundState) return;
+            
+            var resultContainer = document.getElementById('closestCampusesResult');
+            if (resultContainer) {
+                var districtInfo = districtData[districtId];
+                var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                var distanceText = '';
+                if (window.lastUserLocation) {
+                    var distance = calculateDistance(
+                        window.lastUserLocation.lat, 
+                        window.lastUserLocation.lng, 
+                        districtInfo.center[0], 
+                        districtInfo.center[1]
+                    );
+                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
+                }
+                
+                resultContainer.innerHTML = 
+                    '<div style="background: ' + partyBackgroundColor + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; margin: 6px 0 0 0 !important;">' +
+                        '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">' +
+                            'Swing district: ' + districtId +
+                        '</div>' +
+                        '<div style="color: #666; margin-bottom: 0;">' +
+                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                        '</div>' +
+                    '</div>';
+                resultContainer.style.display = 'block';
+            }
+            
+            var closestDistrictsResults = document.getElementById('closestDistrictsResults');
+            if (closestDistrictsResults) {
+                closestDistrictsResults.style.display = 'none';
+            }
+            
+            // OUTLINE FIX: Store previous selection and reset its styling
+            var previousDistrict = map.selectedDistrict;
+            
+            if (map) {
+                // Update map's selected district info
+                map.selectedDistrict = districtId;
+                map.selectedState = foundState;
+                
+                // OUTLINE FIX: Reset styling by completely reloading the boundaries with new selection
+                // This ensures only the new district gets highlighted styling
+                if (map.allSwingDistrictLayer) {
+                    map.removeLayer(map.allSwingDistrictLayer);
+                    map.allSwingDistrictLayer = null;
+                }
+                
+                if (districtLayer) {
+                    map.removeLayer(districtLayer);
+                    districtLayer = null;
+                }
+                
+                // Reload all boundaries with the new selected district
+                loadAllSwingDistrictBoundaries('force');
+                
+                // Reload local boundaries to highlight the new selected district
+                setTimeout(function() {
+                    loadDistrictBoundariesForMap(map, districtId);
+                }, 200);
+                
+                // Center on the new district after boundaries load
+                setTimeout(function() {
+                    fitMapToSelectedDistrict(districtId);
+                }, 500);
+            }
+            
+            // Load and display college data without reinitializing the map
+            displayCollegesWithoutMapInit(foundState, districtId);
+        };
+
+        // New function to display colleges without reinitializing the map
+        function displayCollegesWithoutMapInit(state, district) {
+            var collegeItems = document.getElementById('collegeItems');
+            var collegeList = document.getElementById('collegeList');
+            
+            showLoadingState(collegeItems, district);
+            collegeList.style.display = 'block';
+            
+            // Show map container if hidden
+            var mapContainer = document.getElementById('mapContainer');
+            if (mapContainer) mapContainer.style.display = 'block';
+
+            loadDistrictDataWithTimeout(district).then(function() {
+                var collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
+                
+                var allColleges = [];
+                var withinColleges = [];
+                var nearColleges = [];
+
+                if (Array.isArray(collegeDataForDistrict)) {
+                    allColleges = collegeDataForDistrict;
+                    withinColleges = collegeDataForDistrict;
+                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
+                    withinColleges = collegeDataForDistrict.within || [];
+                    nearColleges = collegeDataForDistrict.near || [];
+                    allColleges = withinColleges.concat(nearColleges);
+                }
+                
+                allColleges = allColleges.filter(function(college) {
+                    return college && college.name && 
+                           college.lat !== null && college.lng !== null &&
+                           !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
+                });
+                
+                if (allColleges.length === 0) {
+                    showNoData(state, district);
+                } else {
+                    displayCollegeListWithSections(district, withinColleges, nearColleges);
+                    
+                    // Add markers without reinitializing map
+                    setTimeout(function() {
+                        addMarkersToMainMap(allColleges);
+                    }, 500);
+                }
+            }).catch(function(error) {
+                showNoData(state, district);
+            });
+        }
+
+        function fitMapToSelectedDistrict(selectedDistrict) {
+            if (!map || !districtLayer) {
+                if (selectedDistrict && districtData[selectedDistrict]) {
+                    var districtInfo = districtData[selectedDistrict];
+                    
+                    if (selectedDistrict === 'AK-AL') {
+                        map.setView([districtInfo.center[0], districtInfo.center[1]], 3);
+                        return;
+                    }
+                    
+                    // ZOOM FIX: Reduced zoom level for fallback (was 9, now 8)
+                    map.setView([districtInfo.center[0], districtInfo.center[1]], 8);
+                }
+                return;
+            }
+            
+            if (selectedDistrict === 'AK-AL') {
+                var alaskaCenter = districtData['AK-AL'].center;
+                map.setView([alaskaCenter[0], alaskaCenter[1]], 3);
+                return;
+            }
+            
+            var selectedFeatures = [];
+            districtLayer.eachLayer(function(layer) {
+                if (layer.feature && layer.feature.properties) {
+                    var featureDistrictId = getDistrictId(layer.feature);
+                    if (featureDistrictId === selectedDistrict) {
+                        selectedFeatures.push(layer);
+                    }
+                }
+            });
+            
+            if (selectedFeatures.length > 0) {
+                var group = L.featureGroup(selectedFeatures);
+                var bounds = group.getBounds();
+                
+                // ZOOM FIX: Increased padding and reduced max zoom levels
+                var padding = [60, 60]; // Increased from [50, 50]
+                var maxZoom = 10; // Reduced from 11
+                
+                if (selectedDistrict === 'CA-13' || selectedDistrict === 'CO-03') {
+                    maxZoom = 9; // Reduced from 10
+                    padding = [70, 70]; // Increased from [60, 60]
+                }
+                
+                // Special handling for CA-27 and other CA districts
+                if (selectedDistrict.startsWith('CA-')) {
+                    maxZoom = 9; // Reduced zoom for all CA districts
+                    padding = [70, 70]; // Extra padding for CA districts
+                }
+                
+                map.fitBounds(bounds, { 
+                    padding: padding,
+                    maxZoom: maxZoom
+                });
+            }
+        }
+
+        function addMarkersToMainMap(colleges) {
+            if (!map || !colleges || colleges.length === 0) return;
+
+            clearMarkers();
+            
+            var group = L.featureGroup();
+
+            for (var i = 0; i < colleges.length; i++) {
+                var college = colleges[i];
+                if (!college.lat || !college.lng) continue;
+
+                var lat = parseFloat(college.lat);
+                var lng = parseFloat(college.lng);
+                
+                if (isNaN(lat) || isNaN(lng)) continue;
+
+                var iconColor = getSuitabilityColor(college.suitability);
+                
+                var marker = L.marker([lat, lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: '<div style="background-color: ' + iconColor + '; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    })
+                });
+
+                var popupContent = '<div style="text-align: center; padding: 4px;">' +
+                    '<div style="font-weight: bold; margin-bottom: 2px; color: #333; font-size: 0.9rem;">' + college.name + '</div>' +
+                    '<div style="font-size: 0.8rem; color: #666;">Rating: <strong>' + college.suitability + '</strong></div>' +
+                    '</div>';
+                marker.bindPopup(popupContent);
+                
+                marker.addTo(map);
+                group.addLayer(marker);
+                markers.push(marker);
+            }
         }
 
         // Helper functions
@@ -1509,7 +1745,6 @@
             collegeList.style.display = 'block';
         }
 
-        // Rest of the functions continue...
         function loadDistrictDataWithTimeout(district) {
             return new Promise(function(resolve, reject) {
                 var state = null;
@@ -1544,6 +1779,7 @@
 
                 var loadPromise = Promise.resolve();
                 var csvText = null;
+                var successfulUrl = null;
 
                 for (var i = 0; i < possibleFilenames.length; i++) {
                     var filename = possibleFilenames[i];
@@ -1562,6 +1798,7 @@
                                     if (response.ok) {
                                         return response.text().then(function(text) {
                                             csvText = text;
+                                            successfulUrl = currentFilename;
                                         });
                                     }
                                 })
@@ -1593,7 +1830,6 @@
             });
         }
 
-        // CSV parsing functions
         function parseCSV(csvText, district) {
             return new Promise(function(resolve) {
                 var lines = csvText.split('\n').filter(function(line) {
@@ -1771,201 +2007,6 @@
             else return 'Low';
         }
 
-        // Add the remaining functions...
-        window.showCampusesFromPopup = function(districtId) {
-            if (map) map.closePopup();
-            
-            var foundState = null;
-            for (var state in districtMappings) {
-                var districts = districtMappings[state];
-                for (var i = 0; i < districts.length; i++) {
-                    if (districts[i] === districtId) {
-                        foundState = state;
-                        break;
-                    }
-                }
-                if (foundState) break;
-            }
-            
-            if (!foundState) return;
-            
-            var resultContainer = document.getElementById('closestCampusesResult');
-            if (resultContainer) {
-                var districtInfo = districtData[districtId];
-                var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
-                var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
-                
-                var distanceText = '';
-                if (window.lastUserLocation) {
-                    var distance = calculateDistance(
-                        window.lastUserLocation.lat, 
-                        window.lastUserLocation.lng, 
-                        districtInfo.center[0], 
-                        districtInfo.center[1]
-                    );
-                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
-                }
-                
-                resultContainer.innerHTML = 
-                    '<div style="background: ' + partyBackgroundColor + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; margin: 6px 0 0 0 !important;">' +
-                        '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">' +
-                            'Swing district: ' + districtId +
-                        '</div>' +
-                        '<div style="color: #666; margin-bottom: 0;">' +
-                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
-                        '</div>' +
-                    '</div>';
-                resultContainer.style.display = 'block';
-            }
-            
-            var closestDistrictsResults = document.getElementById('closestDistrictsResults');
-            if (closestDistrictsResults) {
-                closestDistrictsResults.style.display = 'none';
-            }
-            
-            displayCollegesWithoutMapInit(foundState, districtId);
-        };
-
-        function displayCollegesWithoutMapInit(state, district) {
-            var collegeItems = document.getElementById('collegeItems');
-            var collegeList = document.getElementById('collegeList');
-            
-            showLoadingState(collegeItems, district);
-            collegeList.style.display = 'block';
-            
-            var mapContainer = document.getElementById('mapContainer');
-            if (mapContainer) mapContainer.style.display = 'block';
-
-            loadDistrictDataWithTimeout(district).then(function() {
-                var collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
-                
-                var allColleges = [];
-                var withinColleges = [];
-                var nearColleges = [];
-
-                if (Array.isArray(collegeDataForDistrict)) {
-                    allColleges = collegeDataForDistrict;
-                    withinColleges = collegeDataForDistrict;
-                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
-                    withinColleges = collegeDataForDistrict.within || [];
-                    nearColleges = collegeDataForDistrict.near || [];
-                    allColleges = withinColleges.concat(nearColleges);
-                }
-                
-                allColleges = allColleges.filter(function(college) {
-                    return college && college.name && 
-                           college.lat !== null && college.lng !== null && 
-                           !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
-                });
-                
-                if (allColleges.length === 0) {
-                    showNoData(state, district);
-                } else {
-                    displayCollegeListWithSections(district, withinColleges, nearColleges);
-                    
-                    setTimeout(function() {
-                        addMarkersToMainMap(allColleges);
-                    }, 500);
-                }
-            }).catch(function(error) {
-                showNoData(state, district);
-            });
-        }
-
-        function fitMapToSelectedDistrict(selectedDistrict) {
-            if (!map || !districtLayer) {
-                if (selectedDistrict && districtData[selectedDistrict]) {
-                    var districtInfo = districtData[selectedDistrict];
-                    
-                    if (selectedDistrict === 'AK-AL') {
-                        map.setView([districtInfo.center[0], districtInfo.center[1]], 3);
-                        return;
-                    }
-                    
-                    map.setView([districtInfo.center[0], districtInfo.center[1]], 8);
-                }
-                return;
-            }
-            
-            if (selectedDistrict === 'AK-AL') {
-                var alaskaCenter = districtData['AK-AL'].center;
-                map.setView([alaskaCenter[0], alaskaCenter[1]], 3);
-                return;
-            }
-            
-            var selectedFeatures = [];
-            districtLayer.eachLayer(function(layer) {
-                if (layer.feature && layer.feature.properties) {
-                    var featureDistrictId = getDistrictId(layer.feature);
-                    if (featureDistrictId === selectedDistrict) {
-                        selectedFeatures.push(layer);
-                    }
-                }
-            });
-            
-            if (selectedFeatures.length > 0) {
-                var group = L.featureGroup(selectedFeatures);
-                var bounds = group.getBounds();
-                
-                var padding = [60, 60];
-                var maxZoom = 10;
-                
-                if (selectedDistrict === 'CA-13' || selectedDistrict === 'CO-03') {
-                    maxZoom = 9;
-                    padding = [70, 70];
-                }
-                
-                if (selectedDistrict.startsWith('CA-')) {
-                    maxZoom = 9;
-                    padding = [70, 70];
-                }
-                
-                map.fitBounds(bounds, { 
-                    padding: padding,
-                    maxZoom: maxZoom
-                });
-            }
-        }
-
-        function addMarkersToMainMap(colleges) {
-            if (!map || !colleges || colleges.length === 0) return;
-
-            clearMarkers();
-            
-            var group = L.featureGroup();
-
-            for (var i = 0; i < colleges.length; i++) {
-                var college = colleges[i];
-                if (!college.lat || !college.lng) continue;
-
-                var lat = parseFloat(college.lat);
-                var lng = parseFloat(college.lng);
-                
-                if (isNaN(lat) || isNaN(lng)) continue;
-
-                var iconColor = getSuitabilityColor(college.suitability);
-                
-                var marker = L.marker([lat, lng], {
-                    icon: L.divIcon({
-                        className: 'custom-marker',
-                        html: '<div style="background-color: ' + iconColor + '; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
-                        iconSize: [20, 20],
-                        iconAnchor: [10, 10]
-                    })
-                });
-
-                var popupContent = '<div style="text-align: center; padding: 4px;">' +
-                    '<div style="font-weight: bold; margin-bottom: 2px; color: #333; font-size: 0.9rem;">' + college.name + '</div>' +
-                    '<div style="font-size: 0.8rem; color: #666;">Rating: <strong>' + college.suitability + '</strong></div>' +
-                    '</div>';
-                marker.bindPopup(popupContent);
-                
-                marker.addTo(map);
-                group.addLayer(marker);
-                markers.push(marker);
-            }
-        }
-
         function displayCollegeListWithSections(district, withinColleges, nearColleges) {
             var container = document.getElementById('collegeItems');
             if (!container) return;
@@ -2137,3 +2178,6 @@
         });
 
         console.log("🎯 FRESH START: Drive Scout loaded successfully - All functions working!");
+    </script>
+</body>
+</html>
