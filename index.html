@@ -1371,8 +1371,73 @@
                 closestDistrictsResults.style.display = 'none';
             }
             
-            displayColleges(foundState, districtId);
+            // CENTERING FIX: Don't reinitialize the entire map, just update the selected district and recenter
+            if (map) {
+                // Update map's selected district info
+                map.selectedDistrict = districtId;
+                map.selectedState = foundState;
+                
+                // Reload local boundaries to highlight the new selected district
+                loadDistrictBoundariesForMap(map, districtId);
+                
+                // Center on the new district after boundaries load
+                setTimeout(function() {
+                    fitMapToSelectedDistrict(districtId);
+                }, 300);
+            }
+            
+            // Load and display college data without reinitializing the map
+            displayCollegesWithoutMapInit(foundState, districtId);
         };
+
+        // New function to display colleges without reinitializing the map
+        function displayCollegesWithoutMapInit(state, district) {
+            var collegeItems = document.getElementById('collegeItems');
+            var collegeList = document.getElementById('collegeList');
+            
+            showLoadingState(collegeItems, district);
+            collegeList.style.display = 'block';
+            
+            // Show map container if hidden
+            var mapContainer = document.getElementById('mapContainer');
+            if (mapContainer) mapContainer.style.display = 'block';
+
+            loadDistrictDataWithTimeout(district).then(function() {
+                var collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
+                
+                var allColleges = [];
+                var withinColleges = [];
+                var nearColleges = [];
+
+                if (Array.isArray(collegeDataForDistrict)) {
+                    allColleges = collegeDataForDistrict;
+                    withinColleges = collegeDataForDistrict;
+                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
+                    withinColleges = collegeDataForDistrict.within || [];
+                    nearColleges = collegeDataForDistrict.near || [];
+                    allColleges = withinColleges.concat(nearColleges);
+                }
+                
+                allColleges = allColleges.filter(function(college) {
+                    return college && college.name && 
+                           college.lat !== null && college.lng !== null && 
+                           !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
+                });
+                
+                if (allColleges.length === 0) {
+                    showNoData(state, district);
+                } else {
+                    displayCollegeListWithSections(district, withinColleges, nearColleges);
+                    
+                    // Add markers without reinitializing map
+                    setTimeout(function() {
+                        addMarkersToMainMap(allColleges);
+                    }, 500);
+                }
+            }).catch(function(error) {
+                showNoData(state, district);
+            });
+        }
 
         function fitMapToSelectedDistrict(selectedDistrict) {
             if (!map || !districtLayer) {
