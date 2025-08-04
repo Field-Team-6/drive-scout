@@ -1522,6 +1522,8 @@
 
         // New function for popup campuses - GLOBAL SCOPE
         window.showCampusesFromPopup = function(districtId) {
+            console.log('🎯 POPUP: showCampusesFromPopup called for:', districtId);
+            
             if (map) map.closePopup();
             
             var foundState = null;
@@ -1536,7 +1538,12 @@
                 if (foundState) break;
             }
             
-            if (!foundState) return;
+            if (!foundState) {
+                console.log('❌ POPUP: State not found for district:', districtId);
+                return;
+            }
+            
+            console.log('✅ POPUP: Found state', foundState, 'for district', districtId);
             
             var resultContainer = document.getElementById('closestCampusesResult');
             if (resultContainer) {
