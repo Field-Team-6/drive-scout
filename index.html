@@ -1379,44 +1379,30 @@
                 map.selectedDistrict = districtId;
                 map.selectedState = foundState;
                 
-                // OUTLINE FIX: Reset all district styling first, then reload with new selection
+                // OUTLINE FIX: Reset styling by completely reloading the boundaries with new selection
+                // This ensures only the new district gets highlighted styling
                 if (map.allSwingDistrictLayer) {
-                    // Reset national districts styling
-                    map.allSwingDistrictLayer.eachLayer(function(layer) {
-                        if (layer.feature) {
-                            var featureDistrictId = getDistrictId(layer.feature);
-                            var districtInfo = districtData[featureDistrictId];
-                            
-                            if (districtInfo) {
-                                // Apply default styling
-                                var defaultStyle = {
-                                    color: districtInfo.action === 'FLIP' ? '#DC143C' : '#4169E1',
-                                    weight: 2,
-                                    opacity: 0.7,
-                                    fillColor: districtInfo.action === 'FLIP' ? '#DC143C' : '#4169E1',
-                                    fillOpacity: 0.15
-                                };
-                                
-                                // Highlight only the newly selected district
-                                if (featureDistrictId === districtId) {
-                                    defaultStyle.weight = 4;
-                                    defaultStyle.opacity = 1.0;
-                                    defaultStyle.fillOpacity = 0.3;
-                                }
-                                
-                                layer.setStyle(defaultStyle);
-                            }
-                        }
-                    });
+                    map.removeLayer(map.allSwingDistrictLayer);
+                    map.allSwingDistrictLayer = null;
                 }
                 
+                if (districtLayer) {
+                    map.removeLayer(districtLayer);
+                    districtLayer = null;
+                }
+                
+                // Reload all boundaries with the new selected district
+                loadAllSwingDistrictBoundaries('force');
+                
                 // Reload local boundaries to highlight the new selected district
-                loadDistrictBoundariesForMap(map, districtId);
+                setTimeout(function() {
+                    loadDistrictBoundariesForMap(map, districtId);
+                }, 200);
                 
                 // Center on the new district after boundaries load
                 setTimeout(function() {
                     fitMapToSelectedDistrict(districtId);
-                }, 300);
+                }, 500);
             }
             
             // Load and display college data without reinitializing the map
