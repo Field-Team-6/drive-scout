@@ -1789,8 +1789,8 @@
             console.log('✅ ZOOM ENHANCED: ALL swing district boundaries added to map');
         }
 
-        // ENHANCED: New function to show campuses from popup
-        function showCampusesFromPopup(districtId) {
+        // ENHANCED: New function to show campuses from popup - GLOBAL SCOPE
+        window.showCampusesFromPopup = function(districtId) {
             console.log('🎯 POPUP ENHANCED: showCampusesFromPopup called for:', districtId);
             
             // Close any open popups
@@ -1854,7 +1854,7 @@
             displayColleges(foundState, districtId);
             
             console.log('✅ POPUP ENHANCED: District', districtId, 'campuses displayed from popup');
-        }
+        };
                     } else {
                         console.log('❌ SIMPLIFIED: Leaflet not loaded');
                     }
