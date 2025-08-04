@@ -593,6 +593,8 @@
 
         // Find closest districts
         function findClosestDistricts() {
+            // Clear existing map & list immediately when any Full Drive Scout Controls button is clicked
+            clearMapAndList();
             clearAllResults();
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
@@ -872,6 +874,9 @@
 
         // FIXED: Toggle location search - button text stays the same, clears results when opened
         function toggleLocationSearch() {
+            // Clear existing map & list immediately when any Full Drive Scout Controls button is clicked
+            clearMapAndList();
+            
             var section = document.getElementById('locationInputSection');
             var btn = document.getElementById('locationSearchBtn');
             
@@ -1020,6 +1025,9 @@
         }
 
         function exploreNationalMap() {
+            // Clear existing map & list immediately when any Full Drive Scout Controls button is clicked
+            clearMapAndList();
+            
             alert('National map exploration will be restored in the next update!');
         }
 
@@ -1703,6 +1711,33 @@
             var mainCollegeList = document.getElementById('collegeList');
             if (mainMapContainer) mainMapContainer.style.display = 'none';
             if (mainCollegeList) mainCollegeList.style.display = 'none';
+        }
+
+        // NEW: Clear map and list specifically - used by Full Drive Scout Controls buttons
+        function clearMapAndList() {
+            var mainMapContainer = document.getElementById('mapContainer');
+            var mainCollegeList = document.getElementById('collegeList');
+            
+            if (mainMapContainer) {
+                mainMapContainer.style.display = 'none';
+            }
+            
+            if (mainCollegeList) {
+                mainCollegeList.style.display = 'none';
+            }
+            
+            // Clear markers and reset map if it exists
+            if (map) {
+                clearMarkers();
+                if (districtLayer) {
+                    map.removeLayer(districtLayer);
+                    districtLayer = null;
+                }
+                if (map.allSwingDistrictLayer) {
+                    map.removeLayer(map.allSwingDistrictLayer);
+                    map.allSwingDistrictLayer = null;
+                }
+            }
         }
 
         function clearMarkers() {
