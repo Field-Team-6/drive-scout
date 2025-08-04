@@ -1371,11 +1371,44 @@
                 closestDistrictsResults.style.display = 'none';
             }
             
-            // CENTERING FIX: Don't reinitialize the entire map, just update the selected district and recenter
+            // OUTLINE FIX: Store previous selection and reset its styling
+            var previousDistrict = map.selectedDistrict;
+            
             if (map) {
                 // Update map's selected district info
                 map.selectedDistrict = districtId;
                 map.selectedState = foundState;
+                
+                // OUTLINE FIX: Reset all district styling first, then reload with new selection
+                if (map.allSwingDistrictLayer) {
+                    // Reset national districts styling
+                    map.allSwingDistrictLayer.eachLayer(function(layer) {
+                        if (layer.feature) {
+                            var featureDistrictId = getDistrictId(layer.feature);
+                            var districtInfo = districtData[featureDistrictId];
+                            
+                            if (districtInfo) {
+                                // Apply default styling
+                                var defaultStyle = {
+                                    color: districtInfo.action === 'FLIP' ? '#DC143C' : '#4169E1',
+                                    weight: 2,
+                                    opacity: 0.7,
+                                    fillColor: districtInfo.action === 'FLIP' ? '#DC143C' : '#4169E1',
+                                    fillOpacity: 0.15
+                                };
+                                
+                                // Highlight only the newly selected district
+                                if (featureDistrictId === districtId) {
+                                    defaultStyle.weight = 4;
+                                    defaultStyle.opacity = 1.0;
+                                    defaultStyle.fillOpacity = 0.3;
+                                }
+                                
+                                layer.setStyle(defaultStyle);
+                            }
+                        }
+                    });
+                }
                 
                 // Reload local boundaries to highlight the new selected district
                 loadDistrictBoundariesForMap(map, districtId);
