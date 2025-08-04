@@ -1520,102 +1520,7 @@
             }).addTo(map);
         }
 
-        // New function for popup campuses - GLOBAL SCOPE
-        window.showCampusesFromPopup = function(districtId) {
-            console.log('🎯 POPUP: showCampusesFromPopup called for:', districtId);
-            
-            if (map) map.closePopup();
-            
-            var foundState = null;
-            for (var state in districtMappings) {
-                var districts = districtMappings[state];
-                for (var i = 0; i < districts.length; i++) {
-                    if (districts[i] === districtId) {
-                        foundState = state;
-                        break;
-                    }
-                }
-                if (foundState) break;
-            }
-            
-            if (!foundState) {
-                console.log('❌ POPUP: State not found for district:', districtId);
-                return;
-            }
-            
-            console.log('✅ POPUP: Found state', foundState, 'for district', districtId);
-            
-            var resultContainer = document.getElementById('closestCampusesResult');
-            if (resultContainer) {
-                var districtInfo = districtData[districtId];
-                var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
-                var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
-                
-                var distanceText = '';
-                if (window.lastUserLocation) {
-                    var distance = calculateDistance(
-                        window.lastUserLocation.lat, 
-                        window.lastUserLocation.lng, 
-                        districtInfo.center[0], 
-                        districtInfo.center[1]
-                    );
-                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
-                }
-                
-                resultContainer.innerHTML = 
-                    '<div style="background: ' + partyBackgroundColor + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; margin: 6px 0 0 0 !important;">' +
-                        '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">' +
-                            'Swing district: ' + districtId +
-                        '</div>' +
-                        '<div style="color: #666; margin-bottom: 0;">' +
-                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
-                        '</div>' +
-                    '</div>';
-                resultContainer.style.display = 'block';
-            }
-            
-            var closestDistrictsResults = document.getElementById('closestDistrictsResults');
-            if (closestDistrictsResults) {
-                closestDistrictsResults.style.display = 'none';
-            }
-            
-            // OUTLINE FIX: Store previous selection and reset its styling
-            var previousDistrict = map.selectedDistrict;
-            
-            if (map) {
-                // Update map's selected district info
-                map.selectedDistrict = districtId;
-                map.selectedState = foundState;
-                
-                // OUTLINE FIX: Reset styling by completely reloading the boundaries with new selection
-                // This ensures only the new district gets highlighted styling
-                if (map.allSwingDistrictLayer) {
-                    map.removeLayer(map.allSwingDistrictLayer);
-                    map.allSwingDistrictLayer = null;
-                }
-                
-                if (districtLayer) {
-                    map.removeLayer(districtLayer);
-                    districtLayer = null;
-                }
-                
-                // Reload all boundaries with the new selected district
-                loadAllSwingDistrictBoundaries('force');
-                
-                // Reload local boundaries to highlight the new selected district
-                setTimeout(function() {
-                    loadDistrictBoundariesForMap(map, districtId);
-                }, 200);
-                
-                // Center on the new district after boundaries load
-                setTimeout(function() {
-                    fitMapToSelectedDistrict(districtId);
-                }, 500);
-            }
-            
-            // Load and display college data without reinitializing the map
-            displayCollegesWithoutMapInit(foundState, districtId);
-        };
+        // REMOVED DUPLICATE FUNCTION - moved to end of script
 
         // New function to display colleges without reinitializing the map
         function displayCollegesWithoutMapInit(state, district) {
@@ -2294,6 +2199,77 @@
         });
 
         console.log("🎯 FRESH START: Drive Scout loaded successfully - All functions working!");
+        
+        // DEBUGGING: Make sure the function is accessible globally
+        window.showCampusesFromPopup = function(districtId) {
+            console.log('🎯 BUTTON CLICK: showCampusesFromPopup called for:', districtId);
+            alert('Button clicked for district: ' + districtId + '. Function is working!');
+            
+            if (map) map.closePopup();
+            
+            var foundState = null;
+            for (var state in districtMappings) {
+                var districts = districtMappings[state];
+                for (var i = 0; i < districts.length; i++) {
+                    if (districts[i] === districtId) {
+                        foundState = state;
+                        break;
+                    }
+                }
+                if (foundState) break;
+            }
+            
+            if (!foundState) {
+                console.log('❌ POPUP: State not found for district:', districtId);
+                alert('Error: Could not find state for district ' + districtId);
+                return;
+            }
+            
+            console.log('✅ POPUP: Found state', foundState, 'for district', districtId);
+            
+            var resultContainer = document.getElementById('closestCampusesResult');
+            if (resultContainer) {
+                var districtInfo = districtData[districtId];
+                var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                var distanceText = '';
+                if (window.lastUserLocation) {
+                    var distance = calculateDistance(
+                        window.lastUserLocation.lat, 
+                        window.lastUserLocation.lng, 
+                        districtInfo.center[0], 
+                        districtInfo.center[1]
+                    );
+                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
+                }
+                
+                resultContainer.innerHTML = 
+                    '<div style="background: ' + partyBackgroundColor + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; margin: 6px 0 0 0 !important;">' +
+                        '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">' +
+                            'Swing district: ' + districtId +
+                        '</div>' +
+                        '<div style="color: #666; margin-bottom: 0;">' +
+                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                        '</div>' +
+                    '</div>';
+                resultContainer.style.display = 'block';
+            }
+            
+            var closestDistrictsResults = document.getElementById('closestDistrictsResults');
+            if (closestDistrictsResults) {
+                closestDistrictsResults.style.display = 'none';
+            }
+            
+            // Load and display college data
+            displayCollegesWithoutMapInit(foundState, districtId);
+        };
+        
+        // DEBUGGING: Test that the function exists
+        console.log('🔍 DEBUGGING: showCampusesFromPopup function exists:', typeof window.showCampusesFromPopup);
+        
+        // DEBUGGING: Make function also available without window prefix
+        showCampusesFromPopup = window.showCampusesFromPopup;
     </script>
 </body>
 </html>
