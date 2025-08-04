@@ -619,6 +619,20 @@
 
         console.log("🎯 SIMPLIFIED: Loaded", Object.keys(districtData).length, "districts with simplified approach");
 
+        // GLOBAL FUNCTION DEFINITIONS - Making sure all functions are accessible
+        window.findClosestCampuses = findClosestCampuses;
+        window.toggleFullControls = toggleFullControls;
+        window.findClosestDistricts = findClosestDistricts;
+        window.showMoreDistricts = showMoreDistricts;
+        window.showDistrictCampusesSimplified = showDistrictCampusesSimplified;
+        window.getUserLocation = getUserLocation;
+        window.toggleDistrictBoundaries = toggleDistrictBoundaries;
+        window.toggleLocationSearch = toggleLocationSearch;
+        window.handleLocationKeypress = handleLocationKeypress;
+        window.searchByLocation = searchByLocation;
+        window.exploreNationalMap = exploreNationalMap;
+        window.openMobilizeWithAutoFill = openMobilizeWithAutoFill;
+
         // Main function - Find closest campuses
         function findClosestCampuses() {
             console.log('🔄 SIMPLIFIED: Starting findClosestCampuses...');
