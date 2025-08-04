@@ -454,7 +454,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        console.log("🎯 FRESH START: Drive Scout - All functions properly defined");
+        console.log("🎯 SYNTAX FIX: Drive Scout starting with clean JavaScript");
         
         // Global variables
         var map;
@@ -593,7 +593,6 @@
 
         // Find closest districts
         function findClosestDistricts() {
-            // Clear existing map & list immediately when any Full Drive Scout Controls button is clicked
             clearMapAndList();
             clearAllResults();
             
@@ -683,7 +682,6 @@
         }
 
         function showMoreDistricts() {
-            // Implementation for showing more districts
             if (!window.allDistrictsByDistance || !window.currentlyDisplayed) return;
             
             var remaining = window.allDistrictsByDistance.length - window.currentlyDisplayed;
@@ -792,6 +790,216 @@
             displayColleges(foundState, districtId);
         }
 
+        // FIXED: Toggle location search - button text stays the same, clears results when opened
+        function toggleLocationSearch() {
+            clearMapAndList();
+            
+            var section = document.getElementById('locationInputSection');
+            var btn = document.getElementById('locationSearchBtn');
+            
+            if (section.style.display === 'none') {
+                var closestDistrictsResults = document.getElementById('closestDistrictsResults');
+                if (closestDistrictsResults) {
+                    closestDistrictsResults.innerHTML = '';
+                    closestDistrictsResults.style.display = 'none';
+                }
+                
+                section.style.display = 'block';
+                var input = document.getElementById('locationInput');
+                if (input) input.focus();
+            } else {
+                section.style.display = 'none';
+            }
+        }
+
+        function handleLocationKeypress(event) {
+            if (event.key === 'Enter') {
+                var input = document.getElementById('locationInput');
+                var location = input.value.trim();
+                if (location) {
+                    searchByLocation(location);
+                } else {
+                    alert('Please enter a location');
+                }
+            }
+        }
+
+        function searchByLocation(locationQuery) {
+            console.log('🔄 LOCATION SEARCH: Starting search for:', locationQuery);
+            
+            var resultsContainer = document.getElementById('closestDistrictsResults');
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding swing districts near ' + locationQuery + '...</h3><p>Searching for location and calculating distances.</p></div>';
+            resultsContainer.style.display = 'block';
+            
+            var geocodeUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(locationQuery + ', USA');
+            
+            fetch(geocodeUrl)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data && data.length > 0) {
+                        var location = data[0];
+                        var userLat = parseFloat(location.lat);
+                        var userLng = parseFloat(location.lon);
+                        
+                        console.log('✅ LOCATION SEARCH: Found location:', location.display_name, userLat, userLng);
+                        
+                        window.lastUserLocation = { lat: userLat, lng: userLng };
+                        
+                        var districtDistances = [];
+                        for (var districtId in districtData) {
+                            var data = districtData[districtId];
+                            var distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                            districtDistances.push({
+                                id: districtId,
+                                distance: distance,
+                                data: data
+                            });
+                        }
+                        
+                        districtDistances.sort(function(a, b) {
+                            return a.distance - b.distance;
+                        });
+                        
+                        window.allDistrictsByDistance = districtDistances;
+                        window.currentlyDisplayed = 0;
+                        
+                        displayLocationSearchResults(locationQuery, location.display_name, 0, 5);
+                    } else {
+                        resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Location Not Found</h3><p>Could not find "' + locationQuery + '". Try a different city, state, or zip code.</p></div>';
+                    }
+                })
+                .catch(function(error) {
+                    console.log('❌ LOCATION SEARCH: Error:', error);
+                    resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Search Error</h3><p>Unable to search for "' + locationQuery + '". Please try again.</p></div>';
+                });
+        }
+
+        function displayLocationSearchResults(searchQuery, foundLocation, startIndex, count) {
+            var resultsContainer = document.getElementById('closestDistrictsResults');
+            var endIndex = Math.min(startIndex + count, window.allDistrictsByDistance.length);
+            var districts = window.allDistrictsByDistance.slice(startIndex, endIndex);
+            
+            window.currentlyDisplayed = endIndex;
+            
+            var html = '';
+            
+            if (startIndex === 0) {
+                html += '<div class="district-results-container">';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 15px;">🎯 Swing Districts Near "' + searchQuery + '"</h2>';
+                html += '<div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: white; text-align: center; margin-bottom: 20px; font-size: 0.9rem;">';
+                html += '<strong>Found:</strong> ' + foundLocation;
+                html += '</div>';
+            } else {
+                html += '<div class="district-results-container">';
+            }
+            
+            for (var i = 0; i < districts.length; i++) {
+                var district = districts[i];
+                var partyBackgroundColor = district.data.party === 'D' ? '#e3f2fd' : '#ffebee';
+                var partyBorderColor = district.data.party === 'D' ? '#2196f3' : '#f44336';
+                
+                html += '<div class="district-card" style="border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
+                html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
+                html += '<div>';
+                html += '<div style="font-weight: bold; font-size: 1.2rem; color: #333;">' + district.id + '</div>';
+                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> • Rep. ' + district.data.rep + ' (' + district.data.party + ') • ' + district.data.action + '</div>';
+                html += '</div>';
+                html += '<div>';
+                html += '<button onclick="showDistrictCampusesSimplified(\'' + district.id + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
+                html += '</div>';
+                html += '</div>';
+                html += '</div>';
+            }
+            
+            if (window.currentlyDisplayed < window.allDistrictsByDistance.length) {
+                var remaining = window.allDistrictsByDistance.length - window.currentlyDisplayed;
+                var nextBatch = Math.min(5, remaining);
+                html += '<div style="text-align: center; margin-top: 20px;">';
+                html += '<button onclick="showMoreDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">Show ' + nextBatch + ' more districts</button>';
+                html += '</div>';
+            }
+            
+            html += '</div>';
+            
+            if (startIndex === 0) {
+                resultsContainer.innerHTML = html;
+            }
+        }
+
+        function exploreNationalMap() {
+            clearMapAndList();
+            
+            console.log('🌎 EXPLORE: Starting national map exploration...');
+            
+            var resultsContainer = document.getElementById('closestDistrictsResults');
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 22 competitive congressional districts across 7 states.</p></div>';
+            resultsContainer.style.display = 'block';
+            
+            var mapContainer = document.getElementById('mapContainer');
+            if (mapContainer) mapContainer.style.display = 'block';
+            
+            initializeNationalMap();
+            
+            setTimeout(function() {
+                var html = '<div class="district-results-container">';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 20px;">🇺🇸 All Swing Districts (2026)</h2>';
+                html += '<div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; color: white; text-align: center; margin-bottom: 20px;">';
+                html += '<p style="font-size: 1.1rem; margin-bottom: 10px;">Drive Scout tracks <strong>22 competitive congressional districts</strong> across 7 states.</p>';
+                html += '<p style="margin: 8px 0;">🔴 <strong>Red districts:</strong> Republican-held seats to flip</p>';
+                html += '<p style="margin: 8px 0;">🔵 <strong>Blue districts:</strong> Democratic seats to defend</p>';
+                html += '<p style="margin-top: 15px; font-style: italic;">Click any district on the map to see details and college campuses!</p>';
+                html += '</div>';
+                html += '</div>';
+                
+                resultsContainer.innerHTML = html;
+            }, 1500);
+        }
+
+        function initializeNationalMap() {
+            console.log('🌎 EXPLORE: Initializing national map...');
+            
+            if (map) {
+                map.remove();
+            }
+
+            setTimeout(function() {
+                if (typeof L !== 'undefined') {
+                    map = L.map('map', {
+                        attributionControl: false,
+                        minZoom: 1,
+                        maxZoom: 15
+                    }).setView([39.8283, -98.5795], 4);
+                    
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                        attribution: '© OpenStreetMap contributors © CARTO',
+                        maxZoom: 15,
+                        minZoom: 1
+                    }).addTo(map);
+
+                    districtBoundariesVisible = true;
+                    var districtToggleBtn = document.getElementById('districtToggleBtn');
+                    if (districtToggleBtn) {
+                        districtToggleBtn.classList.add('active');
+                        districtToggleBtn.style.background = '#667eea';
+                        districtToggleBtn.style.color = 'white';
+                        districtToggleBtn.style.borderColor = '#667eea';
+                    }
+
+                    map.selectedDistrict = null;
+                    map.selectedState = null;
+                    map.isNationalView = true;
+
+                    loadAllSwingDistrictBoundaries();
+                    
+                    console.log('✅ EXPLORE: National map initialized successfully');
+                } else {
+                    console.log('❌ EXPLORE: Leaflet not loaded');
+                }
+            }, 50);
+        }
+
         // Enhanced user location functionality
         function getUserLocation() {
             var btn = document.getElementById('locationBtn');
@@ -870,239 +1078,6 @@
                     districtToggleBtn.style.color = 'black';
                 }
             }
-        }
-
-        // FIXED: Toggle location search - button text stays the same, clears results when opened
-        function toggleLocationSearch() {
-            // Clear existing map & list immediately when any Full Drive Scout Controls button is clicked
-            clearMapAndList();
-            
-            var section = document.getElementById('locationInputSection');
-            var btn = document.getElementById('locationSearchBtn');
-            
-            if (section.style.display === 'none') {
-                // Clear previous district results when opening location search
-                var closestDistrictsResults = document.getElementById('closestDistrictsResults');
-                if (closestDistrictsResults) {
-                    closestDistrictsResults.innerHTML = '';
-                    closestDistrictsResults.style.display = 'none';
-                }
-                
-                section.style.display = 'block';
-                // Button text stays the same - DO NOT change it to "Hide location search"
-                var input = document.getElementById('locationInput');
-                if (input) input.focus();
-            } else {
-                section.style.display = 'none';
-                // Button text stays the same
-            }
-        }
-
-        function handleLocationKeypress(event) {
-            if (event.key === 'Enter') {
-                var input = document.getElementById('locationInput');
-                var location = input.value.trim();
-                if (location) {
-                    searchByLocation(location);
-                } else {
-                    alert('Please enter a location');
-                }
-            }
-        }
-
-        // WORKING location search functionality
-        function searchByLocation(locationQuery) {
-            console.log('🔄 LOCATION SEARCH: Starting search for:', locationQuery);
-            
-            var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding swing districts near ' + locationQuery + '...</h3><p>Searching for location and calculating distances.</p></div>';
-            resultsContainer.style.display = 'block';
-            
-            // Try to geocode the location using Nominatim
-            var geocodeUrl = 'https://nominatim.openstreetmap.org/search?format=json&q=' + encodeURIComponent(locationQuery + ', USA');
-            
-            fetch(geocodeUrl)
-                .then(function(response) {
-                    return response.json();
-                })
-                .then(function(data) {
-                    if (data && data.length > 0) {
-                        var location = data[0];
-                        var userLat = parseFloat(location.lat);
-                        var userLng = parseFloat(location.lon);
-                        
-                        console.log('✅ LOCATION SEARCH: Found location:', location.display_name, userLat, userLng);
-                        
-                        // Store this as the user location for distance calculations
-                        window.lastUserLocation = { lat: userLat, lng: userLng };
-                        
-                        // Calculate distances to all districts (same as findClosestDistricts)
-                        var districtDistances = [];
-                        for (var districtId in districtData) {
-                            var data = districtData[districtId];
-                            var distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
-                            districtDistances.push({
-                                id: districtId,
-                                distance: distance,
-                                data: data
-                            });
-                        }
-                        
-                        // Sort by distance
-                        districtDistances.sort(function(a, b) {
-                            return a.distance - b.distance;
-                        });
-                        
-                        // Store for "show more" functionality
-                        window.allDistrictsByDistance = districtDistances;
-                        window.currentlyDisplayed = 0;
-                        
-                        // Display results using SAME format as district list
-                        displayLocationSearchResults(locationQuery, location.display_name, 0, 5);
-                    } else {
-                        resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Location Not Found</h3><p>Could not find "' + locationQuery + '". Try a different city, state, or zip code.</p></div>';
-                    }
-                })
-                .catch(function(error) {
-                    console.log('❌ LOCATION SEARCH: Error:', error);
-                    resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Search Error</h3><p>Unable to search for "' + locationQuery + '". Please try again.</p></div>';
-                });
-        }
-
-        // Display location search results using SAME format as district results
-        function displayLocationSearchResults(searchQuery, foundLocation, startIndex, count) {
-            var resultsContainer = document.getElementById('closestDistrictsResults');
-            var endIndex = Math.min(startIndex + count, window.allDistrictsByDistance.length);
-            var districts = window.allDistrictsByDistance.slice(startIndex, endIndex);
-            
-            window.currentlyDisplayed = endIndex;
-            
-            var html = '';
-            
-            if (startIndex === 0) {
-                html += '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 15px;">🎯 Swing Districts Near "' + searchQuery + '"</h2>';
-                html += '<div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: white; text-align: center; margin-bottom: 20px; font-size: 0.9rem;">';
-                html += '<strong>Found:</strong> ' + foundLocation;
-                html += '</div>';
-            } else {
-                html += '<div class="district-results-container">';
-            }
-            
-            // Use EXACT same district card format as findClosestDistricts
-            for (var i = 0; i < districts.length; i++) {
-                var district = districts[i];
-                var partyBackgroundColor = district.data.party === 'D' ? '#e3f2fd' : '#ffebee';
-                var partyBorderColor = district.data.party === 'D' ? '#2196f3' : '#f44336';
-                
-                html += '<div class="district-card" style="border-left: 5px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
-                html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
-                html += '<div>';
-                html += '<div style="font-weight: bold; font-size: 1.2rem; color: #333;">' + district.id + '</div>';
-                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> • Rep. ' + district.data.rep + ' (' + district.data.party + ') • ' + district.data.action + '</div>';
-                html += '</div>';
-                html += '<div>';
-                html += '<button onclick="showDistrictCampusesSimplified(\'' + district.id + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
-                html += '</div>';
-                html += '</div>';
-                html += '</div>';
-            }
-            
-            // Add "Show 5 more districts" button if there are more
-            if (window.currentlyDisplayed < window.allDistrictsByDistance.length) {
-                var remaining = window.allDistrictsByDistance.length - window.currentlyDisplayed;
-                var nextBatch = Math.min(5, remaining);
-                html += '<div style="text-align: center; margin-top: 20px;">';
-                html += '<button onclick="showMoreDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">Show ' + nextBatch + ' more districts</button>';
-                html += '</div>';
-            }
-            
-            html += '</div>';
-            
-            if (startIndex === 0) {
-                resultsContainer.innerHTML = html;
-            }
-        }
-
-        function exploreNationalMap() {
-            // Clear existing map & list immediately when any Full Drive Scout Controls button is clicked
-            clearMapAndList();
-            
-            console.log('🌎 EXPLORE: Starting national map exploration...');
-            
-            var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 22 competitive congressional districts across 7 states.</p></div>';
-            resultsContainer.style.display = 'block';
-            
-            // Show map container
-            var mapContainer = document.getElementById('mapContainer');
-            if (mapContainer) mapContainer.style.display = 'block';
-            
-            // Initialize national map
-            initializeNationalMap();
-            
-            // Show informational content after map loads
-            setTimeout(function() {
-                var html = '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 20px;">🇺🇸 All Swing Districts (2026)</h2>';
-                html += '<div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; color: white; text-align: center; margin-bottom: 20px;">';
-                html += '<p style="font-size: 1.1rem; margin-bottom: 10px;">Drive Scout tracks <strong>22 competitive congressional districts</strong> across 7 states.</p>';
-                html += '<p style="margin: 8px 0;">🔴 <strong>Red districts:</strong> Republican-held seats to flip</p>';
-                html += '<p style="margin: 8px 0;">🔵 <strong>Blue districts:</strong> Democratic seats to defend</p>';
-                html += '<p style="margin-top: 15px; font-style: italic;">Click any district on the map to see details and college campuses!</p>';
-                html += '</div>';
-                html += '</div>';
-                
-                resultsContainer.innerHTML = html;
-            }, 1500);
-        }
-
-        function initializeNationalMap() {
-            console.log('🌎 EXPLORE: Initializing national map...');
-            
-            // Remove existing map if it exists
-            if (map) {
-                map.remove();
-            }
-
-            setTimeout(function() {
-                if (typeof L !== 'undefined') {
-                    // Create map centered on continental US
-                    map = L.map('map', {
-                        attributionControl: false,
-                        minZoom: 1,
-                        maxZoom: 15
-                    }).setView([39.8283, -98.5795], 4); // US center, zoom level 4 for national view
-                    
-                    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                        attribution: '© OpenStreetMap contributors © CARTO',
-                        maxZoom: 15,
-                        minZoom: 1
-                    }).addTo(map);
-
-                    districtBoundariesVisible = true;
-                    var districtToggleBtn = document.getElementById('districtToggleBtn');
-                    if (districtToggleBtn) {
-                        districtToggleBtn.classList.add('active');
-                        districtToggleBtn.style.background = '#667eea';
-                        districtToggleBtn.style.color = 'white';
-                        districtToggleBtn.style.borderColor = '#667eea';
-                    }
-
-                    // Set map mode to national
-                    map.selectedDistrict = null;
-                    map.selectedState = null;
-                    map.isNationalView = true;
-
-                    // Load all swing district boundaries for national view
-                    loadAllSwingDistrictBoundaries();
-                    
-                    console.log('✅ EXPLORE: National map initialized successfully');
-                } else {
-                    console.log('❌ EXPLORE: Leaflet not loaded');
-                }
-            }, 50);
-        }
         }
 
         // Enhanced map initialization
@@ -1185,15 +1160,12 @@
                     map.selectedDistrict = selectedDistrict;
                     map.selectedState = state;
 
-                    // ENHANCEMENT: Load ALL swing districts from the start
                     loadAllSwingDistrictBoundaries();
                     
-                    // Also load local district boundaries for highlighting
                     setTimeout(function() {
                         loadDistrictBoundariesForMap(map, selectedDistrict);
                     }, 500);
 
-                    // Enhanced zoom event listener
                     map.on('zoomend', function() {
                         var currentZoom = map.getZoom();
                         
@@ -1290,7 +1262,6 @@
                         };
                     }
                     
-                    // POPUP FIX: Use same compact popup style as national districts
                     function onEachDistrict(feature, layer) {
                         var featureDistrictId = getDistrictId(feature);
                         var districtInfo = districtData[featureDistrictId];
@@ -1300,7 +1271,6 @@
                             var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                             var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
                             
-                            // Calculate distance if user location available
                             var distanceText = '';
                             if (window.lastUserLocation && districtInfo.center) {
                                 var distance = calculateDistance(
@@ -1312,20 +1282,17 @@
                                 distanceText = '<div style="color: #666; font-size: 0.85rem; font-style: italic; margin: 2px 0 6px 0;">' + Math.round(distance) + ' miles away</div>';
                             }
                             
-                            // Use same ULTRA-COMPACT popup style as national districts
                             var popupContent = '<div style="padding: 8px 12px; border-left: 4px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + '; margin: 0; line-height: 1.2;">';
                             popupContent += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin: 0 0 2px 0;">' + featureDistrictId;
                             if (isSelected) {
                                 popupContent += ' <span style="background: #4CAF50; color: white; padding: 1px 6px; border-radius: 8px; font-size: 0.7rem; margin-left: 4px;">CURRENT</span>';
                             }
                             popupContent += '</div>';
-                            popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
                             popupContent += distanceText;
                             popupContent += '<div style="text-align: center; margin: 6px 0 0 0;">';
                             popupContent += '<button onclick="showCampusesFromPopup(\'' + featureDistrictId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
                             popupContent += '</div></div>';
                             
-                            // Configure popup with zero padding
                             layer.bindPopup(popupContent, { 
                                 maxWidth: 200, 
                                 className: 'compact-popup',
@@ -1334,7 +1301,6 @@
                                 offset: [0, -5]
                             });
                             
-                            // Add hover effects for non-selected districts
                             if (!isSelected) {
                                 layer.on({
                                     mouseover: function(e) {
@@ -1365,12 +1331,10 @@
         }
 
         function loadAllSwingDistrictBoundaries() {
-            // Don't reload if we already have national boundaries, unless forced
             if (map.allSwingDistrictLayer && arguments[0] !== 'force') {
                 return;
             }
             
-            // Remove existing national layer if reloading
             if (map.allSwingDistrictLayer) {
                 map.removeLayer(map.allSwingDistrictLayer);
                 map.allSwingDistrictLayer = null;
@@ -1465,7 +1429,6 @@
                     var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                     var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
                     
-                    // Calculate distance if user location available
                     var distanceText = '';
                     if (window.lastUserLocation && districtInfo.center) {
                         var distance = calculateDistance(
@@ -1477,7 +1440,6 @@
                         distanceText = '<div style="color: #666; font-size: 0.85rem; font-style: italic; margin: 2px 0 6px 0;">' + Math.round(distance) + ' miles away</div>';
                     }
                     
-                    // ULTRA-COMPACT popup with zero padding
                     var popupContent = '<div style="padding: 8px 12px; border-left: 4px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + '; margin: 0; line-height: 1.2;">';
                     popupContent += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin: 0 0 2px 0;">' + districtId + '</div>';
                     popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
@@ -1486,7 +1448,6 @@
                     popupContent += '<button onclick="showCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
                     popupContent += '</div></div>';
                     
-                    // Configure popup with zero padding
                     layer.bindPopup(popupContent, { 
                         maxWidth: 200, 
                         className: 'compact-popup',
@@ -1520,9 +1481,6 @@
             }).addTo(map);
         }
 
-        // REMOVED DUPLICATE FUNCTION - moved to end of script
-
-        // New function to display colleges without reinitializing the map
         function displayCollegesWithoutMapInit(state, district) {
             var collegeItems = document.getElementById('collegeItems');
             var collegeList = document.getElementById('collegeList');
@@ -1530,7 +1488,6 @@
             showLoadingState(collegeItems, district);
             collegeList.style.display = 'block';
             
-            // Show map container if hidden
             var mapContainer = document.getElementById('mapContainer');
             if (mapContainer) mapContainer.style.display = 'block';
 
@@ -1561,7 +1518,6 @@
                 } else {
                     displayCollegeListWithSections(district, withinColleges, nearColleges);
                     
-                    // Add markers without reinitializing map
                     setTimeout(function() {
                         addMarkersToMainMap(allColleges);
                     }, 500);
@@ -1581,7 +1537,6 @@
                         return;
                     }
                     
-                    // ZOOM FIX: Reduced zoom level for fallback (was 9, now 8)
                     map.setView([districtInfo.center[0], districtInfo.center[1]], 8);
                 }
                 return;
@@ -1607,19 +1562,17 @@
                 var group = L.featureGroup(selectedFeatures);
                 var bounds = group.getBounds();
                 
-                // ZOOM FIX: Increased padding and reduced max zoom levels
-                var padding = [60, 60]; // Increased from [50, 50]
-                var maxZoom = 10; // Reduced from 11
+                var padding = [60, 60];
+                var maxZoom = 10;
                 
                 if (selectedDistrict === 'CA-13' || selectedDistrict === 'CO-03') {
-                    maxZoom = 9; // Reduced from 10
-                    padding = [70, 70]; // Increased from [60, 60]
+                    maxZoom = 9;
+                    padding = [70, 70];
                 }
                 
-                // Special handling for CA-27 and other CA districts
                 if (selectedDistrict.startsWith('CA-')) {
-                    maxZoom = 9; // Reduced zoom for all CA districts
-                    padding = [70, 70]; // Extra padding for CA districts
+                    maxZoom = 9;
+                    padding = [70, 70];
                 }
                 
                 map.fitBounds(bounds, { 
@@ -1699,7 +1652,6 @@
             if (mainCollegeList) mainCollegeList.style.display = 'none';
         }
 
-        // NEW: Clear map and list specifically - used by Full Drive Scout Controls buttons
         function clearMapAndList() {
             var mainMapContainer = document.getElementById('mapContainer');
             var mainCollegeList = document.getElementById('collegeList');
@@ -1712,7 +1664,6 @@
                 mainCollegeList.style.display = 'none';
             }
             
-            // Clear markers and reset map if it exists
             if (map) {
                 clearMarkers();
                 if (districtLayer) {
@@ -2198,9 +2149,7 @@
             }, 100);
         });
 
-        console.log("🎯 FRESH START: Drive Scout loaded successfully - All functions working!");
-        
-        // DEBUGGING: Make sure the function is accessible globally
+        // DEBUGGING: Define the function at global scope with detailed logging
         window.showCampusesFromPopup = function(districtId) {
             console.log('🎯 BUTTON CLICK: showCampusesFromPopup called for:', districtId);
             alert('Button clicked for district: ' + districtId + '. Function is working!');
@@ -2261,15 +2210,14 @@
                 closestDistrictsResults.style.display = 'none';
             }
             
-            // Load and display college data
             displayCollegesWithoutMapInit(foundState, districtId);
         };
-        
-        // DEBUGGING: Test that the function exists
+
+        // DEBUGGING: Test that the function exists and make it available without window prefix
         console.log('🔍 DEBUGGING: showCampusesFromPopup function exists:', typeof window.showCampusesFromPopup);
-        
-        // DEBUGGING: Make function also available without window prefix
         showCampusesFromPopup = window.showCampusesFromPopup;
+
+        console.log("🎯 SYNTAX FIX: Drive Scout loaded successfully - All functions properly defined!");
     </script>
 </body>
 </html>
