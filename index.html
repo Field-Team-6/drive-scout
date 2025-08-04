@@ -1028,7 +1028,81 @@
             // Clear existing map & list immediately when any Full Drive Scout Controls button is clicked
             clearMapAndList();
             
-            alert('National map exploration will be restored in the next update!');
+            console.log('🌎 EXPLORE: Starting national map exploration...');
+            
+            var resultsContainer = document.getElementById('closestDistrictsResults');
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 22 competitive congressional districts across 7 states.</p></div>';
+            resultsContainer.style.display = 'block';
+            
+            // Show map container
+            var mapContainer = document.getElementById('mapContainer');
+            if (mapContainer) mapContainer.style.display = 'block';
+            
+            // Initialize national map
+            initializeNationalMap();
+            
+            // Show informational content after map loads
+            setTimeout(function() {
+                var html = '<div class="district-results-container">';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 20px;">🇺🇸 All Swing Districts (2026)</h2>';
+                html += '<div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; color: white; text-align: center; margin-bottom: 20px;">';
+                html += '<p style="font-size: 1.1rem; margin-bottom: 10px;">Drive Scout tracks <strong>22 competitive congressional districts</strong> across 7 states.</p>';
+                html += '<p style="margin: 8px 0;">🔴 <strong>Red districts:</strong> Republican-held seats to flip</p>';
+                html += '<p style="margin: 8px 0;">🔵 <strong>Blue districts:</strong> Democratic seats to defend</p>';
+                html += '<p style="margin-top: 15px; font-style: italic;">Click any district on the map to see details and college campuses!</p>';
+                html += '</div>';
+                html += '</div>';
+                
+                resultsContainer.innerHTML = html;
+            }, 1500);
+        }
+
+        function initializeNationalMap() {
+            console.log('🌎 EXPLORE: Initializing national map...');
+            
+            // Remove existing map if it exists
+            if (map) {
+                map.remove();
+            }
+
+            setTimeout(function() {
+                if (typeof L !== 'undefined') {
+                    // Create map centered on continental US
+                    map = L.map('map', {
+                        attributionControl: false,
+                        minZoom: 1,
+                        maxZoom: 15
+                    }).setView([39.8283, -98.5795], 4); // US center, zoom level 4 for national view
+                    
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                        attribution: '© OpenStreetMap contributors © CARTO',
+                        maxZoom: 15,
+                        minZoom: 1
+                    }).addTo(map);
+
+                    districtBoundariesVisible = true;
+                    var districtToggleBtn = document.getElementById('districtToggleBtn');
+                    if (districtToggleBtn) {
+                        districtToggleBtn.classList.add('active');
+                        districtToggleBtn.style.background = '#667eea';
+                        districtToggleBtn.style.color = 'white';
+                        districtToggleBtn.style.borderColor = '#667eea';
+                    }
+
+                    // Set map mode to national
+                    map.selectedDistrict = null;
+                    map.selectedState = null;
+                    map.isNationalView = true;
+
+                    // Load all swing district boundaries for national view
+                    loadAllSwingDistrictBoundaries();
+                    
+                    console.log('✅ EXPLORE: National map initialized successfully');
+                } else {
+                    console.log('❌ EXPLORE: Leaflet not loaded');
+                }
+            }, 50);
+        }
         }
 
         // Enhanced map initialization
