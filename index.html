@@ -1089,20 +1089,64 @@
                         };
                     }
                     
+                    // POPUP FIX: Use same compact popup style as national districts
                     function onEachDistrict(feature, layer) {
                         var featureDistrictId = getDistrictId(feature);
                         var districtInfo = districtData[featureDistrictId];
+                        var isSelected = selectedDistrict && featureDistrictId === selectedDistrict;
                         
                         if (districtInfo) {
                             var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
                             var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
                             
-                            var popupContent = '<div style="padding: 8px; border-left: 3px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + ';">';
-                            popupContent += '<div style="font-weight: bold; color: #333;">' + featureDistrictId + '</div>';
-                            popupContent += '<div style="font-size: 0.9rem; color: #666;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
-                            popupContent += '</div>';
+                            // Calculate distance if user location available
+                            var distanceText = '';
+                            if (window.lastUserLocation && districtInfo.center) {
+                                var distance = calculateDistance(
+                                    window.lastUserLocation.lat, 
+                                    window.lastUserLocation.lng, 
+                                    districtInfo.center[0], 
+                                    districtInfo.center[1]
+                                );
+                                distanceText = '<div style="color: #666; font-size: 0.85rem; font-style: italic; margin: 2px 0 6px 0;">' + Math.round(distance) + ' miles away</div>';
+                            }
                             
-                            layer.bindPopup(popupContent, { maxWidth: 250 });
+                            // Use same ULTRA-COMPACT popup style as national districts
+                            var popupContent = '<div style="padding: 8px 12px; border-left: 4px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + '; margin: 0; line-height: 1.2;">';
+                            popupContent += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin: 0 0 2px 0;">' + featureDistrictId;
+                            if (isSelected) {
+                                popupContent += ' <span style="background: #4CAF50; color: white; padding: 1px 6px; border-radius: 8px; font-size: 0.7rem; margin-left: 4px;">CURRENT</span>';
+                            }
+                            popupContent += '</div>';
+                            popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
+                            popupContent += distanceText;
+                            popupContent += '<div style="text-align: center; margin: 6px 0 0 0;">';
+                            popupContent += '<button onclick="showCampusesFromPopup(\'' + featureDistrictId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
+                            popupContent += '</div></div>';
+                            
+                            // Configure popup with zero padding
+                            layer.bindPopup(popupContent, { 
+                                maxWidth: 200, 
+                                className: 'compact-popup',
+                                closeButton: true,
+                                autoPan: true,
+                                offset: [0, -5]
+                            });
+                            
+                            // Add hover effects for non-selected districts
+                            if (!isSelected) {
+                                layer.on({
+                                    mouseover: function(e) {
+                                        layer.setStyle({
+                                            weight: 4,
+                                            opacity: 0.9
+                                        });
+                                    },
+                                    mouseout: function(e) {
+                                        layer.setStyle(districtStyle(feature));
+                                    }
+                                });
+                            }
                         }
                     }
                     
@@ -1340,7 +1384,8 @@
                         return;
                     }
                     
-                    map.setView([districtInfo.center[0], districtInfo.center[1]], 9);
+                    // ZOOM FIX: Reduced zoom level for fallback (was 9, now 8)
+                    map.setView([districtInfo.center[0], districtInfo.center[1]], 8);
                 }
                 return;
             }
@@ -1365,12 +1410,19 @@
                 var group = L.featureGroup(selectedFeatures);
                 var bounds = group.getBounds();
                 
-                var padding = [50, 50];
-                var maxZoom = 11;
+                // ZOOM FIX: Increased padding and reduced max zoom levels
+                var padding = [60, 60]; // Increased from [50, 50]
+                var maxZoom = 10; // Reduced from 11
                 
                 if (selectedDistrict === 'CA-13' || selectedDistrict === 'CO-03') {
-                    maxZoom = 10;
-                    padding = [60, 60];
+                    maxZoom = 9; // Reduced from 10
+                    padding = [70, 70]; // Increased from [60, 60]
+                }
+                
+                // Special handling for CA-27 and other CA districts
+                if (selectedDistrict.startsWith('CA-')) {
+                    maxZoom = 9; // Reduced zoom for all CA districts
+                    padding = [70, 70]; // Extra padding for CA districts
                 }
                 
                 map.fitBounds(bounds, { 
