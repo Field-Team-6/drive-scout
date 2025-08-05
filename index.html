@@ -394,7 +394,7 @@
                     Full Drive Scout Controls
                 </button>
                 
-                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px; margin-top: 15px; border-radius: 10px;">
+                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px 20px 12px 20px; margin-top: 15px; border-radius: 10px;">  <!-- Reduced bottom padding from 20px to 12px -->
                     <div style="text-align: center; margin-bottom: 20px;">
                         <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
                             Find closest swing districts
@@ -417,7 +417,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="closestCampusesResult" style="display: none; margin: 0 !important; padding: 0 !important;"></div>
+                <div id="closestCampusesResult" style="display: none; margin: 5px 0 0 0 !important; padding: 0 !important;"></div>  <!-- Reduced top margin from 0 to 5px -->
             </div>
         </div>
 
@@ -945,7 +945,7 @@
             
             setTimeout(function() {
                 var html = '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 20px;">🇺🇸 All Swing Districts (2026)</h2>';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 25px;">All 2026 Swing Districts</h2>'; // Changed title and increased bottom margin
                 html += '</div>';
                 
                 resultsContainer.innerHTML = html;
@@ -1052,13 +1052,20 @@
             districtBoundariesVisible = !districtBoundariesVisible;
             
             if (districtBoundariesVisible) {
-                loadDistrictBoundariesForMap(map, currentSelectedDistrict);
+                // Show boundaries - check if we're in national view or district view
+                if (map.isNationalView) {
+                    loadAllSwingDistrictBoundaries('force'); // Force reload for national view
+                } else {
+                    loadDistrictBoundariesForMap(map, currentSelectedDistrict);
+                }
+                
                 if (districtToggleBtn) {
                     districtToggleBtn.classList.add('active');
                     districtToggleBtn.style.background = '#667eea';
                     districtToggleBtn.style.color = 'white';
                 }
             } else {
+                // Hide boundaries - remove all layers
                 if (districtLayer) {
                     map.removeLayer(districtLayer);
                     districtLayer = null;
