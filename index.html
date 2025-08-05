@@ -930,6 +930,7 @@
 
         function exploreNationalMap() {
             clearMapAndList();
+            clearAllResults(); // This should clear the "Swing district: CO-03" display
             
             console.log('🌎 EXPLORE: Starting national map exploration...');
             
@@ -945,12 +946,6 @@
             setTimeout(function() {
                 var html = '<div class="district-results-container">';
                 html += '<h2 style="color: white; text-align: center; margin-bottom: 20px;">🇺🇸 All Swing Districts (2026)</h2>';
-                html += '<div style="background: rgba(255,255,255,0.1); padding: 20px; border-radius: 10px; color: white; text-align: center; margin-bottom: 20px;">';
-                html += '<p style="font-size: 1.1rem; margin-bottom: 10px;">Drive Scout tracks <strong>22 competitive congressional districts</strong> across 7 states.</p>';
-                html += '<p style="margin: 8px 0;">🔴 <strong>Red districts:</strong> Republican-held seats to flip</p>';
-                html += '<p style="margin: 8px 0;">🔵 <strong>Blue districts:</strong> Democratic seats to defend</p>';
-                html += '<p style="margin-top: 15px; font-style: italic;">Click any district on the map to see details and college campuses!</p>';
-                html += '</div>';
                 html += '</div>';
                 
                 resultsContainer.innerHTML = html;
@@ -970,7 +965,7 @@
                         attributionControl: false,
                         minZoom: 1,
                         maxZoom: 15
-                    }).setView([39.8283, -98.5795], 4);
+                    }).setView([39.8283, -98.5795], 3); // Changed from zoom 4 to zoom 3 for wider view
                     
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                         attribution: '© OpenStreetMap contributors © CARTO',
@@ -2149,10 +2144,9 @@
             }, 100);
         });
 
-        // DEBUGGING: Define the function at global scope with detailed logging
+        // DEBUGGING: Define the function at global scope with NO ALERT POPUP
         window.showCampusesFromPopup = function(districtId) {
             console.log('🎯 BUTTON CLICK: showCampusesFromPopup called for:', districtId);
-            alert('Button clicked for district: ' + districtId + '. Function is working!');
             
             if (map) map.closePopup();
             
