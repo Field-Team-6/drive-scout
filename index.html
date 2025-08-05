@@ -59,11 +59,13 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             margin: -24px 0 8px 0 !important;
             padding: 0 !important;
+            border: none; /* Ensure no borders */
         }
 
         #mapContainer {
             margin: -24px 0 8px 0 !important;
             padding: 0 !important;
+            border: none; /* Ensure no borders */
         }
 
         #map {
@@ -72,6 +74,8 @@
             min-height: 280px;
             background: #f8f9fa;
             position: relative;
+            border: none; /* Ensure no borders */
+            outline: none; /* Remove any outlines */
         }
 
         .location-button {
@@ -394,7 +398,7 @@
                     Full Drive Scout Controls
                 </button>
                 
-                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px 20px 12px 20px; margin-top: 15px; border-radius: 10px;">  <!-- Reduced bottom padding from 20px to 12px -->
+                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px 20px 7px 20px; margin-top: 15px; border-radius: 10px;">  <!-- Reduced bottom padding from 12px to 7px -->
                     <div style="text-align: center; margin-bottom: 20px;">
                         <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
                             Find closest swing districts
@@ -945,7 +949,7 @@
             
             setTimeout(function() {
                 var html = '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 25px;">All 2026 Swing Districts</h2>'; // Changed title and increased bottom margin
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 30px; margin-top: -20px;">All 2026 Swing Districts</h2>'; // Added negative top margin and increased bottom margin
                 html += '</div>';
                 
                 resultsContainer.innerHTML = html;
