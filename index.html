@@ -244,6 +244,8 @@
             width: auto;
             display: inline-block;
             text-align: center;
+            vertical-align: middle; /* Add vertical centering */
+            line-height: 1.2; /* Consistent line height */
         }
 
         .main-action-button:hover {
@@ -261,13 +263,15 @@
                 font-size: 1rem;
                 padding: 12px 20px;
                 margin: 0 auto;
-                display: block;
+                display: flex; /* Change to flex for better centering */
+                align-items: center; /* Vertical centering */
+                justify-content: center; /* Horizontal centering */
                 width: fit-content;
                 max-width: calc(100vw - 40px);
                 word-wrap: break-word;
                 hyphens: auto;
-                text-align: center; /* Ensure text is centered */
-                line-height: 1.2; /* Better line spacing for mobile */
+                text-align: center;
+                line-height: 1.2;
             }
         }
 
