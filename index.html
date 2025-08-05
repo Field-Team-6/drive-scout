@@ -425,7 +425,7 @@
                     Full Drive Scout Controls
                 </button>
                 
-                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px 20px 5px 20px; margin-top: 15px; border-radius: 10px;">  <!-- Reduced bottom padding from 7px to 5px -->
+                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px 20px 4px 20px; margin-top: 15px; border-radius: 10px;">  <!-- Reduced bottom padding from 5px to 4px -->
                     <div style="text-align: center; margin-bottom: 20px;">
                         <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
                             Find closest swing districts
@@ -537,6 +537,9 @@
         function findClosestCampuses() {
             console.log('🔄 WORKING: Starting findClosestCampuses...');
             
+            // Close location search field if open
+            hideLocationSearchField();
+            
             clearAllResults();
             
             var btn = document.getElementById('findClosestCampusesBtn');
@@ -624,6 +627,9 @@
 
         // Find closest districts
         function findClosestDistricts() {
+            // Close location search field if open
+            hideLocationSearchField();
+            
             clearMapAndList();
             clearAllResults();
             
@@ -960,6 +966,9 @@
         }
 
         function exploreNationalMap() {
+            // Close location search field if open
+            hideLocationSearchField();
+            
             clearMapAndList();
             clearAllResults(); // This should clear the "Swing district: CO-03" display
             
@@ -1707,6 +1716,14 @@
                     map.removeLayer(map.allSwingDistrictLayer);
                     map.allSwingDistrictLayer = null;
                 }
+            }
+        }
+
+        // Helper function to hide location search field
+        function hideLocationSearchField() {
+            var locationInputSection = document.getElementById('locationInputSection');
+            if (locationInputSection && locationInputSection.style.display !== 'none') {
+                locationInputSection.style.display = 'none';
             }
         }
 
