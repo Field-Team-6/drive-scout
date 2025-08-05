@@ -376,6 +376,33 @@
             border: none;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
+
+        /* Additional CSS to remove any white lines or borders from Leaflet map */
+        .leaflet-container {
+            border: none !important;
+            outline: none !important;
+        }
+
+        .leaflet-control-container {
+            border: none !important;
+        }
+
+        .leaflet-tile-pane {
+            border: none !important;
+        }
+
+        .leaflet-map-pane {
+            border: none !important;
+        }
+
+        .leaflet-overlay-pane {
+            border: none !important;
+        }
+
+        .leaflet-tile {
+            border: none !important;
+            outline: none !important;
+        }
     </style>
 </head>
 <body>
@@ -398,7 +425,7 @@
                     Full Drive Scout Controls
                 </button>
                 
-                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px 20px 7px 20px; margin-top: 15px; border-radius: 10px;">  <!-- Reduced bottom padding from 12px to 7px -->
+                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px 20px 5px 20px; margin-top: 15px; border-radius: 10px;">  <!-- Reduced bottom padding from 7px to 5px -->
                     <div style="text-align: center; margin-bottom: 20px;">
                         <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
                             Find closest swing districts
@@ -949,7 +976,7 @@
             
             setTimeout(function() {
                 var html = '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 30px; margin-top: -20px;">All 2026 Swing Districts</h2>'; // Added negative top margin and increased bottom margin
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 30px; margin-top: -22px;">All 2026 Swing Districts</h2>'; // Changed top margin from -20px to -22px
                 html += '</div>';
                 
                 resultsContainer.innerHTML = html;
