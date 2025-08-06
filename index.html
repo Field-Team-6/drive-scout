@@ -59,13 +59,13 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             margin: -24px 0 8px 0 !important;
             padding: 0 !important;
-            border: none; /* Ensure no borders */
+            border: none;
         }
 
         #mapContainer {
             margin: -24px 0 8px 0 !important;
             padding: 0 !important;
-            border: none; /* Ensure no borders */
+            border: none;
         }
 
         #map {
@@ -74,8 +74,8 @@
             min-height: 280px;
             background: #f8f9fa;
             position: relative;
-            border: none; /* Ensure no borders */
-            outline: none; /* Remove any outlines */
+            border: none;
+            outline: none;
         }
 
         .location-button {
@@ -244,8 +244,8 @@
             width: auto;
             display: inline-block;
             text-align: center;
-            vertical-align: middle; /* Add vertical centering */
-            line-height: 1.2; /* Consistent line height */
+            vertical-align: middle;
+            line-height: 1.2;
         }
 
         .main-action-button:hover {
@@ -263,9 +263,9 @@
                 font-size: 1rem;
                 padding: 12px 20px;
                 margin: 0 auto;
-                display: flex; /* Change to flex for better centering */
-                align-items: center; /* Vertical centering */
-                justify-content: center; /* Horizontal centering */
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 width: fit-content;
                 max-width: calc(100vw - 40px);
                 word-wrap: break-word;
@@ -383,7 +383,6 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
-        /* Additional CSS to remove any white lines or borders from Leaflet map */
         .leaflet-container {
             border: none !important;
             outline: none !important;
@@ -431,7 +430,7 @@
                     Full Drive Scout Controls
                 </button>
                 
-                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px 20px 4px 20px; margin-top: 15px; border-radius: 10px;">  <!-- Reduced bottom padding from 5px to 4px -->
+                <div id="advancedControlsSection" style="display: none; background: rgba(255,255,255,0.1); padding: 20px 20px 4px 20px; margin-top: 15px; border-radius: 10px;">
                     <div style="text-align: center; margin-bottom: 20px;">
                         <button onclick="findClosestDistricts()" style="background: #764ba2; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
                             Find closest swing districts
@@ -454,7 +453,7 @@
                         </button>
                     </div>
                 </div>
-                <div id="closestCampusesResult" style="display: none; margin: 5px 0 0 0 !important; padding: 0 !important;"></div>  <!-- Reduced top margin from 0 to 5px -->
+                <div id="closestCampusesResult" style="display: none; margin: 5px 0 0 0 !important; padding: 0 !important;"></div>
             </div>
         </div>
 
@@ -491,7 +490,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        console.log("🎯 SYNTAX FIX: Drive Scout starting with clean JavaScript");
+        console.log("🎯 Drive Scout: Loading with New Jersey districts added");
         
         // Global variables
         var map;
@@ -503,7 +502,7 @@
         var districtLayer = null;
         var currentSelectedDistrict = null;
         
-        // District data - UPDATED WITH IL-06 and IL-17
+        // District data - UPDATED WITH NEW JERSEY DISTRICTS
         var districtData = {
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
             'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', center: [33.6061, -111.8781] },
@@ -524,8 +523,11 @@
             'CT-05': { rep: 'Jahana Hayes', party: 'D', action: 'HOLD', center: [41.5834, -73.0877] },
             'FL-23': { rep: 'Jared Moskowitz', party: 'D', action: 'HOLD', center: [26.1224, -80.1373] },
             'FL-25': { rep: 'Debbie Wasserman Schultz', party: 'D', action: 'HOLD', center: [25.6761, -80.3200] },
-            'IL-06': { rep: 'Sean Casten', party: 'D', action: 'HOLD', center: [41.8781, -88.0074] },  // NEW - Coordinates for IL-06 (DuPage County area)
-            'IL-17': { rep: 'Eric Sorensen', party: 'D', action: 'HOLD', center: [41.2519, -90.5775] },  // NEW - Coordinates for IL-17 (Moline/Rock Island area)
+            'IL-06': { rep: 'Sean Casten', party: 'D', action: 'HOLD', center: [41.8781, -88.0074] },
+            'IL-17': { rep: 'Eric Sorensen', party: 'D', action: 'HOLD', center: [41.2519, -90.5775] },
+            'NJ-03': { rep: 'Herb Conaway', party: 'D', action: 'HOLD', center: [39.9751, -74.6114] },  // NEW
+            'NJ-07': { rep: 'Thomas Kean Jr.', party: 'R', action: 'FLIP', center: [40.7357, -74.8331] },  // NEW
+            'NJ-09': { rep: 'Nellie Pou', party: 'D', action: 'HOLD', center: [40.8956, -74.1418] },  // NEW
             'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398] },
             'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656] },
             'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640] }
@@ -538,7 +540,8 @@
             "Colorado": ["CO-03", "CO-08"],
             "Connecticut": ["CT-05"],
             "Florida": ["FL-23", "FL-25"],
-            "Illinois": ["IL-06", "IL-17"],  // NEW - Added Illinois state mapping
+            "Illinois": ["IL-06", "IL-17"],
+            "New Jersey": ["NJ-03", "NJ-07", "NJ-09"],  // NEW
             "Nevada": ["NV-01", "NV-03", "NV-04"]
         };
 
@@ -546,9 +549,7 @@
         function findClosestCampuses() {
             console.log('🔄 WORKING: Starting findClosestCampuses...');
             
-            // Close location search field if open
             hideLocationSearchField();
-            
             clearAllResults();
             
             var btn = document.getElementById('findClosestCampusesBtn');
@@ -636,9 +637,7 @@
 
         // Find closest districts
         function findClosestDistricts() {
-            // Close location search field if open
             hideLocationSearchField();
-            
             clearMapAndList();
             clearAllResults();
             
@@ -836,7 +835,6 @@
             displayColleges(foundState, districtId);
         }
 
-        // FIXED: Toggle location search - button text stays the same, clears results when opened
         function toggleLocationSearch() {
             clearMapAndList();
             
@@ -975,16 +973,14 @@
         }
 
         function exploreNationalMap() {
-            // Close location search field if open
             hideLocationSearchField();
-            
             clearMapAndList();
-            clearAllResults(); // This should clear the "Swing district: CO-03" display
+            clearAllResults();
             
             console.log('🌎 EXPLORE: Starting national map exploration...');
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 24 competitive congressional districts across 8 states.</p></div>';
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 27 competitive congressional districts across 9 states.</p></div>';
             resultsContainer.style.display = 'block';
             
             var mapContainer = document.getElementById('mapContainer');
@@ -994,7 +990,7 @@
             
             setTimeout(function() {
                 var html = '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 30px; margin-top: -22px;">All 2026 Swing Districts</h2>'; // Changed top margin from -20px to -22px
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 30px; margin-top: -22px;">All 2026 Swing Districts</h2>';
                 html += '</div>';
                 
                 resultsContainer.innerHTML = html;
@@ -1014,7 +1010,7 @@
                         attributionControl: false,
                         minZoom: 1,
                         maxZoom: 15
-                    }).setView([39.8283, -98.5795], 3); // Changed from zoom 4 to zoom 3 for wider view
+                    }).setView([39.8283, -98.5795], 3);
                     
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                         attribution: '© OpenStreetMap contributors © CARTO',
@@ -1044,7 +1040,6 @@
             }, 50);
         }
 
-        // Enhanced user location functionality
         function getUserLocation() {
             var btn = document.getElementById('locationBtn');
             
@@ -1092,7 +1087,6 @@
             );
         }
 
-        // Toggle district boundaries
         function toggleDistrictBoundaries() {
             var districtToggleBtn = document.getElementById('districtToggleBtn');
             
@@ -1101,9 +1095,8 @@
             districtBoundariesVisible = !districtBoundariesVisible;
             
             if (districtBoundariesVisible) {
-                // Show boundaries - check if we're in national view or district view
                 if (map.isNationalView) {
-                    loadAllSwingDistrictBoundaries('force'); // Force reload for national view
+                    loadAllSwingDistrictBoundaries('force');
                 } else {
                     loadDistrictBoundariesForMap(map, currentSelectedDistrict);
                 }
@@ -1114,7 +1107,6 @@
                     districtToggleBtn.style.color = 'white';
                 }
             } else {
-                // Hide boundaries - remove all layers
                 if (districtLayer) {
                     map.removeLayer(districtLayer);
                     districtLayer = null;
@@ -1131,7 +1123,6 @@
             }
         }
 
-        // Enhanced map initialization
         function displayColleges(state, district) {
             var collegeItems = document.getElementById('collegeItems');
             var collegeList = document.getElementById('collegeList');
@@ -1256,7 +1247,8 @@
                 'Colorado': 'data/boundaries/colorado_districts_119th.json',
                 'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
                 'Florida': 'data/boundaries/florida_districts_119th.json',
-                'Illinois': 'data/boundaries/illinois_districts_119th.json',  // NEW - Added Illinois boundary file
+                'Illinois': 'data/boundaries/illinois_districts_119th.json',
+                'New Jersey': 'data/boundaries/newjersey_districts_119th.json',  // NEW
                 'Nevada': 'data/boundaries/nevada_districts_119th.json'
             };
             
@@ -1393,7 +1385,7 @@
                 map.allSwingDistrictLayer = null;
             }
             
-            var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 'Nevada'];  // Added Illinois
+            var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 'New Jersey', 'Nevada'];  // Added New Jersey
             var allBoundariesData = { type: "FeatureCollection", features: [] };
             var loadedStates = 0;
             
@@ -1404,7 +1396,8 @@
                 'Colorado': 'data/boundaries/colorado_districts_119th.json',
                 'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
                 'Florida': 'data/boundaries/florida_districts_119th.json',
-                'Illinois': 'data/boundaries/illinois_districts_119th.json',  // NEW - Added Illinois
+                'Illinois': 'data/boundaries/illinois_districts_119th.json',
+                'New Jersey': 'data/boundaries/newjersey_districts_119th.json',  // NEW
                 'Nevada': 'data/boundaries/nevada_districts_119th.json'
             };
             
@@ -1629,6 +1622,12 @@
                     padding = [70, 70];
                 }
                 
+                // Special handling for New Jersey districts
+                if (selectedDistrict.startsWith('NJ-')) {
+                    maxZoom = 10;
+                    padding = [50, 50];
+                }
+                
                 map.fitBounds(bounds, { 
                     padding: padding,
                     maxZoom: maxZoom
@@ -1731,7 +1730,6 @@
             }
         }
 
-        // Helper function to hide location search field
         function hideLocationSearchField() {
             var locationInputSection = document.getElementById('locationInputSection');
             if (locationInputSection && locationInputSection.style.display !== 'none') {
@@ -2172,7 +2170,8 @@
             if (properties.STATEFP) {
                 var stateMap = {
                     '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
-                    '09': 'CT', '12': 'FL', '17': 'IL', '32': 'NV'  // Added Illinois mapping
+                    '09': 'CT', '12': 'FL', '17': 'IL', '32': 'NV',
+                    '34': 'NJ'  // NEW - Added New Jersey
                 };
                 return stateMap[properties.STATEFP] || 'XX';
             }
@@ -2181,7 +2180,8 @@
                 var stateCode = properties.GEOID.substring(0, 2);
                 var stateMap = {
                     '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
-                    '09': 'CT', '12': 'FL', '17': 'IL', '32': 'NV'  // Added Illinois mapping
+                    '09': 'CT', '12': 'FL', '17': 'IL', '32': 'NV',
+                    '34': 'NJ'  // NEW - Added New Jersey
                 };
                 return stateMap[stateCode] || 'XX';
             }
@@ -2191,7 +2191,7 @@
 
         // Initialize the app
         function init() {
-            console.log('🎯 FRESH START: App initialized successfully');
+            console.log('🎯 Drive Scout: App initialized with New Jersey districts');
             
             for (var state in districtMappings) {
                 collegeData[state] = {};
@@ -2204,14 +2204,14 @@
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 FRESH START: DOM loaded, initializing Drive Scout...');
+            console.log('🎯 Drive Scout: DOM loaded, initializing with NJ districts...');
             
             setTimeout(function() {
                 init();
             }, 100);
         });
 
-        // DEBUGGING: Define the function at global scope with NO ALERT POPUP
+        // Global function for popup buttons
         window.showCampusesFromPopup = function(districtId) {
             console.log('🎯 BUTTON CLICK: showCampusesFromPopup called for:', districtId);
             
@@ -2274,11 +2274,9 @@
             displayCollegesWithoutMapInit(foundState, districtId);
         };
 
-        // DEBUGGING: Test that the function exists and make it available without window prefix
-        console.log('🔍 DEBUGGING: showCampusesFromPopup function exists:', typeof window.showCampusesFromPopup);
         showCampusesFromPopup = window.showCampusesFromPopup;
 
-        console.log("🎯 SYNTAX FIX: Drive Scout loaded successfully - All functions properly defined!");
+        console.log("🎯 Drive Scout loaded successfully with NJ-03, NJ-07, and NJ-09!");
     </script>
 </body>
 </html>
