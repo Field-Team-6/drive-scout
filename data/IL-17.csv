@@ -1,0 +1,6 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Western Illinois University,Public University,"1 University Cir, Macomb, IL 61455",Macomb,IL,61455,40.4606,-90.6712,7800,1050,,"Public university, large campus, main campus in Macomb, Quad Cities branch"
+Within,Illinois Central College,Community College,"1 College Dr, East Peoria, IL 61635",East Peoria,IL,61635,40.6631,-89.5831,7813,440,,"Community college, multiple campuses in Peoria area, strong technical programs"
+Within,Knox College,Private Liberal Arts College,"2 E South St, Galesburg, IL 61401",Galesburg,IL,61401,40.9478,-90.3712,1001,82,,"Private liberal arts college, historic campus, secular since founding"
+Within,Black Hawk College,Community College,"6600 34th Ave, Moline, IL 61265",Moline,IL,61265,41.5067,-90.5151,4500,160,,"Community college, Quad Cities area, multiple locations"
+Within,Western Illinois University-Quad Cities,Public University Branch,"3300 River Dr, Moline, IL 61265",Moline,IL,61265,41.5131,-90.524,1200,15,,"Branch campus of WIU, riverfront location, undergraduate and graduate programs"

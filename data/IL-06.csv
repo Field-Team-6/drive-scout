@@ -1,0 +1,12 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Elmhurst University,Private University,"190 S Prospect Ave, Elmhurst, IL 60126",Elmhurst,IL,60126,41.8969889,-87.9471365,3082,48,,"Liberal arts university, 48-acre arboretum campus, suburban setting"
+Within,College of DuPage,Community College,"425 Fawell Blvd, Glen Ellyn, IL 60137",Glen Ellyn,IL,60137,41.84103,-88.070717,21010,254,,"Largest community college in Illinois, multiple centers in district"
+Within,Midwestern University,Private Health Sciences University,"555 31st St, Downers Grove, IL 60515",Downers Grove,IL,60515,41.8089,-88.0131,2800,105,,"Health sciences focus, medical/dental programs, large campus"
+Near,Aurora University,Private University,"347 S Gladstone Ave, Aurora, IL 60506",Aurora,IL,60506,41.7606,-88.3201,6200,32,,"Private university, 32-acre campus, independent since 1971"
+Near,Waubonsee Community College,Community College,"Route 47 at Waubonsee Dr, Sugar Grove, IL 60554",Sugar Grove,IL,60554,41.7714,-88.437,7564,243,,"Community college, 243-acre main campus, multiple locations"
+Near,Harper College,Community College,"1200 W Algonquin Rd, Palatine, IL 60067",Palatine,IL,60067,42.0814,-88.0716,12199,200,,"Large community college, 200-acre campus, northwest suburbs"
+Near,Moraine Valley Community College,Community College,"9000 W College Pkwy, Palos Hills, IL 60465",Palos Hills,IL,60465,41.6899,-87.8169,16000,294,,"Large community college serving south suburbs, extensive programs"
+Near,Triton College,Community College,"2000 5th Ave, River Grove, IL 60171",River Grove,IL,60171,41.9298,-87.8442,14000,110,,"Community college, diverse programs, serves western Cook County"
+Near,Morton College,Community College,"3801 S Central Ave, Cicero, IL 60804",Cicero,IL,60804,41.8209,-87.7479,4500,25,,"Small community college, serves diverse Hispanic community"
+Near,Oakton Community College,Community College,"1600 E Golf Rd, Des Plaines, IL 60016",Des Plaines,IL,60016,42.0361,-87.8745,18000,155,,"Large community college, multiple campuses, strong transfer programs"
+Near,University of Illinois Chicago,Public University,"1200 W Harrison St, Chicago, IL 60607",Chicago,IL,60607,41.8708,-87.6505,33000,240,,"Large public research university, 16 colleges, medical center"
