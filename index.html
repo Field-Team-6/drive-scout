@@ -503,7 +503,7 @@
         var districtLayer = null;
         var currentSelectedDistrict = null;
         
-        // District data
+        // District data - UPDATED WITH IL-06 and IL-17
         var districtData = {
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
             'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', center: [33.6061, -111.8781] },
@@ -524,6 +524,8 @@
             'CT-05': { rep: 'Jahana Hayes', party: 'D', action: 'HOLD', center: [41.5834, -73.0877] },
             'FL-23': { rep: 'Jared Moskowitz', party: 'D', action: 'HOLD', center: [26.1224, -80.1373] },
             'FL-25': { rep: 'Debbie Wasserman Schultz', party: 'D', action: 'HOLD', center: [25.6761, -80.3200] },
+            'IL-06': { rep: 'Sean Casten', party: 'D', action: 'HOLD', center: [41.8781, -88.0074] },  // NEW - Coordinates for IL-06 (DuPage County area)
+            'IL-17': { rep: 'Eric Sorensen', party: 'D', action: 'HOLD', center: [41.2519, -90.5775] },  // NEW - Coordinates for IL-17 (Moline/Rock Island area)
             'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398] },
             'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656] },
             'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640] }
@@ -536,6 +538,7 @@
             "Colorado": ["CO-03", "CO-08"],
             "Connecticut": ["CT-05"],
             "Florida": ["FL-23", "FL-25"],
+            "Illinois": ["IL-06", "IL-17"],  // NEW - Added Illinois state mapping
             "Nevada": ["NV-01", "NV-03", "NV-04"]
         };
 
@@ -981,7 +984,7 @@
             console.log('🌎 EXPLORE: Starting national map exploration...');
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 22 competitive congressional districts across 7 states.</p></div>';
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 24 competitive congressional districts across 8 states.</p></div>';
             resultsContainer.style.display = 'block';
             
             var mapContainer = document.getElementById('mapContainer');
@@ -1253,6 +1256,7 @@
                 'Colorado': 'data/boundaries/colorado_districts_119th.json',
                 'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
                 'Florida': 'data/boundaries/florida_districts_119th.json',
+                'Illinois': 'data/boundaries/illinois_districts_119th.json',  // NEW - Added Illinois boundary file
                 'Nevada': 'data/boundaries/nevada_districts_119th.json'
             };
             
@@ -1388,7 +1392,7 @@
                 map.allSwingDistrictLayer = null;
             }
             
-            var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Nevada'];
+            var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 'Nevada'];  // Added Illinois
             var allBoundariesData = { type: "FeatureCollection", features: [] };
             var loadedStates = 0;
             
@@ -1399,6 +1403,7 @@
                 'Colorado': 'data/boundaries/colorado_districts_119th.json',
                 'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
                 'Florida': 'data/boundaries/florida_districts_119th.json',
+                'Illinois': 'data/boundaries/illinois_districts_119th.json',  // NEW - Added Illinois
                 'Nevada': 'data/boundaries/nevada_districts_119th.json'
             };
             
@@ -2166,7 +2171,7 @@
             if (properties.STATEFP) {
                 var stateMap = {
                     '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
-                    '09': 'CT', '12': 'FL', '32': 'NV'
+                    '09': 'CT', '12': 'FL', '17': 'IL', '32': 'NV'  // Added Illinois mapping
                 };
                 return stateMap[properties.STATEFP] || 'XX';
             }
@@ -2175,7 +2180,7 @@
                 var stateCode = properties.GEOID.substring(0, 2);
                 var stateMap = {
                     '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
-                    '09': 'CT', '12': 'FL', '32': 'NV'
+                    '09': 'CT', '12': 'FL', '17': 'IL', '32': 'NV'  // Added Illinois mapping
                 };
                 return stateMap[stateCode] || 'XX';
             }
