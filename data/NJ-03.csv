@@ -2,13 +2,8 @@ Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Ca
 Within,The College of New Jersey,Public University,"2000 Pennington Road, Ewing NJ 08628",Ewing,NJ,08628,40.32863,-74.813557,7200,289,,Beautiful tree-lined campus with multiple quad areas ideal for voter drives
 Within,Rider University,Private University,"2083 Lawrenceville Road, Lawrenceville NJ 08648",Lawrenceville,NJ,08648,40.277841,-74.731842,5000,280,,Large campus with extensive green spaces and student gathering areas
 Within,Mercer County Community College - West Windsor,Community College,"1200 Old Trenton Road, West Windsor NJ 08550",West Windsor,NJ,08550,40.253434,-74.652298,13000,292,,Main campus with scenic grounds bordering Mercer County Park
-Within,Mercer County Community College - James Kerney Campus,Community College,"102 North Broad Street, Trenton NJ 08608",Trenton,NJ,08608,40.221097,-74.764034,2000,5,,Urban campus serving downtown Trenton community
 Within,Rowan College at Burlington County,Community College,"900 College Circle, Mount Laurel NJ 08054",Mount Laurel,NJ,08054,39.929214,-74.886882,11000,112,,Modern main campus with central hub for student activities
-Within,Rowan College at Burlington County - Mount Holly,Community College,"1 High Street, Mount Holly NJ 08060",Mount Holly,NJ,08060,39.993472,-74.787714,500,3,,Historic arts campus in downtown Mount Holly
-Within,Burlington County Institute of Technology - Westampton,Technical College,"695 Woodlane Road, Westampton NJ 08060",Westampton,NJ,08060,40.018381,-74.82256,1200,50,,Career-focused campus with outdoor common areas
-Within,Burlington County Institute of Technology - Medford,Technical College,"10 Hawkin Road, Medford NJ 08055",Medford,NJ,08055,39.89461,-74.802884,800,45,,Technical education campus with student quad areas
 Near,Princeton University,Private University,"Nassau Hall Princeton, Princeton NJ 08544",Princeton,NJ,08544,40.352474,-74.64997,8400,600,,Prestigious Ivy League campus with extensive quads and gathering spaces
-Near,Thomas Edison State University,Public University,"111 W State Street, Trenton NJ 08608",Trenton,NJ,08608,40.220792,-74.768456,9000,0,,Primarily online adult education institution with limited campus facilities
 Near,Rutgers University-Camden,Public University,"303 Cooper Street, Camden NJ 08102",Camden,NJ,08102,39.947539,-75.123102,7000,40,,Urban campus with quad areas and student gathering spaces
 Near,Rutgers University-New Brunswick,Public University,"57 US Highway 1, New Brunswick NJ 08901",New Brunswick,NJ,08901,40.483696,-74.417506,50000,2688,,Major research university with five campuses and extensive grounds
 Near,Brookdale Community College - Lincroft,Community College,"765 Newman Springs Road, Lincroft NJ 07738",Lincroft,NJ,07738,40.326133,-74.131906,10400,221,,Main campus with extensive grounds and student facilities
@@ -17,10 +12,8 @@ Near,Monmouth University,Private University,"400 Cedar Avenue, West Long Branch 
 Near,Ocean County College,Community College,"1 College Drive, Toms River NJ 08754",Toms River,NJ,08754,40.008907,-74.163674,9000,275,,Large campus with multiple student gathering areas
 Near,Stockton University,Public University,"101 Vera King Farris Drive, Galloway NJ 08205",Galloway,NJ,08205,39.491626,-74.532907,10000,1600,,Large wooded campus in Pinelands with extensive outdoor areas
 Near,Camden County College - Blackwood,Community College,"200 College Drive, Blackwood NJ 08012",Blackwood,NJ,08012,39.785524,-75.041341,12000,320,,Main campus with quad areas and student commons
-Near,Camden County College - Camden,Community College,"200 N Broadway, Camden NJ 08102",Camden,NJ,08102,39.946676,-75.118026,2000,10,,Urban campus location in downtown Camden
 Near,Rowan College of South Jersey - Gloucester,Community College,"1400 Tanyard Road, Sewell NJ 08080",Sewell,NJ,08080,39.781,-75.119971,7000,120,,Campus with student gathering areas and outdoor commons
 Near,Middlesex College - Edison,Community College,"2600 Woodbridge Avenue, Edison NJ 08837",Edison,NJ,08837,40.510037,-74.365852,10000,200,,Main campus with 200 acres and student activity areas
-Near,Middlesex College - New Brunswick,Community College,"140 New Street, New Brunswick NJ 08901",New Brunswick,NJ,08901,40.492414,-74.4476,1500,5,,Urban center campus in downtown New Brunswick
 Near,Union College - Cranford,Community College,"1033 Springfield Avenue, Cranford NJ 07016",Cranford,NJ,07016,40.667779,-74.320217,8300,40,,Main campus with quad and student center
 Near,Union College - Elizabeth,Community College,"40 West Jersey Street, Elizabeth NJ 07202",Elizabeth,NJ,07202,40.66509,-74.216486,3000,10,,Urban campus serving Elizabeth community
 Near,Raritan Valley Community College,Community College,"118 Lamington Road, Branchburg NJ 08876",Branchburg,NJ,08876,40.609964,-74.687803,7000,240,,Scenic campus serving Somerset and Hunterdon counties
