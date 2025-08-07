@@ -1,0 +1,13 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Old Dominion University,Public University,"5115 Hampton Blvd, Norfolk, VA 23529",Norfolk,VA,23529,36.888989,-76.303478,23494,251,,Large public research university with extensive campus grounds
+Within,Norfolk State University,Public University,"700 Park Ave, Norfolk, VA 23504",Norfolk,VA,23504,36.846685,-76.269841,5000,134,,Historically Black public university with traditional campus
+Within,Tidewater Community College - Norfolk Campus,Community College,"300 Granby St, Norfolk, VA 23510",Norfolk,VA,23510,36.849874,-76.290193,4988,15,,Urban campus in downtown Norfolk
+Within,Tidewater Community College - Virginia Beach Campus,Community College,"1700 College Crescent, Virginia Beach, VA 23453",Virginia Beach,VA,23453,36.78682,-76.101532,8000,100,,Large community college campus
+Within,Virginia Wesleyan University,Private University,"5817 Wesleyan Dr, Virginia Beach, VA 23455",Virginia Beach,VA,23455,36.868601,-76.184704,1600,300,,Liberal arts university with extensive campus grounds
+Within,Tidewater Community College - Chesapeake Campus,Community College,"1428 Cedar Rd, Chesapeake, VA 23322",Chesapeake,VA,23322,36.725046,-76.29541,4000,85,,Community college campus with open spaces
+Within,Paul D. Camp Community College - Franklin Campus,Community College,"100 N College Dr, Franklin, VA 23851",Franklin,VA,23851,36.674583,-76.937519,1800,90,,Regional community college serving Franklin area
+Within,Paul D. Camp Community College - Suffolk Campus,Community College,"271 Kenyon Rd, Suffolk, VA 23434",Suffolk,VA,23434,36.72531,-76.655123,1200,65,,Community college branch campus
+Within,Eastern Shore Community College,Community College,"29300 Lankford Hwy, Melfa, VA 23410",Melfa,VA,23410,37.640438,-75.751991,1100,115,,Only higher education institution on Eastern Shore
+Near,Christopher Newport University,Public University,"1 Avenue of the Arts, Newport News, VA 23606",Newport News,VA,23606,37.062084,-76.492279,4407,260,,Liberal arts university with beautiful campus
+Near,Hampton University,Private University,"100 E Queen St, Hampton, VA 23668",Hampton,VA,23668,37.026098,-76.342651,3500,314,,Historic private university with waterfront campus
+Near,Tidewater Community College - Portsmouth Campus,Community College,"120 Campus Dr, Portsmouth, VA 23701",Portsmouth,VA,23701,36.816386,-76.337215,3500,70,,Community college campus with modern facilities
