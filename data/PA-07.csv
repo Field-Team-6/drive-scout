@@ -1,0 +1,11 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Lehigh University,Private University,"27 Memorial Drive West, Bethlehem, PA 18015",Bethlehem,PA,18015,40.606807,-75.3801,7500,1600,,Large research university with extensive quad areas
+Within,Lafayette College,Private Liberal Arts,"730 High Street, Easton, PA 18042",Easton,PA,18042,40.699533,-75.209819,2764,340,,Historic liberal arts college with strong campus community
+Within,Moravian University,Private Liberal Arts,"1200 Main Street, Bethlehem, PA 18018",Bethlehem,PA,18018,40.630039,-75.381615,2700,85,,6th oldest college in America with two campuses
+Within,Northampton Community College,Community College,"3835 Green Pond Road, Bethlehem, PA 18020",Bethlehem,PA,18020,40.672382,-75.324596,8951,165,,Large community college with multiple gathering spaces
+Within,Penn State Lehigh Valley,Public University,"2809 Saucon Valley Road, Center Valley, PA 18034",Center Valley,PA,18034,40.559037,-75.40344,1100,42,,Penn State campus with modern facilities
+Within,DeSales University,Private University,"2755 Station Avenue, Center Valley, PA 18034",Center Valley,PA,18034,40.540493,-75.375169,3000,550,,Catholic university with extensive campus grounds
+Within,Muhlenberg College,Private Liberal Arts,"2400 West Chew Street, Allentown, PA 18104",Allentown,PA,18104,40.59588,-75.507449,1788,75,,Liberal arts college with strong campus life
+Within,Cedar Crest College,Private Liberal Arts,"100 College Drive, Allentown, PA 18104",Allentown,PA,18104,40.586897,-75.520052,1248,84,,Women's college with active campus community
+Within,Lehigh Carbon Community College,Community College,"4525 Education Park Drive, Schnecksville, PA 18078",Schnecksville,PA,18078,40.663177,-75.612103,6205,254,,Community college with main campus and satellites
+Near,Kutztown University,Public University,"15200 Kutztown Road, Kutztown, PA 19530",Kutztown,PA,19530,40.512118,-75.787488,7400,326,,State university with large campus and diverse programs

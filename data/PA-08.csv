@@ -1,0 +1,7 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Lackawanna College,Community College,"501 Vine St, Scranton, PA 18509",Scranton,PA,18509,41.411519,-75.658995,2043,44,,"Private 2-year college, downtown Scranton Gothic District"
+Within,Penn State Scranton,Public University,"120 Ridge View Dr, Dunmore, PA 18512",Dunmore,PA,18512,41.440397,-75.621203,1300,45,,"Penn State branch campus, 4-year degrees available"
+Within,East Stroudsburg University,Public University,"200 Prospect St, East Stroudsburg, PA 18301",East Stroudsburg,PA,18301,40.996617,-75.177306,6000,213,,State university in Pocono Mountains region
+Within,Northampton Community College - Monroe,Community College,"2411 Route 715, Tannersville, PA 18372",Tannersville,PA,18372,41.031003,-75.325695,1200,84,,"NCC Pocono campus, LEED Gold certified"
+Within,Luzerne County Community College - Main,Community College,"1333 S Prospect St, Nanticoke, PA 18634",Nanticoke,PA,18634,41.192484,-75.996079,6000,167,,Main campus with extensive programs and facilities
+Within,Wilkes University,Private University,"84 W South St, Wilkes-Barre, PA 18766",Wilkes-Barre,PA,18766,41.244181,-75.890208,5000,35,,"Private university, downtown Wilkes-Barre location"

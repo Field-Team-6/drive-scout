@@ -1,0 +1,9 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Community College of Beaver County,Community College,"One Campus Drive, Monaca, PA 15061",Monaca,PA,15061,40.655613,-80.305854,1720,125,,Main campus with Golden Dome athletic facility and multiple buildings for gatherings
+Within,Robert Morris University,Private University,"6001 University Boulevard, Moon Township, PA 15108",Moon Township,PA,15108,40.519683,-80.21733,3769,230,,Large campus with multiple quads and student gathering spaces
+Within,Community College of Allegheny County - Allegheny Campus,Community College,"808 Ridge Avenue, Pittsburgh, PA 15212",Pittsburgh,PA,15212,40.450702,-80.013893,6000,10,,Urban campus with student center and multiple gathering areas
+Within,Community College of Allegheny County - North Campus,Community College,"8701 Perry Highway, Pittsburgh, PA 15237",Pittsburgh,PA,15237,40.565862,-80.040143,8000,15,,Single building campus with common areas and student spaces
+Near,Butler County Community College,Community College,"107 College Drive, Butler, PA 16002",Butler,PA,16002,40.828355,-79.913274,2984,100,,Main campus with multiple buildings and outdoor spaces
+Near,Slippery Rock University,Public University,"1 Morrow Way, Slippery Rock, PA 16057",Slippery Rock,PA,16057,41.060838,-80.05209,8350,660,,Large state university campus with extensive quads and gathering areas
+Near,Community College of Allegheny County - Boyce Campus,Community College,"595 Beatty Road, Monroeville, PA 15146",Monroeville,PA,15146,40.453571,-79.752437,4500,25,,Multi-purpose building with gymnasium and common areas
+Near,Community College of Allegheny County - South Campus,Community College,"1750 Clairton Road, West Mifflin, PA 15122",West Mifflin,PA,15122,40.329668,-79.924309,5000,20,,Six-story facility with walkways and outdoor spaces

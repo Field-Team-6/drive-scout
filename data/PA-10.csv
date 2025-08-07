@@ -1,0 +1,8 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Harrisburg Area Community College,Community College,"1 HACC Drive, Harrisburg, PA 17110",Harrisburg,PA,17110,40.290937,-76.884836,12600,200,,Largest community college in central PA with main campus spanning over 200 acres
+Within,Penn State Harrisburg,Public University,"777 West Harrisburg Pike, Middletown, PA 17057",Middletown,PA,17057,40.19953,-76.759214,5000,218,,Comprehensive Penn State campus in Dauphin County with 218-acre campus
+Within,Widener University - Harrisburg Campus,Private University,"3800 Vartan Way, Harrisburg, PA 17110",Harrisburg,PA,17110,40.324038,-76.854173,1500,25,,Widener satellite campus focusing on graduate programs
+Within,Central Penn College,Private College,"600 Valley Road, Summerdale, PA 17093",Summerdale,PA,17093,40.305011,-76.934388,1200,35,,Career-focused college in Cumberland County portion of district
+Within,York College of Pennsylvania,Private University,"441 Country Club Road, York, PA 17403",York,PA,17403,39.946443,-76.727725,3335,190,,Private comprehensive secular college with 190-acre campus in York County portion
+Near,Shippensburg University,Public University,"1871 Old Main Drive, Shippensburg, PA 17257",Shippensburg,PA,17257,40.059902,-77.523627,5500,200,,State system university in Cumberland County
+Within,Dickinson College,Private University,"272 West High Street, Carlisle, PA 17013",Carlisle,PA,17013,40.201732,-77.196212,2200,144,,Private liberal arts college with 144-acre campus in Cumberland County portion of district

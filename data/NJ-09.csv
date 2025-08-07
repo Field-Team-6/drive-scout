@@ -1,11 +1,11 @@
 Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
-Within,William Paterson University,Public University,"300 Pompton Rd, Wayne, NJ 07470",Wayne,NJ,7470,40.9469,-74.1769,11500,370,,"Public university with diverse programs, large campus with open spaces"
-Within,Passaic County Community College,Community College,"1 College Blvd, Paterson, NJ 07505",Paterson,NJ,7505,40.9148,-74.1451,5549,15,,"Main campus in Paterson, serves diverse urban population"
-Within,Berkeley College - Woodland Park,Private College,"44 Rifle Camp Rd, Woodland Park, NJ 07424",Woodland Park,NJ,7424,40.8897,-74.1947,2800,25,,"Career-focused programs, business and health sciences"
-Near,Bergen Community College,Community College,"400 Paramus Rd, Paramus, NJ 07652",Paramus,NJ,7652,40.9543,-74.0793,13000,167,,"One of NJ's largest community colleges, extensive campus"
-Near,Montclair State University,Public University,"1 Normal Ave, Montclair, NJ 07043",Montclair,NJ,7043,40.8625,-74.1979,21000,252,,"Major public university, large campus with extensive facilities"
-Near,Hudson County Community College,Community College,"70 Sip Ave, Jersey City, NJ 07306",Jersey City,NJ,7306,40.7325,-74.0619,7039,12,,"Main campus in Journal Square, urban setting"
-Near,Essex County College,Community College,"303 University Ave, Newark, NJ 07102",Newark,NJ,7102,40.7432,-74.1788,6360,22,,Urban campus in University Heights district
-Near,Ramapo College of New Jersey,Public College,"505 Ramapo Valley Rd, Mahwah, NJ 07430",Mahwah,NJ,7430,41.0825,-74.1741,6000,300,,"Liberal arts college, beautiful campus with modern facilities"
-Near,Fairleigh Dickinson University - Teaneck,Private University,"1000 River Rd, Teaneck, NJ 07666",Teaneck,NJ,7666,40.8589,-74.0334,8500,88,,"Metropolitan campus, diverse academic programs"
-Near,New Jersey City University,Public University,"2039 Kennedy Blvd, Jersey City, NJ 07305",Jersey City,NJ,7305,40.7073,-74.0977,7000,46,,"Urban campus, strong education and business programs"
+Within,William Paterson University,Public University,"300 Pompton Rd, Wayne, NJ 07470",Wayne,NJ,7470,40.948133,-74.197672,11500,370,,"Public university with diverse programs, large campus with open spaces"
+Within,Passaic County Community College,Community College,"1 College Blvd, Paterson, NJ 07505",Paterson,NJ,7505,40.9183,-74.175388,5549,15,,"Main campus in Paterson, serves diverse urban population"
+Within,Berkeley College - Woodland Park,Private College,"44 Rifle Camp Rd, Woodland Park, NJ 07424",Woodland Park,NJ,7424,40.900182,-74.186867,2800,25,,"Career-focused programs, business and health sciences"
+Near,Bergen Community College,Community College,"400 Paramus Rd, Paramus, NJ 07652",Paramus,NJ,7652,40.952081,-74.09024,13000,167,,"One of NJ's largest community colleges, extensive campus"
+Near,Montclair State University,Public University,"1 Normal Ave, Montclair, NJ 07043",Montclair,NJ,7043,40.857718,-74.202475,21000,252,,"Major public university, large campus with extensive facilities"
+Near,Hudson County Community College,Community College,"70 Sip Ave, Jersey City, NJ 07306",Jersey City,NJ,7306,40.730697,-74.062429,7039,12,,"Main campus in Journal Square, urban setting"
+Near,Essex County College,Community College,"303 University Ave, Newark, NJ 07102",Newark,NJ,7102,40.737087,-74.176284,6360,22,,Urban campus in University Heights district
+Near,Ramapo College of New Jersey,Public College,"505 Ramapo Valley Rd, Mahwah, NJ 07430",Mahwah,NJ,7430,41.082749,-74.17738,6000,300,,"Liberal arts college, beautiful campus with modern facilities"
+Near,Fairleigh Dickinson University - Teaneck,Private University,"1000 River Rd, Teaneck, NJ 07666",Teaneck,NJ,7666,40.895433,-74.030388,8500,88,,"Metropolitan campus, diverse academic programs"
+Near,New Jersey City University,Public University,"2039 Kennedy Blvd, Jersey City, NJ 07305",Jersey City,NJ,7305,40.768468,-74.041173,7000,46,,"Urban campus, strong education and business programs"
