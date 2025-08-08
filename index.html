@@ -1221,6 +1221,8 @@
 
                     map.selectedDistrict = selectedDistrict;
                     map.selectedState = state;
+                    
+                    currentSelectedDistrict = selectedDistrict;
 
                     loadAllSwingDistrictBoundaries();
                     
@@ -1233,7 +1235,7 @@
                         
                         if (currentZoom <= 6 && districtBoundariesVisible) {
                             loadAllSwingDistrictBoundaries();
-                        } else if (currentZoom > 6 && districtBoundariesVisible) {
+                        } else if (currentZoom > 6 && districtBoundariesVisible && selectedDistrict) {
                             loadDistrictBoundariesForMap(map, selectedDistrict);
                         }
                     });
@@ -1394,10 +1396,15 @@
                     }).addTo(targetMap);
                     
                     targetMap.districtLayer = districtLayer;
+                })
+                .catch(function(error) {
+                    console.log('Error loading district boundaries:', error);
                 });
         }
 
         function loadAllSwingDistrictBoundaries() {
+            if (!map) return;
+            
             if (map.allSwingDistrictLayer && arguments[0] !== 'force') {
                 return;
             }
@@ -1407,9 +1414,11 @@
                 map.allSwingDistrictLayer = null;
             }
             
+            // Only load states that are visible or needed - optimize for performance
             var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 'New Jersey', 'Nevada', 'Pennsylvania', 'Virginia'];
             var allBoundariesData = { type: "FeatureCollection", features: [] };
             var loadedStates = 0;
+            var failedStates = 0;
             
             var boundaryFiles = {
                 'Alaska': 'data/boundaries/alaska_districts_119th.json',
@@ -1425,42 +1434,51 @@
                 'Virginia': 'data/boundaries/virginia_districts_119th.json'
             };
             
+            // Load all states in parallel with shorter timeout
+            var promises = [];
+            
             for (var i = 0; i < statesToLoad.length; i++) {
                 var state = statesToLoad[i];
                 var boundaryFile = boundaryFiles[state];
                 if (boundaryFile) {
-                    (function(currentState) {
-                        fetch(boundaryFile)
-                            .then(function(response) {
-                                if (response.ok) {
-                                    return response.json();
-                                }
-                                throw new Error('Failed to load ' + boundaryFile);
-                            })
-                            .then(function(geojsonData) {
-                                if (geojsonData && geojsonData.features) {
-                                    allBoundariesData.features = allBoundariesData.features.concat(geojsonData.features);
-                                }
-                                
-                                loadedStates++;
-                                
-                                if (loadedStates === statesToLoad.length) {
-                                    addAllSwingDistrictBoundaries(allBoundariesData);
-                                }
-                            })
-                            .catch(function(error) {
-                                loadedStates++;
-                                
-                                if (loadedStates === statesToLoad.length && allBoundariesData.features.length > 0) {
-                                    addAllSwingDistrictBoundaries(allBoundariesData);
-                                }
-                            });
-                    })(state);
+                    var promise = fetch(boundaryFile)
+                        .then(function(response) {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error('Failed to load');
+                        })
+                        .then(function(geojsonData) {
+                            if (geojsonData && geojsonData.features) {
+                                return geojsonData.features;
+                            }
+                            return [];
+                        })
+                        .catch(function(error) {
+                            console.log('Failed to load boundary file:', error);
+                            return [];
+                        });
+                    
+                    promises.push(promise);
                 }
             }
+            
+            Promise.all(promises).then(function(results) {
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i] && results[i].length > 0) {
+                        allBoundariesData.features = allBoundariesData.features.concat(results[i]);
+                    }
+                }
+                
+                if (allBoundariesData.features.length > 0) {
+                    addAllSwingDistrictBoundaries(allBoundariesData);
+                }
+            });
         }
 
         function addAllSwingDistrictBoundaries(boundariesData) {
+            if (!map || !boundariesData || boundariesData.features.length === 0) return;
+            
             function allSwingDistrictStyle(feature) {
                 var districtId = getDistrictId(feature);
                 var districtInfo = districtData[districtId];
