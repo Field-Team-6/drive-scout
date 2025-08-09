@@ -1,0 +1,19 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Michigan State University,Public University,"426 Auditorium Road, East Lansing, MI 48824",East Lansing,MI,48824,42.728334,-84.488226,50000,5300,,Flagship research university with extensive campus green spaces
+Within,Lansing Community College,Community College,"610 N Capitol Avenue, Lansing, MI 48933",Lansing,MI,48933,42.73789,-84.55271,11000,42,,Urban campus with multiple satellite locations
+Within,Lansing Community College - Livingston County Center,Community College,"402 Wright Road, Howell, MI 48843",Howell,MI,48843,42.568259,-83.931654,2000,15,,Satellite campus serving Livingston County
+Within,Oakland University,Public University,"2200 N Squirrel Road, Rochester Hills, MI 48309",Rochester Hills,MI,48309,42.671325,-83.210814,20000,1444,,Large campus with extensive facilities and green spaces
+Within,Oakland Community College - Highland Lakes,Community College,"7350 Cooley Lake Road, Waterford, MI 48327",Waterford,MI,48327,42.619726,-83.430446,3500,200,,One of five OCC campuses in Oakland County
+Within,University of Michigan-Flint,Public University,"303 E Kearsley Street, Flint, MI 48502",Flint,MI,48502,43.019554,-83.68732,7500,76,,Urban campus in downtown Flint
+Within,Mott Community College,Community College,"1401 E Court Street, Flint, MI 48503",Flint,MI,48503,43.018581,-83.672835,6200,32,,Main campus with multiple satellite locations
+Within,Baker College of Owosso,Private University,"1020 S Washington Street, Owosso, MI 48867",Owosso,MI,48867,42.986867,-84.170629,3800,70,,Multi-program campus with residential facilities
+Within,Davenport University - Lansing,Private University,"200 S Grand Avenue, Lansing, MI 48933",Lansing,MI,48933,42.732481,-84.550658,2000,10,,Urban campus near Michigan State Capitol
+Near,Jackson College,Community College,"2111 Emmons Road, Jackson, MI 49201",Jackson,MI,49201,42.167358,-84.40639,5900,500,,Large campus with extensive grounds and facilities
+Near,Washtenaw Community College,Community College,"4800 E Huron River Drive, Ann Arbor, MI 48105",Ann Arbor,MI,48105,42.263371,-83.663719,12000,285,,Large community college campus with extensive facilities
+Near,Eastern Michigan University,Public University,"900 Oakwood Street, Ypsilanti, MI 48197",Ypsilanti,MI,48197,42.247501,-83.623925,16000,800,,Major public university with large campus
+Near,University of Michigan-Dearborn,Public University,"4901 Evergreen Road, Dearborn, MI 48128",Dearborn,MI,48128,42.312973,-83.231309,9100,200,,Regional campus of University of Michigan system
+Near,Henry Ford College,Community College,"5101 Evergreen Road, Dearborn, MI 48128",Dearborn,MI,48128,42.322296,-83.235565,13000,75,,Community college with main campus and satellite locations
+Near,Oakland Community College - Orchard Ridge,Community College,"27055 Orchard Lake Road, Farmington Hills, MI 48334",Farmington Hills,MI,48334,42.491426,-83.369364,7000,188,,One of five OCC campuses
+Near,Oakland Community College - Auburn Hills,Community College,"2900 Featherstone Road, Auburn Hills, MI 48326",Auburn Hills,MI,48326,42.643574,-83.228482,6500,110,,One of five OCC campuses
+Near,Schoolcraft College,Community College,"18600 Haggerty Road, Livonia, MI 48152",Livonia,MI,48152,42.41931,-83.430938,10000,230,,Large community college campus
+Near,Macomb Community College - South Campus,Community College,"14500 E 12 Mile Road, Warren, MI 48088",Warren,MI,48088,42.508218,-82.976056,8000,147,,One of two main MCC campuses

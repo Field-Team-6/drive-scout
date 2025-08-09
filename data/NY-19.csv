@@ -1,0 +1,24 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,SUNY Oneonta,Public University,"108 Ravine Parkway, Oneonta, NY 13820",Oneonta,NY,13820,42.468402,-75.06426,6000,250,,Strong public university with extensive campus grounds and active student life
+Within,Hartwick College,Private College,"1 Hartwick Drive, Oneonta, NY 13820",Oneonta,NY,13820,42.45868,-75.071879,1500,425,,"Liberal arts college with picturesque campus and quad spaces, secular since 1968"
+Within,SUNY Delhi,Public University,"454 Delhi Drive, Delhi, NY 13753",Delhi,NY,13753,42.267713,-74.924363,3000,638,,Technology college with large campus and strong community presence
+Within,SUNY Cobleskill,Public University,"106 Suffolk Circle, Cobleskill, NY 12043",Cobleskill,NY,12043,42.672168,-74.499032,2500,750,,Agriculture and technology college with extensive grounds
+Within,Columbia-Greene Community College,Community College,"4400 Route 23, Hudson, NY 12534",Hudson,NY,12534,42.219052,-73.820408,1578,141,,Community college serving Columbia and Greene counties
+Within,SUNY Ulster,Community College,"491 Cottekill Road, Stone Ridge, NY 12484",Stone Ridge,NY,12484,41.852261,-74.130676,2200,165,,Community college with modern facilities and active campus
+Within,SUNY Sullivan,Community College,"112 College Road, Loch Sheldrake, NY 12759",Loch Sheldrake,NY,12759,41.763649,-74.667991,1500,405,,Community college with residential facilities and scenic campus
+Within,SUNY Broome Community College,Community College,"907 Front Street, Binghamton, NY 13902",Binghamton,NY,13902,42.16913,-75.88737,5500,176,,Large community college with active campus life
+Near,Binghamton University,Public University,"4400 Vestal Parkway East, Vestal, NY 13850",Vestal,NY,13850,42.088861,-75.966873,18000,930,,Major research university with extensive campus facilities
+Near,SUNY New Paltz,Public University,"1 Hawk Drive, New Paltz, NY 12561",New Paltz,NY,12561,41.740905,-74.082085,7800,216,,Public liberal arts college with strong campus community
+Near,Vassar College,Private University,"124 Raymond Avenue, Poughkeepsie, NY 12604",Poughkeepsie,NY,12604,41.686518,-73.897729,2400,1000,,Elite liberal arts college with beautiful historic campus
+Near,Marist College,Private University,"3399 North Road, Poughkeepsie, NY 12601",Poughkeepsie,NY,12601,41.718224,-73.932259,6500,210,,Comprehensive college with Hudson River campus
+Near,Bard College,Private College,"30 Campus Road, Annandale-on-Hudson, NY 12504",Annandale-on-Hudson,NY,12504,42.025507,-73.903398,2000,1000,,Liberal arts college with extensive grounds and arts focus
+Near,Dutchess Community College,Community College,"53 Pendell Road, Poughkeepsie, NY 12601",Poughkeepsie,NY,12601,41.724763,-73.905058,9000,153,,Large community college with main campus and satellite locations
+Near,The Culinary Institute of America,Private College,"1946 Campus Drive, Hyde Park, NY 12538",Hyde Park,NY,12538,41.745802,-73.933247,3000,170,,Premier culinary school with extensive campus facilities
+Near,Rensselaer Polytechnic Institute,Private University,"110 8th Street, Troy, NY 12180",Troy,NY,12180,42.731188,-73.6832,7000,296,,Premier technology university with historic campus
+Near,Russell Sage College,Private College,"65 1st Street, Troy, NY 12180",Troy,NY,12180,42.728348,-73.693686,2800,14,,Liberal arts college with campuses in Troy and Albany
+Near,Hudson Valley Community College,Community College,"80 Vandenburgh Avenue, Troy, NY 12180",Troy,NY,12180,42.695652,-73.686919,11000,135,,Large community college serving capital region
+Near,University at Albany,Public University,"1400 Washington Avenue, Albany, NY 12222",Albany,NY,12222,42.689499,-73.820235,17000,795,,Major research university with extensive facilities
+Near,Skidmore College,Private College,"815 North Broadway, Saratoga Springs, NY 12866",Saratoga Springs,NY,12866,43.09626,-73.787714,2600,890,,Prestigious liberal arts college with beautiful campus
+Near,Union College,Private College,"807 Union Street, Schenectady, NY 12308",Schenectady,NY,12308,42.814736,-73.931596,2200,100,,Liberal arts and engineering college with historic campus
+Near,SUNY Schenectady County Community College,Community College,"78 Washington Avenue, Schenectady, NY 12305",Schenectady,NY,12305,42.814156,-73.949605,6000,35,,Urban community college serving capital region
+Near,Fulton-Montgomery Community College,Community College,"2805 State Highway 67, Johnstown, NY 12095",Johnstown,NY,12095,42.982458,-74.298186,2800,195,,Community college serving Fulton and Montgomery counties

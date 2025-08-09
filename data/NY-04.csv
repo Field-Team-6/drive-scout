@@ -1,0 +1,9 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Hofstra University,Private University,"100 Hofstra University, Hempstead, NY 11549",Hempstead,NY,11549,40.717262,-73.600588,6581,244,,Large private university with extensive campus facilities and Division I athletics
+Within,Nassau Community College,Community College,"1 Education Drive, Garden City, NY 11530",Garden City,NY,11530,40.729816,-73.592391,12000,225,,Largest SUNY community college with extensive campus and facilities
+Within,Adelphi University,Private University,"1 South Avenue, Garden City, NY 11530",Garden City,NY,11530,40.719259,-73.649666,7859,75,,Private university with traditional campus and strong academic programs
+Near,Molloy University,Private University,"1000 Hempstead Avenue, Rockville Centre, NY 11571",Rockville Centre,NY,11571,40.685974,-73.626184,4800,32,,Private university with nursing and health programs
+Near,LIU Post,Private University,"720 Northern Boulevard, Brookville, NY 11548",Brookville,NY,11548,40.81951,-73.595225,15000,307,,Large campus on former Gold Coast estate with diverse programs
+Near,SUNY Old Westbury,Public University,"223 Store Hill Road, Old Westbury, NY 11568",Old Westbury,NY,11568,40.782831,-73.579425,3226,604,,Large public campus with extensive grounds and facilities
+Near,Farmingdale State College,Public University,"2350 Broadhollow Road, Farmingdale, NY 11735",Farmingdale,NY,11735,40.753439,-73.423606,10000,380,,SUNY college focusing on applied sciences and technology
+Near,New York Institute of Technology,Private University,"Northern Boulevard, Old Westbury, NY 11568",Old Westbury,NY,11568,40.78871,-73.59957,3355,215,,Private university with engineering and technology focus

@@ -1,0 +1,12 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Rockland Community College,Community College,"145 College Road, Suffern, NY 10901",Suffern,NY,10901,41.133324,-74.085322,6400,130,,SUNY community college with multiple outdoor spaces for voter registration
+Within,SUNY Purchase,Public University,"735 Anderson Hill Road, Purchase, NY 10577",Purchase,NY,10577,41.046369,-73.700524,3600,500,,Large campus with extensive outdoor spaces and quads
+Within,Manhattanville University,Private University,"2900 Purchase Street, Purchase, NY 10577",Purchase,NY,10577,41.032139,-73.71575,1329,97,,Small private university with campus quad areas
+Within,Pace University Pleasantville,Private University,"861 Bedford Road, Pleasantville, NY 10570",Pleasantville,NY,10570,41.128386,-73.808279,2258,200,,Branch campus with quad and outdoor spaces
+Within,Westchester Community College,Community College,"75 Grasslands Road, Valhalla, NY 10595",Valhalla,NY,10595,41.065408,-73.789263,12000,218,,Large SUNY community college with extensive outdoor areas
+Within,Mercy University,Private University,"555 Broadway, Dobbs Ferry, NY 10522",Dobbs Ferry,NY,10522,41.021372,-73.869969,6482,66,,Private non-sectarian university with campus green spaces
+Within,Sarah Lawrence College,Private College,"1 Mead Way, Bronxville, NY 10708",Bronxville,NY,10708,40.934455,-73.843486,1700,44,,Liberal arts college with lawn and outdoor spaces
+Near,Dutchess Community College,Community College,"53 Pendell Road, Poughkeepsie, NY 12601",Poughkeepsie,NY,12601,41.724763,-73.905058,4500,130,,SUNY community college with quad and outdoor spaces
+Near,Marist College,Private University,"3399 North Road, Poughkeepsie, NY 12601",Poughkeepsie,NY,12601,41.718224,-73.932259,6500,210,,Private university with extensive campus greens
+Near,Vassar College,Private College,"124 Raymond Avenue, Poughkeepsie, NY 12604",Poughkeepsie,NY,12604,41.686518,-73.897729,2456,1000,,Elite liberal arts college with extensive outdoor spaces
+Near,SUNY New Paltz,Public University,"1 Hawk Drive, New Paltz, NY 12561",New Paltz,NY,12561,41.740905,-74.082085,7000,257,,Public university with large quad and outdoor areas
