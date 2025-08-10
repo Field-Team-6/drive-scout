@@ -1,0 +1,7 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Akron,Public University,"302 Buchtel Common, Akron, OH 44325",Akron,OH,44325,41.07601,-81.511138,15000,218,,Large public research university with extensive campus quad areas
+Within,Kent State University,Public University,"800 E Summit St, Kent, OH 44242",Kent,OH,44242,41.147537,-81.347969,26106,866,,Major public university with large campus and multiple quad areas
+Within,Stark State College,Community College,"6200 Frank Ave NW, North Canton, OH 44720",North Canton,OH,44720,40.869809,-81.43955,10772,100,,Large community college with main campus featuring outdoor spaces
+Within,Kent State University at Stark,Public University,"6000 Frank Ave NW, North Canton, OH 44720",North Canton,OH,44720,40.867812,-81.441666,5405,200,,Regional campus with beautiful 200-acre grounds and outdoor spaces
+Within,Stark State College Akron,Community College,"360 Perkins St, Akron, OH 44304",Akron,OH,44304,41.084017,-81.504384,2000,15,,Satellite campus offering accessible education
+Near,University of Mount Union,Private University,"1972 Clark Ave, Alliance, OH 44601",Alliance,OH,44601,40.902246,-81.109153,2100,123,,Liberal arts university with historic campus and quad areas

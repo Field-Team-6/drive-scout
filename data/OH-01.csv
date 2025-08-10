@@ -1,0 +1,6 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Cincinnati,Public University,"2600 Clifton Ave, Cincinnati, OH 45221",Cincinnati,OH,45221,39.130996,-84.519961,53000,473,,Large public research university with extensive campus grounds
+Within,Cincinnati State Technical and Community College,Community College,"3520 Central Parkway, Cincinnati, OH 45223",Cincinnati,OH,45223,39.149933,-84.536065,6873,46,,Community college with multiple campuses in the region
+Within,University of Cincinnati Blue Ash College,Public University,"9555 Plainfield Rd, Blue Ash, OH 45236",Blue Ash,OH,45236,39.233242,-84.399852,7239,135,,Regional campus of UC with suburban setting
+Near,Miami University Hamilton,Public University,"1601 University Blvd, Hamilton, OH 45011",Hamilton,OH,45011,39.377486,-84.563719,2374,78,,Regional campus of Miami University with compact campus
+Near,University of Cincinnati Clermont College,Public University,"4200 Clermont College Dr, Batavia, OH 45103",Batavia,OH,45103,39.08328,-84.197296,3336,91,,UC regional campus serving eastern Cincinnati area

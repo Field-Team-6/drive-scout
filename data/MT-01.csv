@@ -1,0 +1,9 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Montana,Public University,"32 Campus Drive, Missoula, MT 59812",Missoula,MT,59812,46.860203,-113.98372,10811,220,,Main flagship campus with large quad areas and extensive outdoor spaces
+Within,Montana State University,Public University,"100 Culbertson Hall, Bozeman, MT 59717",Bozeman,MT,59717,45.670702,-111.04977,17144,1170,,Largest university in Montana with extensive campus grounds and multiple quads
+Within,Montana Technological University,Public University,"1300 W Park Street, Butte, MT 59701",Butte,MT,59701,46.01278,-112.55895,2700,108,,STEM-focused university with campus quad areas suitable for gatherings
+Within,Flathead Valley Community College,Community College,"777 Grandview Drive, Kalispell, MT 59901",Kalispell,MT,59901,48.227854,-114.32827,2049,40,,Two-year college with campus green spaces and modern facilities
+Within,Great Falls College Montana State University,Community College,"2100 16th Avenue South, Great Falls, MT 59405",Great Falls,MT,59405,47.486346,-111.27005,1071,20,,Technical community college with outdoor gathering spaces
+Within,Helena College University of Montana,Community College,"1115 North Roberts Street, Helena, MT 59601",Helena,MT,59601,46.595478,-112.01589,1423,15,,Two-year college with campus commons areas
+Within,Missoula College,Community College,"1205 East Broadway, Missoula, MT 59802",Missoula,MT,59802,46.864789,-113.97592,1397,10,,Two-year unit of University of Montana with new River Campus
+Near,Salish Kootenai College,Tribal College,"58138 US Highway 93, Pablo, MT 59855",Pablo,MT,59855,47.549104,-114.11321,1207,100,,Tribal college with campus quad areas; may be near district boundary

@@ -1,0 +1,13 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Willamette University,Private University,"900 State Street, Salem, OR 97301",Salem,OR,97301,44.937227,-123.03115,2554,72,,"Oregon's oldest university, strong liberal arts programs"
+Within,Chemeketa Community College,Community College,"4000 Lancaster Drive NE, Salem, OR 97305",Salem,OR,97305,44.979925,-122.97831,8328,195,,"Large community college, main Salem campus"
+Within,Linfield University,Private University,"900 SE Baker Street, McMinnville, OR 97128",McMinnville,OR,97128,45.206931,-123.19963,1672,189,,Liberal arts college with strong academic programs
+Within,Western Oregon University,Public University,"345 N Monmouth Avenue, Monmouth, OR 97361",Monmouth,OR,97361,44.850814,-123.23697,3750,157,,Public university with education focus
+Within,Portland Community College - Newberg Center,Community College,"135 Werth Boulevard, Newberg, OR 97132",Newberg,OR,97132,45.300398,-122.93961,650,16,,PCC satellite campus serving Newberg area
+Within,Pacific University - Woodburn Campus,Private University,"560 N First Street, Woodburn, OR 97071",Woodburn,OR,97071,45.144067,-122.8558,200,5,,Education programs focused campus
+Within,Chemeketa Community College - Yamhill Valley Campus,Community College,"288 NE Norton Lane, McMinnville, OR 97128",McMinnville,OR,97128,45.201965,-123.1664,1500,10,,Chemeketa satellite campus serving Yamhill County
+Near,Clackamas Community College,Community College,"19600 Molalla Avenue, Oregon City, OR 97045",Oregon City,OR,97045,45.322164,-122.57426,10454,165,,Large community college southeast of district
+Near,Portland State University,Public University,"1825 SW Broadway, Portland, OR 97201",Portland,OR,97201,45.511826,-122.6843,23000,50,,Major urban university north of district
+Near,Oregon State University,Public University,"1500 SW Jefferson Way, Corvallis, OR 97331",Corvallis,OR,97331,44.564455,-123.27189,36000,420,,State's largest university south of district
+Near,Portland Community College - Sylvania Campus,Community College,"12000 SW 49th Avenue, Portland, OR 97219",Portland,OR,97219,45.437944,-122.73196,11600,125,,PCC campus southwest Portland
+Near,Pacific University - Forest Grove Campus,Private University,"2043 College Way, Forest Grove, OR 97116",Forest Grove,OR,97116,45.520945,-123.10945,1800,55,,Main Pacific campus west of district

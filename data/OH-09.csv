@@ -1,0 +1,10 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Toledo,Public University,"2801 W Bancroft St, Toledo, OH 43606",Toledo,OH,43606,41.659888,-83.613729,15000,1037,,Large public research university with extensive campus grounds and quad areas
+Within,Owens Community College,Community College,"30335 Oregon Road, Perrysburg, OH 43551",Perrysburg,OH,43551,41.588312,-83.538587,11259,280,,Main campus with multiple buildings and open campus spaces
+Within,Bowling Green State University Firelands,Public University Branch,"1 University Drive, Huron, OH 44839",Huron,OH,44839,41.397696,-82.594285,2085,216,,Regional campus of BGSU with quad areas and campus grounds
+Within,Northwest State Community College,Community College,"22600 State Route 34, Archbold, OH 43502",Archbold,OH,43502,41.451069,-84.299326,3000,80,,Community college serving northwest Ohio with campus green spaces
+Within,Defiance College,Private University,"701 N Clinton St, Defiance, OH 43512",Defiance,OH,43512,41.295852,-84.360078,1100,150,,Private liberal arts college with traditional campus and quad
+Near,Bowling Green State University,Public University,"1001 E Wooster St, Bowling Green, OH 43403",Bowling Green,OH,43403,41.374605,-83.636364,17000,1338,,Major university 10 miles from district with large campus and multiple quads
+Near,Heidelberg University,Private University,"310 E Market St, Tiffin, OH 44883",Tiffin,OH,44883,41.116336,-83.168531,1050,115,,Small liberal arts university with traditional campus layout
+Near,Tiffin University,Private University,"155 Miami St, Tiffin, OH 44883",Tiffin,OH,44883,41.118596,-83.183767,3600,130,,Private university with campus grounds and open spaces
+Near,Terra State Community College,Community College,"2830 Napoleon Rd, Fremont, OH 43420",Fremont,OH,43420,41.352902,-83.158385,2214,143,,Community college with main campus and student housing

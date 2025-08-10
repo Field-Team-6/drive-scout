@@ -1,0 +1,19 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Chemeketa Community College,Community College,"4000 Lancaster Drive NE, Salem, OR 97305",Salem,OR,97305,44.979925,-122.97831,19028,72,,Large community college with main campus and multiple open areas
+Within,Willamette University,Private University,"900 State Street, Salem, OR 97301",Salem,OR,97301,44.937227,-123.03115,2400,72,,Historic liberal arts university with traditional campus quad
+Within,Western Oregon University - Salem Campus,Public University,"525 Trade Street SE, Salem, OR 97301",Salem,OR,97301,44.937686,-123.03778,500,5,,Graduate center location in downtown Salem
+Within,Linn-Benton Community College,Community College,"6500 Pacific Boulevard SW, Albany, OR 97321",Albany,OR,97321,44.587138,-123.11327,4956,193,,Main community college campus with extensive outdoor spaces
+Within,Oregon State University - Cascades,Public University,"1500 SW Chandler Avenue, Bend, OR 97702",Bend,OR,97702,44.042786,-121.33372,1576,128,,Growing campus with new facilities and outdoor gathering areas
+Within,Central Oregon Community College,Community College,"2600 NW College Way, Bend, OR 97703",Bend,OR,97703,44.067962,-121.34595,6759,200,,Large campus with mountain views and outdoor spaces
+Within,Clackamas Community College - Oregon City,Community College,"19600 Molalla Avenue, Oregon City, OR 97045",Oregon City,OR,97045,45.322164,-122.57426,5555,165,,Main campus with multiple buildings and outdoor areas
+Within,Clackamas Community College - Harmony,Community College,"7738 SE Harmony Road, Milwaukie, OR 97222",Milwaukie,OR,97222,45.431863,-122.58225,2000,10,,Satellite campus serving eastern Clackamas County
+Near,Oregon State University,Public University,"1500 SW Jefferson Way, Corvallis, OR 97331",Corvallis,OR,97331,44.564455,-123.27189,32312,422,,Major research university 10 miles from district boundary
+Near,Western Oregon University,Public University,"345 Monmouth Avenue N, Monmouth, OR 97361",Monmouth,OR,97361,44.850814,-123.23697,4174,157,,Regional public university 12 miles from district
+Near,Portland Community College - Sylvania,Community College,"12000 SW 49th Avenue, Portland, OR 97219",Portland,OR,97219,45.437944,-122.73196,8500,122,,Large campus near Lake Oswego area
+Near,Portland State University,Public University,"1825 SW Broadway, Portland, OR 97201",Portland,OR,97201,45.511826,-122.6843,20519,50,,Urban campus 8 miles from district boundary
+Near,Lewis & Clark College,Private University,"0615 SW Palatine Hill Road, Portland, OR 97219",Portland,OR,97219,45.4504,-122.6694,3500,137,,Liberal arts college with scenic campus
+Near,Reed College,Private College,"3203 SE Woodstock Boulevard, Portland, OR 97202",Portland,OR,97202,45.480964,-122.63015,1500,116,,Liberal arts college with traditional campus
+Near,Mt. Hood Community College,Community College,"26000 SE Stark Street, Gresham, OR 97030",Gresham,OR,97030,45.512414,-122.39595,7800,224,,Large community college east of Portland
+Near,Portland Community College - Southeast,Community College,"2305 SE 82nd Avenue, Portland, OR 97216",Portland,OR,97216,45.506228,-122.57916,5000,8,,Urban campus serving diverse population
+Near,Pacific University,Private University,"2043 College Way, Forest Grove, OR 97116",Forest Grove,OR,97116,45.520945,-123.10945,3850,108,,Liberal arts university with traditional campus
+Near,Linfield University,Private University,"900 SE Baker Street, McMinnville, OR 97361",McMinnville,OR,97361,45.206931,-123.19963,1672,189,,Liberal arts university with residential campus
