@@ -1,0 +1,5 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Iowa,Public University,"101 Jessup Hall, Iowa City, IA 52242",Iowa City,IA,52242,41.654537,-91.573275,22130,1880,,"Large research university with extensive open campus areas, quad spaces"
+Within,Southeastern Community College - West Burlington,Community College,"1500 West Agency Road, West Burlington, IA 52655",West Burlington,IA,52655,40.812159,-91.173487,3810,180,,"Main campus with athletic facilities, 180-acre campus with open areas"
+Within,Southeastern Community College - Keokuk,Community College,"335 Messenger Road, Keokuk, IA 52632",Keokuk,IA,52632,40.421139,-91.400945,1207,5,,"Secondary campus, part of SCC system (3,810 total enrollment)"
+Near,Kirkwood Community College - Main Campus,Community College,"6301 Kirkwood Boulevard SW, Cedar Rapids, IA 52404",Cedar Rapids,IA,52404,41.918706,-91.655332,12277,680,,"Large CC with extensive campus facilities, 14,000+ total students served"

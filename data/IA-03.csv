@@ -1,0 +1,11 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Drake University,Private University,"2507 University Avenue, Des Moines, IA 50311",Des Moines,IA,50311,41.600473,-93.651544,4685,150,,Large private university with extensive campus grounds suitable for voter drives
+Within,Grand View University,Private University,"1200 Grandview Avenue, Des Moines, IA 50316",Des Moines,IA,50316,41.620515,-93.60441,1949,60,,Small private university with campus quad areas
+Within,Des Moines Area Community College - Ankeny Campus,Community College,"2006 S Ankeny Boulevard, Ankeny, IA 50023",Ankeny,IA,50023,41.706888,-93.610666,23051,304,,Large community college main campus with extensive outdoor spaces
+Within,Des Moines Area Community College - Urban Campus,Community College,"1100 7th Street, Des Moines, IA 50314",Des Moines,IA,50314,41.597878,-93.627691,3500,40,,Urban campus location with accessible student areas
+Within,Des Moines Area Community College - West Campus,Community College,"5959 Grand Avenue, West Des Moines, IA 50266",West Des Moines,IA,50266,41.5423,-93.789919,2800,226,,West Des Moines campus with outdoor gathering spaces
+Within,Simpson College,Private University,"701 North C Street, Indianola, IA 50125",Indianola,IA,50125,41.365473,-93.563547,1140,85,,Small liberal arts college with traditional campus quad
+Within,Iowa Western Community College,Community College,"2700 College Road, Council Bluffs, IA 51503",Council Bluffs,IA,51503,41.272595,-95.801547,5342,250,,Community college with large campus grounds
+Within,Southwestern Community College,Community College,"1501 West Townline Street, Creston, IA 50801",Creston,IA,50801,41.071249,-94.380716,1503,406,,Rural community college with extensive campus area
+Near,Des Moines Area Community College - Boone Campus,Community College,"1125 Hancock Drive, Boone, IA 50036",Boone,IA,50036,42.046703,-93.875014,1200,62,,North of district with athletic facilities and campus grounds
+Near,Des Moines Area Community College - Newton Campus,Community College,"600 N 2nd Avenue West, Newton, IA 50208",Newton,IA,50208,41.70114,-93.060276,1100,20,,East of district with campus facilities
