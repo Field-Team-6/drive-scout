@@ -1,0 +1,10 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Wisconsin-Eau Claire,Public University,"105 Garfield Avenue, Eau Claire, WI 54701",Eau Claire,WI,54701,44.798603,-91.500295,8795,314,,"Main campus with large quads, 314 acres"
+Within,University of Wisconsin-La Crosse,Public University,"1725 State Street, La Crosse, WI 54601",La Crosse,WI,54601,43.813485,-91.229993,9386,128,,"Strong campus quad areas, 128 acres"
+Within,University of Wisconsin-Stevens Point,Public University,"2100 Main Street, Stevens Point, WI 54481",Stevens Point,WI,54481,44.52432,-89.568887,7419,335,,"Large campus with Schmeeckle Reserve, 335 acres"
+Within,Chippewa Valley Technical College,Community College,"620 W Clairemont Avenue, Eau Claire, WI 54701",Eau Claire,WI,54701,44.794029,-91.505356,5000,50,,Multiple campuses with outdoor areas
+Within,Western Technical College,Community College,"400 7th Street N, La Crosse, WI 54601",La Crosse,WI,54601,43.814688,-91.246281,4240,25,,Main campus downtown with commons areas
+Within,Mid-State Technical College,Community College,"500 32nd Street N, Wisconsin Rapids, WI 54494",Wisconsin Rapids,WI,54494,44.391119,-89.783726,2648,30,,Campus with open areas for gatherings
+Near,University of Wisconsin-Platteville,Public University,"1 University Plaza, Platteville, WI 53818",Platteville,WI,53818,42.733786,-90.493107,6278,820,,"Large campus with extensive grounds, 820 acres"
+Near,University of Wisconsin-River Falls,Public University,"410 S 3rd Street, River Falls, WI 54022",River Falls,WI,54022,44.855212,-92.623827,5200,226,,"Campus with open spaces, near Twin Cities"
+Near,Northcentral Technical College,Community College,"1000 W Campus Drive, Wausau, WI 54401",Wausau,WI,54401,44.986446,-89.646087,5939,40,,"Main campus with outdoor areas, serves 10-county district"
