@@ -360,6 +360,12 @@
             border-color: #667eea;
         }
 
+        .location-hint {
+            color: white;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
         .compact-popup .leaflet-popup-content-wrapper {
             background: transparent;
             color: #333;
@@ -510,7 +516,7 @@
         var districtLayer = null;
         var currentSelectedDistrict = null;
         
-        // District data - UPDATED WITH ALL 63 DISTRICTS (41 original + 22 new)
+        // District data - UPDATED WITH ALL 63 DISTRICTS
         var districtData = {
             // Alaska
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
@@ -633,6 +639,269 @@
             "Washington": ["WA-03", "WA-08"],  // NEW STATE
             "Wisconsin": ["WI-03"]  // NEW STATE
         };
+
+        // Helper functions that were missing
+        function clearAllResults() {
+            var closestCampusesResult = document.getElementById('closestCampusesResult');
+            var closestDistrictsResults = document.getElementById('closestDistrictsResults');
+            var collegeList = document.getElementById('collegeList');
+            
+            if (closestCampusesResult) {
+                closestCampusesResult.innerHTML = '';
+                closestCampusesResult.style.display = 'none';
+            }
+            
+            if (closestDistrictsResults) {
+                closestDistrictsResults.innerHTML = '';
+                closestDistrictsResults.style.display = 'none';
+            }
+            
+            if (collegeList) {
+                collegeList.style.display = 'none';
+            }
+        }
+
+        function clearMapAndList() {
+            var mapContainer = document.getElementById('mapContainer');
+            var collegeList = document.getElementById('collegeList');
+            
+            if (mapContainer) {
+                mapContainer.style.display = 'none';
+            }
+            
+            if (collegeList) {
+                collegeList.style.display = 'none';
+            }
+            
+            if (map) {
+                map.remove();
+                map = null;
+            }
+        }
+
+        function hideLocationSearchField() {
+            var section = document.getElementById('locationInputSection');
+            if (section) {
+                section.style.display = 'none';
+            }
+        }
+
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            var R = 3959; // Earth's radius in miles
+            var dLat = (lat2 - lat1) * Math.PI / 180;
+            var dLng = (lng2 - lng1) * Math.PI / 180;
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                    Math.sin(dLng/2) * Math.sin(dLng/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function showLoadingState(container, district) {
+            container.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading colleges for ' + district + '...</h3><p>Fetching campus data from CSV files...</p></div>';
+        }
+
+        function showNoData(state, district) {
+            var collegeItems = document.getElementById('collegeItems');
+            collegeItems.innerHTML = '<div class="no-data"><h3>No college data available yet</h3><p>Data for ' + district + ' in ' + state + ' is coming soon!</p></div>';
+        }
+
+        function loadDistrictDataWithTimeout(district) {
+            return new Promise(function(resolve, reject) {
+                // Load CSV data for the district
+                loadCSVData(district, function(success) {
+                    if (success) {
+                        resolve();
+                    } else {
+                        reject();
+                    }
+                });
+            });
+        }
+
+        function loadCSVData(district, callback) {
+            // Load the CSV file for this district
+            var csvPath = 'data/' + district + '.csv';
+            
+            fetch(csvPath)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('CSV not found');
+                    }
+                    return response.text();
+                })
+                .then(function(csvText) {
+                    parseCSVWithLatLng(csvText, district);
+                    if (callback) callback(true);
+                })
+                .catch(function(error) {
+                    console.log('Error loading CSV for', district, ':', error);
+                    if (callback) callback(false);
+                });
+        }
+
+        function parseCSVWithLatLng(csvText, district) {
+            var lines = csvText.split('\n');
+            var headers = lines[0].split(',');
+            var colleges = [];
+            
+            // Find the state for this district
+            var state = null;
+            for (var stateName in districtMappings) {
+                if (districtMappings[stateName].indexOf(district) !== -1) {
+                    state = stateName;
+                    break;
+                }
+            }
+            
+            if (!state) return;
+            
+            // Initialize state in collegeData if needed
+            if (!collegeData[state]) {
+                collegeData[state] = {};
+            }
+            
+            // Parse each line of the CSV
+            for (var i = 1; i < lines.length; i++) {
+                var line = lines[i].trim();
+                if (!line) continue;
+                
+                var values = line.split(',');
+                
+                // Look for lat and lng columns
+                var latIndex = -1;
+                var lngIndex = -1;
+                var nameIndex = -1;
+                
+                for (var j = 0; j < headers.length; j++) {
+                    var header = headers[j].toLowerCase().trim();
+                    if (header === 'latitude' || header === 'lat') {
+                        latIndex = j;
+                    } else if (header === 'longitude' || header === 'lng' || header === 'long') {
+                        lngIndex = j;
+                    } else if (header === 'name' || header === 'college' || header === 'institution') {
+                        nameIndex = j;
+                    }
+                }
+                
+                if (latIndex !== -1 && lngIndex !== -1 && nameIndex !== -1) {
+                    var lat = parseFloat(values[latIndex]);
+                    var lng = parseFloat(values[lngIndex]);
+                    var name = values[nameIndex] ? values[nameIndex].trim() : 'Unknown College';
+                    
+                    if (!isNaN(lat) && !isNaN(lng)) {
+                        colleges.push({
+                            name: name,
+                            lat: lat,
+                            lng: lng,
+                            address: values[1] || '', // Assuming address is in column 2
+                            suitability: values[2] || 'medium' // Assuming suitability is in column 3
+                        });
+                    }
+                }
+            }
+            
+            collegeData[state][district] = colleges;
+            console.log('Loaded', colleges.length, 'colleges for', district, 'with lat/lng coordinates');
+        }
+
+        function displayCollegeListWithSections(district, withinColleges, nearColleges) {
+            var collegeItems = document.getElementById('collegeItems');
+            var html = '';
+            
+            // Get all colleges for this district
+            var state = null;
+            for (var stateName in districtMappings) {
+                if (districtMappings[stateName].indexOf(district) !== -1) {
+                    state = stateName;
+                    break;
+                }
+            }
+            
+            var allColleges = [];
+            if (state && collegeData[state] && collegeData[state][district]) {
+                allColleges = collegeData[state][district];
+            }
+            
+            if (allColleges.length === 0) {
+                html = '<div class="no-data"><h3>No college data available yet</h3><p>Data for ' + district + ' is coming soon!</p></div>';
+            } else {
+                html += '<h3 style="color: white; margin: 20px 0 10px 0;">Campuses in ' + district + '</h3>';
+                
+                for (var i = 0; i < allColleges.length; i++) {
+                    var college = allColleges[i];
+                    html += '<div class="college-item">';
+                    html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
+                    html += '<div>';
+                    html += '<strong>' + college.name + '</strong><br>';
+                    if (college.address) {
+                        html += '<small style="color: #666;">' + college.address + '</small>';
+                    }
+                    html += '</div>';
+                    html += '<div style="text-align: right;">';
+                    
+                    var suitabilityClass = 'suitability-medium';
+                    var suitabilityText = 'MEDIUM';
+                    if (college.suitability) {
+                        if (college.suitability.toLowerCase() === 'high') {
+                            suitabilityClass = 'suitability-high';
+                            suitabilityText = 'HIGH';
+                        } else if (college.suitability.toLowerCase() === 'low') {
+                            suitabilityClass = 'suitability-low';
+                            suitabilityText = 'LOW';
+                        }
+                    }
+                    
+                    html += '<span class="suitability-badge ' + suitabilityClass + '">' + suitabilityText + '</span>';
+                    html += '</div>';
+                    html += '</div>';
+                    html += '</div>';
+                }
+            }
+            
+            collegeItems.innerHTML = html;
+        }
+
+        function addMarkersToMainMap(colleges) {
+            if (!map) return;
+            
+            // Clear existing markers
+            for (var i = 0; i < markers.length; i++) {
+                map.removeLayer(markers[i]);
+            }
+            markers = [];
+            
+            // Add markers for each college
+            for (var i = 0; i < colleges.length; i++) {
+                var college = colleges[i];
+                if (college.lat && college.lng) {
+                    var marker = L.marker([college.lat, college.lng]).addTo(map);
+                    marker.bindPopup('<strong>' + college.name + '</strong><br>' + (college.address || ''));
+                    markers.push(marker);
+                }
+            }
+            
+            // Fit map to show all markers
+            if (markers.length > 0) {
+                var group = new L.featureGroup(markers);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+
+        function fitMapToSelectedDistrict(selectedDistrict) {
+            if (!map || !selectedDistrict) return;
+            
+            var districtInfo = districtData[selectedDistrict];
+            if (districtInfo && districtInfo.center) {
+                map.setView(districtInfo.center, 8);
+            }
+        }
+
+        function loadAllSwingDistrictBoundaries(force) {
+            // This function would load boundary files
+            // For now, just log that it would load
+            console.log('Loading all swing district boundaries...');
+        }
 
         // MAIN FUNCTION - Find closest campuses
         function findClosestCampuses() {
@@ -1227,7 +1496,15 @@
                 var nearColleges = [];
 
                 if (Array.isArray(collegeDataForDistrict)) {
-                    allColleges = allColleges.filter(function(college) {
+                    allColleges = collegeDataForDistrict;
+                    withinColleges = collegeDataForDistrict;
+                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
+                    withinColleges = collegeDataForDistrict.within || [];
+                    nearColleges = collegeDataForDistrict.near || [];
+                    allColleges = withinColleges.concat(nearColleges);
+                }
+                
+                allColleges = allColleges.filter(function(college) {
                     return college && college.name && 
                            college.lat !== null && college.lng !== null && 
                            !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
@@ -1331,32 +1608,36 @@
                 'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
                 'Florida': 'data/boundaries/florida_districts_119th.json',
                 'Illinois': 'data/boundaries/illinois_districts_119th.json',
-                'Indiana': 'data/boundaries/indiana_districts_119th.json',  // NEW
-                'Iowa': 'data/boundaries/iowa_districts_119th.json',  // NEW
-                'Maine': 'data/boundaries/maine_districts_119th.json',  // NEW
-                'Maryland': 'data/boundaries/maryland_districts_119th.json',  // NEW
+                'Indiana': 'data/boundaries/indiana_districts_119th.json',
+                'Iowa': 'data/boundaries/iowa_districts_119th.json',
+                'Maine': 'data/boundaries/maine_districts_119th.json',
+                'Maryland': 'data/boundaries/maryland_districts_119th.json',
                 'Michigan': 'data/boundaries/michigan_districts_119th.json',
-                'Montana': 'data/boundaries/montana_districts_119th.json',  // NEW
-                'Nebraska': 'data/boundaries/nebraska_districts_119th.json',  // NEW
+                'Montana': 'data/boundaries/montana_districts_119th.json',
+                'Nebraska': 'data/boundaries/nebraska_districts_119th.json',
                 'Nevada': 'data/boundaries/nevada_districts_119th.json',
-                'New Hampshire': 'data/boundaries/newhampshire_districts_119th.json',  // NEW
+                'New Hampshire': 'data/boundaries/newhampshire_districts_119th.json',
                 'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
-                'New Mexico': 'data/boundaries/newmexico_districts_119th.json',  // NEW
+                'New Mexico': 'data/boundaries/newmexico_districts_119th.json',
                 'New York': 'data/boundaries/newyork_districts_119th.json',
-                'North Carolina': 'data/boundaries/northcarolina_districts_119th.json',  // NEW
-                'Ohio': 'data/boundaries/ohio_districts_119th.json',  // NEW
-                'Oregon': 'data/boundaries/oregon_districts_119th.json',  // NEW
+                'North Carolina': 'data/boundaries/northcarolina_districts_119th.json',
+                'Ohio': 'data/boundaries/ohio_districts_119th.json',
+                'Oregon': 'data/boundaries/oregon_districts_119th.json',
                 'Pennsylvania': 'data/boundaries/pennsylvania_districts_119th.json',
-                'Texas': 'data/boundaries/texas_districts_119th.json',  // NEW
+                'Texas': 'data/boundaries/texas_districts_119th.json',
                 'Virginia': 'data/boundaries/virginia_districts_119th.json',
-                'Washington': 'data/boundaries/washington_districts_119th.json',  // NEW
-                'Wisconsin': 'data/boundaries/wisconsin_districts_119th.json'  // NEW
-            }; = collegeDataForDistrict;
-                    withinColleges = collegeDataForDistrict;
-                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
-                    withinColleges = collegeDataForDistrict.within || [];
-                    nearColleges = collegeDataForDistrict.near || [];
-                    allColleges = withinColleges.concat(nearColleges);
-                }
-                
-                allColleges
+                'Washington': 'data/boundaries/washington_districts_119th.json',
+                'Wisconsin': 'data/boundaries/wisconsin_districts_119th.json'
+            };
+            
+            // Load the boundary file for this state
+            var boundaryFile = boundaryFiles[state];
+            if (boundaryFile) {
+                console.log('Loading boundaries for', state, 'from', boundaryFile);
+                // This would actually load the GeoJSON file and add it to the map
+                // For now, just logging
+            }
+        }
+    </script>
+</body>
+</html>
