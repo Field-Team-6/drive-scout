@@ -490,6 +490,14 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
+        console.log("🎯 Drive Scout: Starting to load script...");
+        
+        // Test that functions are being defined
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            console.error('Error: ', msg, 'Line:', lineNo);
+            return false;
+        };
+        
         console.log("🎯 Drive Scout: Loading with 63 total districts (41 original + 22 new)");
         
         // Global variables
