@@ -1,0 +1,6 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Clark College,Community College,"1933 Fort Vancouver Way, Vancouver, WA 98663",Vancouver,WA,98663,45.634343,-122.65259,11500,101,,Large community college with main campus plus satellite locations
+Within,Lower Columbia College,Community College,"1600 Maple Street, Longview, WA 98632",Longview,WA,98632,46.142866,-122.93792,3338,39,,Community college serving Cowlitz County
+Within,Centralia College,Community College,"600 Centralia College Blvd, Centralia, WA 98531",Centralia,WA,98531,46.716337,-122.96067,4840,29,,Oldest community college in Washington State
+Within,Washington State University Vancouver,Public University,"14204 NE Salmon Creek Ave, Vancouver, WA 98686",Vancouver,WA,98686,45.73048,-122.63869,3800,351,,Four-year research university campus
+Within,Grays Harbor College,Community College,"1620 Edward P Smith Drive, Aberdeen, WA 98520",Aberdeen,WA,98520,46.95435,-123.80339,1553,120,,Community college serving Grays Harbor and Pacific counties

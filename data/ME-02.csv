@@ -1,0 +1,14 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Maine,Public University,"168 College Avenue, Orono, ME 04469",Orono,ME,04469,44.895554,-68.673582,11989,660,,Flagship state university with extensive campus and research facilities
+Within,Husson University,Private University,"1 College Circle, Bangor, ME 04401",Bangor,ME,04401,44.826979,-68.793238,3065,208,,Large private university with multiple schools and athletic facilities
+Within,Eastern Maine Community College,Community College,"354 Hogan Road, Bangor, ME 04401",Bangor,ME,04401,44.8259,-68.743061,2042,72,,Community college with technical and career programs
+Within,University of Maine at Farmington,Public University,"224 Main Street, Farmington, ME 04938",Farmington,ME,04938,44.669087,-70.149239,1795,55,,Liberal arts focused campus of UMaine system
+Within,University of Maine at Fort Kent,Public University,"23 University Drive, Fort Kent, ME 04743",Fort Kent,ME,04743,47.250992,-68.588605,1557,52,,Northern Maine campus specializing in rural education
+Within,University of Maine at Presque Isle,Public University,"181 Main Street, Presque Isle, ME 04769",Presque Isle,ME,04769,46.672269,-68.015101,1821,150,,Aroostook County university with online programs
+Within,Northern Maine Community College,Community College,"33 Edgemont Drive, Presque Isle, ME 04769",Presque Isle,ME,04769,46.694504,-68.034472,1200,85,,Technical and career-focused community college
+Within,University of Maine at Machias,Public University,"116 O'Brien Avenue, Machias, ME 04654",Machias,ME,04654,44.709996,-67.458244,1200,43,,Coastal university with environmental programs
+Within,Washington County Community College,Community College,"1 College Drive, Calais, ME 04619",Calais,ME,04619,45.165969,-67.242854,912,400,,Community college on St. Croix River with technical programs
+Within,Kennebec Valley Community College,Community College,"92 Western Avenue, Fairfield, ME 04937",Fairfield,ME,04937,44.594156,-69.611965,2500,70,,Community college with Alfond campus in Hinckley
+Within,Unity Environmental University,Private University,"379 Quaker Hill Road, New Gloucester, ME 04260",New Gloucester,ME,04260,43.865396,-70.24202,7500,235,,Environmental focus with online and hybrid programs
+Near,University of Maine at Augusta,Public University,"46 University Drive, Augusta, ME 04330",Augusta,ME,04330,44.338875,-69.795827,4500,165,,Part of UMaine system with multiple campuses
+Near,Central Maine Community College,Community College,"1250 Turner Street, Auburn, ME 04210",Auburn,ME,04210,44.132248,-70.230899,4121,135,,Largest community college in Maine
