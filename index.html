@@ -866,39 +866,53 @@
             if (allColleges.length === 0) {
                 html = '<div class="no-data">No campus data available for ' + district + ' yet.</div>';
             } else {
-                html += '<div style="background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px;">';
-                html += '<h3 style="color: #333; margin-bottom: 10px;">📍 Campuses in ' + district + '</h3>';
+                // Sort colleges by enrollment (highest first)
+                allColleges.sort(function(a, b) {
+                    return (b.enrollment || 0) - (a.enrollment || 0);
+                });
                 
+                // Display colleges with original formatting and suitability ratings
                 for (var i = 0; i < allColleges.length; i++) {
                     var college = allColleges[i];
+                    
+                    // Determine suitability based on enrollment
+                    var suitability = 'low';
+                    var suitabilityText = 'Low suitability';
+                    if (college.enrollment > 10000) {
+                        suitability = 'high';
+                        suitabilityText = 'High suitability';
+                    } else if (college.enrollment > 5000) {
+                        suitability = 'medium';
+                        suitabilityText = 'Medium suitability';
+                    }
+                    
                     html += '<div class="college-item">';
                     html += '<div style="display: flex; justify-content: space-between; align-items: start;">';
                     html += '<div style="flex: 1;">';
                     html += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin-bottom: 4px;">' + college.name + '</div>';
                     
                     if (college.enrollment) {
-                        html += '<div style="color: #666; font-size: 0.9rem;">Enrollment: ' + college.enrollment.toLocaleString() + '</div>';
+                        html += '<div style="color: #666; font-size: 0.9rem;">📊 ' + college.enrollment.toLocaleString() + ' students</div>';
                     }
-                    if (college.type) {
-                        html += '<div style="color: #666; font-size: 0.9rem;">Type: ' + college.type + '</div>';
-                    }
-                    if (college.address) {
-                        html += '<div style="color: #666; font-size: 0.9rem;">Address: ' + college.address + '</div>';
-                    }
+                    
+                    html += '<div style="margin-top: 8px;">';
+                    html += '<span class="suitability-badge suitability-' + suitability + '">' + suitabilityText + '</span>';
+                    html += '</div>';
                     
                     html += '</div>';
-                    html += '<div>';
+                    html += '<div style="display: flex; gap: 8px;">';
                     
-                    // Add navigation button
+                    // Add buttons
                     var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + college.lat + ',' + college.lng;
-                    html += '<a href="' + mapsUrl + '" target="_blank" class="btn btn-primary" style="text-decoration: none;">📍 Directions</a>';
+                    html += '<a href="' + mapsUrl + '" target="_blank" class="btn btn-primary" style="text-decoration: none;">📍 Map</a>';
+                    
+                    // Optional: Add website button if you have that data
+                    // html += '<a href="#" target="_blank" class="btn btn-tertiary" style="text-decoration: none;">🌐 Website</a>';
                     
                     html += '</div>';
                     html += '</div>';
                     html += '</div>';
                 }
-                
-                html += '</div>';
             }
             
             collegeItems.innerHTML = html;
@@ -918,30 +932,44 @@
                 var college = colleges[i];
                 
                 if (college.lat && college.lng) {
-                    var marker = L.marker([college.lat, college.lng], {
-                        icon: L.divIcon({
-                            className: 'college-marker',
-                            html: '<div style="background: #667eea; width: 30px; height: 30px; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 6px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 14px;">🎓</div>',
-                            iconSize: [30, 30],
-                            iconAnchor: [15, 15]
-                        })
+                    // Determine color based on enrollment (suitability)
+                    var markerColor = '#f44336'; // red for low
+                    if (college.enrollment > 10000) {
+                        markerColor = '#4caf50'; // green for high
+                    } else if (college.enrollment > 5000) {
+                        markerColor = '#ff9800'; // orange for medium
+                    }
+                    
+                    var marker = L.circleMarker([college.lat, college.lng], {
+                        radius: 8,
+                        fillColor: markerColor,
+                        color: '#fff',
+                        weight: 2,
+                        opacity: 1,
+                        fillOpacity: 0.8
                     }).addTo(map);
                     
-                    // Create popup content
-                    var popupContent = '<div style="padding: 8px; min-width: 200px;">';
-                    popupContent += '<strong style="font-size: 1.1rem;">' + college.name + '</strong>';
+                    // Create popup content with original formatting
+                    var suitability = 'Low';
+                    if (college.enrollment > 10000) {
+                        suitability = 'High';
+                    } else if (college.enrollment > 5000) {
+                        suitability = 'Medium';
+                    }
+                    
+                    var popupContent = '<div class="compact-popup" style="padding: 10px; min-width: 200px; background: white; border-radius: 8px;">';
+                    popupContent += '<strong style="font-size: 1.1rem; color: #333;">' + college.name + '</strong>';
                     if (college.enrollment) {
-                        popupContent += '<br>Enrollment: ' + college.enrollment.toLocaleString();
+                        popupContent += '<br><span style="color: #666;">📊 ' + college.enrollment.toLocaleString() + ' students</span>';
                     }
-                    if (college.type) {
-                        popupContent += '<br>Type: ' + college.type;
-                    }
+                    popupContent += '<br><span style="color: #666;">Suitability: ' + suitability + '</span>';
                     var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + college.lat + ',' + college.lng;
-                    popupContent += '<br><a href="' + mapsUrl + '" target="_blank" style="color: #667eea;">Get Directions →</a>';
+                    popupContent += '<br><a href="' + mapsUrl + '" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">📍 Get Directions →</a>';
                     popupContent += '</div>';
                     
                     marker.bindPopup(popupContent, {
-                        className: 'compact-popup'
+                        className: 'compact-popup',
+                        closeButton: false
                     });
                     
                     markers.push(marker);
