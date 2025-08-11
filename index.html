@@ -742,7 +742,7 @@
 
         function parseCSVWithLatLng(csvText, district) {
             var lines = csvText.split('\n');
-            var headers = lines[0].split(',');
+            var headers = lines[0].split(',').map(function(h) { return h.trim().toLowerCase(); });
             var colleges = [];
             
             // Find the state for this district
@@ -761,41 +761,62 @@
                 collegeData[state] = {};
             }
             
+            // Find column indices
+            var latIndex = -1;
+            var lngIndex = -1;
+            var nameIndex = 0; // Default to first column
+            
+            for (var j = 0; j < headers.length; j++) {
+                var header = headers[j];
+                if (header === 'latitude' || header === 'lat') {
+                    latIndex = j;
+                } else if (header === 'longitude' || header === 'lng' || header === 'long') {
+                    lngIndex = j;
+                } else if (header === 'name' || header === 'college' || header === 'institution') {
+                    nameIndex = j;
+                }
+            }
+            
             // Parse each line of the CSV
             for (var i = 1; i < lines.length; i++) {
                 var line = lines[i].trim();
                 if (!line) continue;
                 
-                var values = line.split(',');
+                // Handle CSV with potential commas in quoted fields
+                var values = [];
+                var current = '';
+                var inQuotes = false;
                 
-                // Look for lat and lng columns
-                var latIndex = -1;
-                var lngIndex = -1;
-                var nameIndex = -1;
-                
-                for (var j = 0; j < headers.length; j++) {
-                    var header = headers[j].toLowerCase().trim();
-                    if (header === 'latitude' || header === 'lat') {
-                        latIndex = j;
-                    } else if (header === 'longitude' || header === 'lng' || header === 'long') {
-                        lngIndex = j;
-                    } else if (header === 'name' || header === 'college' || header === 'institution') {
-                        nameIndex = j;
+                for (var c = 0; c < line.length; c++) {
+                    var char = line[c];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
                     }
                 }
+                values.push(current.trim());
                 
-                if (latIndex !== -1 && lngIndex !== -1 && nameIndex !== -1) {
+                // Remove quotes from values
+                values = values.map(function(v) {
+                    return v.replace(/^"|"$/g, '');
+                });
+                
+                if (latIndex !== -1 && lngIndex !== -1 && values[latIndex] && values[lngIndex]) {
                     var lat = parseFloat(values[latIndex]);
                     var lng = parseFloat(values[lngIndex]);
-                    var name = values[nameIndex] ? values[nameIndex].trim() : 'Unknown College';
+                    var name = values[nameIndex] || 'Unknown College';
                     
                     if (!isNaN(lat) && !isNaN(lng)) {
                         colleges.push({
                             name: name,
                             lat: lat,
                             lng: lng,
-                            address: values[1] || '', // Assuming address is in column 2
-                            suitability: values[2] || 'medium' // Assuming suitability is in column 3
+                            address: values[1] || '',
+                            suitability: 'medium'
                         });
                     }
                 }
@@ -1360,6 +1381,7 @@
             
             if (map) {
                 map.remove();
+                map = null;
             }
 
             setTimeout(function() {
@@ -1368,13 +1390,36 @@
                         attributionControl: false,
                         minZoom: 1,
                         maxZoom: 15
-                    }).setView([39.8283, -98.5795], 3);
+                    }).setView([39.8283, -98.5795], 4);
                     
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                         attribution: '© OpenStreetMap contributors © CARTO',
                         maxZoom: 15,
                         minZoom: 1
                     }).addTo(map);
+
+                    // Add markers for all swing districts
+                    for (var districtId in districtData) {
+                        var district = districtData[districtId];
+                        var color = district.party === 'D' ? '#2196f3' : '#f44336';
+                        
+                        var marker = L.circleMarker(district.center, {
+                            radius: 6,
+                            fillColor: color,
+                            color: '#fff',
+                            weight: 2,
+                            opacity: 1,
+                            fillOpacity: 0.8
+                        }).addTo(map);
+                        
+                        marker.bindPopup(
+                            '<div style="text-align: center; padding: 5px;">' +
+                            '<strong>' + districtId + '</strong><br>' +
+                            'Rep. ' + district.rep + ' (' + district.party + ')<br>' +
+                            '<em>' + district.action + '</em>' +
+                            '</div>'
+                        );
+                    }
 
                     districtBoundariesVisible = true;
                     var districtToggleBtn = document.getElementById('districtToggleBtn');
@@ -1388,14 +1433,12 @@
                     map.selectedDistrict = null;
                     map.selectedState = null;
                     map.isNationalView = true;
-
-                    loadAllSwingDistrictBoundaries();
                     
-                    console.log('✅ EXPLORE: National map initialized successfully');
+                    console.log('✅ EXPLORE: National map initialized with district markers');
                 } else {
                     console.log('❌ EXPLORE: Leaflet not loaded');
                 }
-            }, 50);
+            }, 100);
         }
 
         function getUserLocation() {
@@ -1489,41 +1532,44 @@
             collegeList.style.display = 'block';
 
             loadDistrictDataWithTimeout(district).then(function() {
-                var collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
-                
-                var allColleges = [];
-                var withinColleges = [];
-                var nearColleges = [];
+                // Small delay to ensure data is loaded
+                setTimeout(function() {
+                    var collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
+                    
+                    var allColleges = [];
+                    var withinColleges = [];
+                    var nearColleges = [];
 
-                if (Array.isArray(collegeDataForDistrict)) {
-                    allColleges = collegeDataForDistrict;
-                    withinColleges = collegeDataForDistrict;
-                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
-                    withinColleges = collegeDataForDistrict.within || [];
-                    nearColleges = collegeDataForDistrict.near || [];
-                    allColleges = withinColleges.concat(nearColleges);
-                }
-                
-                allColleges = allColleges.filter(function(college) {
-                    return college && college.name && 
-                           college.lat !== null && college.lng !== null && 
-                           !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
-                });
-                
-                if (allColleges.length === 0) {
-                    showNoData(state, district);
-                } else {
-                    var mapContainer = document.getElementById('mapContainer');
-                    if (mapContainer) mapContainer.style.display = 'block';
-                    collegeList.style.display = 'block';
+                    if (Array.isArray(collegeDataForDistrict)) {
+                        allColleges = collegeDataForDistrict;
+                        withinColleges = collegeDataForDistrict;
+                    } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
+                        withinColleges = collegeDataForDistrict.within || [];
+                        nearColleges = collegeDataForDistrict.near || [];
+                        allColleges = withinColleges.concat(nearColleges);
+                    }
                     
-                    initializeMainMap(district, state);
-                    displayCollegeListWithSections(district, withinColleges, nearColleges);
+                    allColleges = allColleges.filter(function(college) {
+                        return college && college.name && 
+                               college.lat !== null && college.lng !== null && 
+                               !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
+                    });
                     
-                    setTimeout(function() {
-                        addMarkersToMainMap(allColleges);
-                    }, 500);
-                }
+                    if (allColleges.length === 0) {
+                        showNoData(state, district);
+                    } else {
+                        var mapContainer = document.getElementById('mapContainer');
+                        if (mapContainer) mapContainer.style.display = 'block';
+                        collegeList.style.display = 'block';
+                        
+                        initializeMainMap(district, state);
+                        displayCollegeListWithSections(district, withinColleges, nearColleges);
+                        
+                        setTimeout(function() {
+                            addMarkersToMainMap(allColleges);
+                        }, 800);
+                    }
+                }, 100);
             }).catch(function(error) {
                 showNoData(state, district);
             });
@@ -1532,15 +1578,20 @@
         function initializeMainMap(selectedDistrict, state) {
             if (map) {
                 map.remove();
+                map = null;
             }
 
             setTimeout(function() {
                 if (typeof L !== 'undefined') {
+                    var districtInfo = districtData[selectedDistrict];
+                    var centerLat = districtInfo ? districtInfo.center[0] : 39.8283;
+                    var centerLng = districtInfo ? districtInfo.center[1] : -98.5795;
+                    
                     map = L.map('map', {
                         attributionControl: false,
                         minZoom: 1,
                         maxZoom: 15
-                    }).setView([39.8283, -98.5795], 8);
+                    }).setView([centerLat, centerLng], 8);
                     
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
                         attribution: '© OpenStreetMap contributors © CARTO',
@@ -1562,27 +1613,9 @@
                     
                     currentSelectedDistrict = selectedDistrict;
 
-                    loadAllSwingDistrictBoundaries();
-                    
-                    setTimeout(function() {
-                        loadDistrictBoundariesForMap(map, selectedDistrict);
-                    }, 500);
-
-                    map.on('zoomend', function() {
-                        var currentZoom = map.getZoom();
-                        
-                        if (currentZoom <= 6 && districtBoundariesVisible) {
-                            loadAllSwingDistrictBoundaries();
-                        } else if (currentZoom > 6 && districtBoundariesVisible && selectedDistrict) {
-                            loadDistrictBoundariesForMap(map, selectedDistrict);
-                        }
-                    });
-
-                    setTimeout(function() {
-                        fitMapToSelectedDistrict(selectedDistrict);
-                    }, 300);
+                    console.log('✅ Map initialized for district:', selectedDistrict);
                 }
-            }, 50);
+            }, 100);
         }
 
         function loadDistrictBoundariesForMap(targetMap, selectedDistrict) {
