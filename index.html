@@ -735,56 +735,62 @@
                 .then(function(csvText) {
                     console.log('✅ Loaded CSV for', district);
                     
-                    // Parse CSV manually (since we're not using Papa Parse in this context)
-                    var lines = csvText.split('\n');
-                    var headers = lines[0].split(',').map(function(h) { return h.trim(); });
+                    // Parse CSV - improved parser to handle different formats
+                    var lines = csvText.split(/\r?\n/);  // Handle both \n and \r\n
+                    var headers = [];
                     var colleges = [];
                     
-                    // Find column indices
-                    var nameIndex = headers.indexOf('name');
-                    var latIndex = headers.indexOf('lat');
-                    var lngIndex = headers.indexOf('lng');
-                    var enrollmentIndex = headers.indexOf('enrollment');
-                    var typeIndex = headers.indexOf('type');
-                    var addressIndex = headers.indexOf('address');
-                    
-                    // Parse each row
-                    for (var i = 1; i < lines.length; i++) {
-                        var line = lines[i].trim();
-                        if (!line) continue;
+                    // Find and parse headers
+                    if (lines.length > 0) {
+                        // Parse header line
+                        headers = parseCSVLine(lines[0]);
+                        console.log('Headers found:', headers);
                         
-                        // Simple CSV parsing (handles basic cases)
-                        var cols = [];
-                        var current = '';
-                        var inQuotes = false;
+                        // Find column indices (case-insensitive)
+                        var nameIndex = -1;
+                        var latIndex = -1;
+                        var lngIndex = -1;
+                        var enrollmentIndex = -1;
+                        var typeIndex = -1;
+                        var addressIndex = -1;
                         
-                        for (var j = 0; j < line.length; j++) {
-                            var char = line[j];
-                            if (char === '"') {
-                                inQuotes = !inQuotes;
-                            } else if (char === ',' && !inQuotes) {
-                                cols.push(current.trim());
-                                current = '';
-                            } else {
-                                current += char;
-                            }
+                        for (var h = 0; h < headers.length; h++) {
+                            var header = headers[h].toLowerCase().trim();
+                            if (header === 'name' || header === 'college' || header === 'institution') nameIndex = h;
+                            if (header === 'lat' || header === 'latitude') latIndex = h;
+                            if (header === 'lng' || header === 'lon' || header === 'longitude') lngIndex = h;
+                            if (header === 'enrollment' || header === 'students') enrollmentIndex = h;
+                            if (header === 'type') typeIndex = h;
+                            if (header === 'address' || header === 'location') addressIndex = h;
                         }
-                        cols.push(current.trim());
                         
-                        // Create college object
-                        if (cols[nameIndex] && cols[latIndex] && cols[lngIndex]) {
-                            var college = {
-                                name: cols[nameIndex].replace(/"/g, ''),
-                                lat: parseFloat(cols[latIndex]),
-                                lng: parseFloat(cols[lngIndex]),
-                                enrollment: cols[enrollmentIndex] ? parseInt(cols[enrollmentIndex]) : null,
-                                type: cols[typeIndex] || '',
-                                address: cols[addressIndex] || ''
-                            };
+                        console.log('Column indices - name:', nameIndex, 'lat:', latIndex, 'lng:', lngIndex);
+                        
+                        // Parse each data row
+                        for (var i = 1; i < lines.length; i++) {
+                            var line = lines[i].trim();
+                            if (!line) continue;
                             
-                            // Only add if we have valid coordinates
-                            if (!isNaN(college.lat) && !isNaN(college.lng)) {
-                                colleges.push(college);
+                            var cols = parseCSVLine(line);
+                            
+                            // Create college object if we have the minimum required fields
+                            if (nameIndex >= 0 && latIndex >= 0 && lngIndex >= 0 && 
+                                cols[nameIndex] && cols[latIndex] && cols[lngIndex]) {
+                                
+                                var college = {
+                                    name: cols[nameIndex].trim(),
+                                    lat: parseFloat(cols[latIndex]),
+                                    lng: parseFloat(cols[lngIndex]),
+                                    enrollment: enrollmentIndex >= 0 && cols[enrollmentIndex] ? parseInt(cols[enrollmentIndex].replace(/,/g, '')) : null,
+                                    type: typeIndex >= 0 && cols[typeIndex] ? cols[typeIndex].trim() : '',
+                                    address: addressIndex >= 0 && cols[addressIndex] ? cols[addressIndex].trim() : ''
+                                };
+                                
+                                // Only add if we have valid coordinates
+                                if (!isNaN(college.lat) && !isNaN(college.lng)) {
+                                    colleges.push(college);
+                                    console.log('Added college:', college.name, 'at', college.lat, college.lng);
+                                }
                             }
                         }
                     }
@@ -800,6 +806,46 @@
                     collegeData[state][district] = [];
                     if (callback) callback();
                 });
+        }
+        
+        // Helper function to parse a CSV line properly handling quotes
+        function parseCSVLine(line) {
+            var result = [];
+            var current = '';
+            var inQuotes = false;
+            
+            for (var i = 0; i < line.length; i++) {
+                var char = line[i];
+                var nextChar = line[i + 1];
+                
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        // Escaped quote
+                        current += '"';
+                        i++; // Skip next quote
+                    } else {
+                        // Toggle quote mode
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    // End of field
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            // Don't forget the last field
+            result.push(current.trim());
+            
+            // Remove quotes from fields
+            return result.map(function(field) {
+                if (field.startsWith('"') && field.endsWith('"')) {
+                    return field.slice(1, -1);
+                }
+                return field;
+            });
         }
 
         function displayCollegeListWithSections(district, withinColleges, nearColleges) {
