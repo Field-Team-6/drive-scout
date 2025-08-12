@@ -304,7 +304,90 @@
             border-top-color: #333;
         }
 
+        .faq-container {
+            display: none;
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 20px auto;
+            max-width: 900px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .faq-container.show {
+            display: block;
+        }
+
+        .faq-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .faq-header h2 {
+            color: #333;
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .faq-close {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .faq-close:hover {
+            background: #5a6fd8;
+            transform: translateY(-2px);
+        }
+
+        .faq-item {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #e1e5e9;
+            padding-bottom: 20px;
+        }
+
+        .faq-item:last-child {
+            border-bottom: none;
+        }
+
+        .faq-question {
+            font-weight: bold;
+            color: #333;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .faq-answer {
+            color: #666;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .faq-answer a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+
         @media (max-width: 768px) {
+            .faq-container {
+                margin: 10px;
+                padding: 20px;
+            }
+            
+            .faq-header h2 {
+                font-size: 1.5rem;
+            }
+        }
             .header h1 {
                 font-size: 2rem;
             }
@@ -526,9 +609,70 @@
     </div>
 
     <div style="margin-top: 150px; text-align: center;">
-        <button style="background: #03013c; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; margin-bottom: 20px;">
+        <button onclick="toggleFAQ()" style="background: #03013c; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold; margin-bottom: 20px;">
             FAQ
         </button>
+        
+        <div id="faqContainer" class="faq-container">
+            <div class="faq-header">
+                <h2>🎯 Drive Scout FAQ</h2>
+                <button class="faq-close" onclick="toggleFAQ()">Close FAQ</button>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What is Drive Scout?</div>
+                <div class="faq-answer">Drive Scout is a free tool that helps activists identify the best college campuses for voter registration drives in competitive congressional districts. We focus on the 63 most flippable and defendable House seats for 2026.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How do I organize a voter drive?</div>
+                <div class="faq-answer">Click any "Set Up Voter Drive" button to create your event on Mobilize. You'll need: voter registration forms (available from your state), a table/tent, clipboards, pens, and 2-4 volunteers. Pick high-traffic times like lunch hours or between classes. Always check campus policies first!</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What do the drive ratings mean?</div>
+                <div class="faq-answer">
+                    <strong>HIGH (Green):</strong> Perfect for drives! Large enrollment (10,000+), public institutions with significant campus space.<br>
+                    <strong>MEDIUM (Yellow):</strong> Good opportunity. Mid-sized schools (3,000-10,000) or smaller public colleges.<br>
+                    <strong>LOW (Red):</strong> More challenging. Smaller schools (<3,000) or specialized institutions. Still worth considering if convenient!
+                </div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Why these specific districts?</div>
+                <div class="faq-answer">These 63 districts are the most competitive House races where Democrats need to either flip Republican seats or defend vulnerable Democratic incumbents. Winning these districts is essential for taking back the House in 2026.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How accurate is the college data?</div>
+                <div class="faq-answer">We use precise latitude/longitude coordinates for each campus and regularly update our enrollment and campus information. If you spot an error or missing school, please contact Field Team 6 with corrections.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Can I organize drives at multiple campuses?</div>
+                <div class="faq-answer">Absolutely! The more campuses you cover, the more voters you'll register. Consider forming a team to hit multiple schools in your district, especially during peak registration periods before deadline.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Is Drive Scout affiliated with the Democratic Party?</div>
+                <div class="faq-answer">Drive Scout is a project of Field Team 6, an independent progressive organization. While we focus on flipping the House blue, voter registration drives must be non-partisan by law - you register all eligible voters regardless of party.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">How can I get more involved?</div>
+                <div class="faq-answer">Visit <a href="https://www.fieldteam6.org" target="_blank">fieldteam6.org</a> to join our volunteer network. You can help with voter registration, phone banking, canvassing, and more. Every action counts toward flipping the House!</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">Does Drive Scout collect my data?</div>
+                <div class="faq-answer">No! Drive Scout collects no data. We don't track you, store your location, or require any login. The app runs entirely in your browser for complete privacy.</div>
+            </div>
+            
+            <div class="faq-item">
+                <div class="faq-question">What if my closest district is far away?</div>
+                <div class="faq-answer">You can still help! Consider: (1) Organizing drives when you visit the area, (2) Supporting local organizers with donations or remote volunteering, (3) Phone banking or writing postcards from home, or (4) Focusing on statewide races in your area.</div>
+            </div>
+        </div>
         
         <div style="text-align: center; color: black; font-size: 0.9rem; line-height: 1.4; margin-bottom: 20px;">
             ©2025 Drive Scout<br>
@@ -2533,6 +2677,21 @@
             }
             
             return 'XX';
+        }
+
+        // FAQ toggle function
+        function toggleFAQ() {
+            var faqContainer = document.getElementById('faqContainer');
+            if (faqContainer) {
+                faqContainer.classList.toggle('show');
+                
+                // Scroll to FAQ when opened
+                if (faqContainer.classList.contains('show')) {
+                    setTimeout(function() {
+                        faqContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                }
+            }
         }
 
         // Initialize the app
