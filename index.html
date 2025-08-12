@@ -254,6 +254,56 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
 
+        .rating-label {
+            font-size: 0.75rem;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 2px;
+            cursor: pointer;
+            transition: font-weight 0.1s ease;
+            position: relative;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .rating-label:hover {
+            font-weight: 900;
+        }
+
+        .rating-tooltip {
+            position: absolute;
+            bottom: 100%;
+            right: 0;
+            background: #333;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: normal;
+            white-space: nowrap;
+            margin-bottom: 4px;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(4px);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            z-index: 1000;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .rating-tooltip.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .rating-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            right: 20px;
+            border: 5px solid transparent;
+            border-top-color: #333;
+        }
+
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -2299,15 +2349,6 @@
             }
         }
 
-        function getRatingTooltip(suitability) {
-            switch(suitability) {
-                case 'High': return 'Perfect place for a voter drive!';
-                case 'Medium': return 'Good place for a voter drive!';
-                case 'Low': return 'Challenging place for a voter drive.';
-                default: return '';
-            }
-        }
-
         function createCollegeElement(college) {
             var div = document.createElement('div');
             div.className = 'college-item';
@@ -2337,8 +2378,10 @@
                         '<div style="color: #666; font-size: 0.85rem; line-height: 1.2;">' + addressDisplay + '</div>' +
                         distanceText +
                     '</div>' +
-                    '<div style="margin-left: 15px; flex-shrink: 0; text-align: right;">' +
-                        '<div style="font-size: 0.75rem; color: #666; font-weight: 600; margin-bottom: 2px; cursor: help;" title="' + ratingTooltip + '">DRIVE RATING:</div>' +
+                    '<div style="margin-left: 15px; flex-shrink: 0; text-align: right; position: relative;">' +
+                        '<div class="rating-label" onclick="handleRatingClick(event, this)" onmouseenter="handleRatingHover(this)" onmouseleave="handleRatingLeave(this)">DRIVE RATING:' +
+                        '<div class="rating-tooltip">' + ratingTooltip + '</div>' +
+                        '</div>' +
                         '<span class="suitability-badge suitability-' + college.suitability.toLowerCase() + '" style="font-size: 0.75rem; padding: 3px 8px;">' + college.suitability + '</span>' +
                     '</div>' +
                 '</div>' +
@@ -2348,6 +2391,54 @@
                 '</div>';
 
             return div;
+        }
+
+        // Global tooltip handlers
+        var tooltipTimeout = null;
+
+        function handleRatingHover(element) {
+            // Desktop hover - show tooltip after 300ms
+            tooltipTimeout = setTimeout(function() {
+                var tooltip = element.querySelector('.rating-tooltip');
+                if (tooltip) {
+                    tooltip.classList.add('show');
+                }
+            }, 300);
+        }
+
+        function handleRatingLeave(element) {
+            // Clear timeout and hide tooltip
+            if (tooltipTimeout) {
+                clearTimeout(tooltipTimeout);
+                tooltipTimeout = null;
+            }
+            var tooltip = element.querySelector('.rating-tooltip');
+            if (tooltip) {
+                tooltip.classList.remove('show');
+            }
+        }
+
+        function handleRatingClick(event, element) {
+            // Mobile/touch - show tooltip instantly on click
+            event.preventDefault();
+            event.stopPropagation();
+            
+            // Hide any other open tooltips
+            var allTooltips = document.querySelectorAll('.rating-tooltip.show');
+            for (var i = 0; i < allTooltips.length; i++) {
+                allTooltips[i].classList.remove('show');
+            }
+            
+            // Show this tooltip
+            var tooltip = element.querySelector('.rating-tooltip');
+            if (tooltip) {
+                tooltip.classList.add('show');
+                
+                // Auto-hide after 3 seconds
+                setTimeout(function() {
+                    tooltip.classList.remove('show');
+                }, 3000);
+            }
         }
 
         function openMobilizeWithAutoFill(district, collegeName, state, districtCode) {
@@ -2368,6 +2459,15 @@
                 case 'Medium': return '#ffc107';
                 case 'Low': return '#dc3545';
                 default: return '#6c757d';
+            }
+        }
+
+        function getRatingTooltip(suitability) {
+            switch(suitability) {
+                case 'High': return 'Perfect place for a voter drive!';
+                case 'Medium': return 'Good place for a voter drive!';
+                case 'Low': return 'Challenging place for a voter drive.';
+                default: return '';
             }
         }
 
