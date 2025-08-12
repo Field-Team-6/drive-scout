@@ -2387,7 +2387,7 @@
                 '</div>' +
                 '<div style="display: flex; gap: 8px;">' +
                     '<a href="https://www.google.com/maps/search/' + encodeURIComponent(addressDisplay) + '" target="_blank" class="btn btn-primary" style="padding: 4px 10px; font-size: 0.75rem;">🗺️ Directions</a>' +
-                    '<button class="btn btn-tertiary" onclick="openMobilizeWithAutoFill(\'' + district + '\', \'' + collegeName.replace(/'/g, "\\'") + '\', \'' + state + '\', \'' + districtCode + '\')" style="padding: 4px 10px; font-size: 0.75rem;">🗳️ Set Up Voter Drive</button>' +
+                    '<a href="https://www.mobilize.us/ft6/c/lead-a-voter-drive/event/create/" target="_blank" class="btn btn-tertiary" style="padding: 4px 10px; font-size: 0.75rem;">🗳️ Set Up Voter Drive</a>' +
                 '</div>';
 
             return div;
@@ -2439,18 +2439,6 @@
                     tooltip.classList.remove('show');
                 }, 3000);
             }
-        }
-
-        function openMobilizeWithAutoFill(district, collegeName, state, districtCode) {
-            var title = district + ' - ' + collegeName + ' - Register Democrats to save the world!';
-            
-            window.open('https://www.mobilize.us/dashboard/ft6/event-campaign/699/', '_blank');
-            
-            setTimeout(function() {
-                alert('Drive Scout Tip: After the Mobilize form loads, look for:\n\n' +
-                      '📝 Default title: Paste this text:\n"' + title + '"\n\n' +
-                      '🏷️ Tag options: Add these tags:\n"Drive", "' + state + '", "' + districtCode + '"');
-            }, 1000);
         }
 
         function getSuitabilityColor(suitability) {
