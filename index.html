@@ -2153,7 +2153,9 @@
             var score = 0;
             var type = (college.type || '').toLowerCase();
             var notes = (college.notes || '').toLowerCase();
+            var name = (college.name || '').toLowerCase();
             
+            // Exclusions
             if (type.includes('online') || type.includes('virtual') || 
                 notes.includes('online') || notes.includes('virtual')) {
                 return 'EXCLUDE';
@@ -2163,24 +2165,72 @@
                 return 'EXCLUDE';
             }
             
+            // NEW: Recalibrated Enrollment Scoring
             var enrollmentStr = String(college.enrollment || '0');
             var enrollment = parseInt(enrollmentStr.replace(/,/g, '')) || 0;
             
-            if (enrollment >= 5000) score += 40;
-            else if (enrollment >= 2000) score += 25;
-            else if (enrollment >= 1000) score += 15;
+            if (enrollment >= 20000) score += 45;      // Major universities
+            else if (enrollment >= 10000) score += 35;  // Large schools
+            else if (enrollment >= 5000) score += 25;   // Medium-large
+            else if (enrollment >= 3000) score += 15;   // Medium
+            else if (enrollment >= 2000) score += 10;   // Small-medium
+            else if (enrollment >= 1000) score += 5;    // Small
+            // else <1000 gets 0 points                 // Very small
             
-            if (type.includes('community')) score += 30;
-            else if (type.includes('public')) score += 20;
-            else if (type.includes('university')) score += 15;
+            // NEW: Adjusted Type Weighting
+            // Check for community college first (most specific)
+            if (type.includes('community')) {
+                score += 20;  // Down from 30
+            }
+            // Check for university vs college, and public vs private
+            else if (type.includes('university')) {
+                if (type.includes('public') || (!type.includes('private'))) {
+                    score += 20;  // Public university
+                } else if (type.includes('private')) {
+                    score += 10;  // Private university
+                } else {
+                    score += 15;  // University (unspecified)
+                }
+            }
+            else if (type.includes('college')) {
+                if (type.includes('public')) {
+                    score += 15;  // Public college
+                } else if (type.includes('private')) {
+                    score += 5;   // Private college
+                } else {
+                    score += 10;  // College (unspecified)
+                }
+            }
+            // Generic public institution (not college or university)
+            else if (type.includes('public')) {
+                score += 15;
+            }
             
+            // Campus Size (unchanged)
             var campusSize = parseFloat(college.campusSize) || 0;
             if (campusSize >= 50) score += 20;
             else if (campusSize >= 25) score += 15;
             else if (campusSize >= 10) score += 10;
             
-            if (score >= 60) return 'High';
-            else if (score >= 30) return 'Medium';
+            // NEW: Penalty Factors
+            // Graduate-only penalty
+            if (type.includes('graduate') || name.includes('graduate') || 
+                notes.includes('graduate only') || notes.includes('grad only')) {
+                score -= 15;
+            }
+            
+            // Specialized school penalty (art, music, trade, technical)
+            if (type.includes('art') || type.includes('music') || 
+                type.includes('trade') || type.includes('technical') ||
+                type.includes('culinary') || type.includes('design') ||
+                name.includes('art institute') || name.includes('music college') ||
+                name.includes('technical') || name.includes('trade school')) {
+                score -= 10;
+            }
+            
+            // NEW: Raised Rating Thresholds
+            if (score >= 70) return 'High';     // Up from 60
+            else if (score >= 40) return 'Medium';  // Up from 30
             else return 'Low';
         }
 
