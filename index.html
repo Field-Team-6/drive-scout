@@ -490,15 +490,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        console.log("🎯 Drive Scout: Starting to load script...");
-        
-        // Test that functions are being defined
-        window.onerror = function(msg, url, lineNo, columnNo, error) {
-            console.error('Error: ', msg, 'Line:', lineNo);
-            return false;
-        };
-        
-        console.log("🎯 Drive Scout: Loading with 63 total districts (41 original + 22 new)");
+        console.log("🎯 Drive Scout: Loading with all districts including NY and MI");
         
         // Global variables
         var map;
@@ -510,7 +502,7 @@
         var districtLayer = null;
         var currentSelectedDistrict = null;
         
-        // District data - UPDATED WITH ALL 63 DISTRICTS (41 original + 22 new)
+        // District data - UPDATED WITH ALL DISTRICTS INCLUDING NY AND MI
         var districtData = {
             // Alaska
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
@@ -540,68 +532,32 @@
             // Illinois
             'IL-06': { rep: 'Sean Casten', party: 'D', action: 'HOLD', center: [41.8781, -88.0074] },
             'IL-17': { rep: 'Eric Sorensen', party: 'D', action: 'HOLD', center: [41.2519, -90.5775] },
-            // Indiana - NEW
-            'IN-01': { rep: 'Frank Mrvan', party: 'D', action: 'HOLD', center: [41.4811, -87.3391] },
-            // Iowa - NEW
-            'IA-01': { rep: 'Mariannette Miller-Meeks', party: 'R', action: 'FLIP', center: [41.6166, -91.5986] },
-            'IA-03': { rep: 'Zach Nunn', party: 'R', action: 'FLIP', center: [41.5868, -93.6250] },
-            // Maine - NEW
-            'ME-02': { rep: 'Jared Golden', party: 'D', action: 'HOLD', center: [45.2538, -69.4455] },
-            // Maryland - NEW
-            'MD-06': { rep: 'April McClain Delaney', party: 'D', action: 'HOLD', center: [39.4926, -77.7184] },
-            // Michigan
+            // Michigan - NEW DISTRICTS
             'MI-07': { rep: 'Tom Barrett', party: 'R', action: 'FLIP', center: [42.5803, -84.2436] },
             'MI-08': { rep: 'Kristen McDonald Rivet', party: 'D', action: 'HOLD', center: [43.0125, -83.6875] },
             'MI-10': { rep: 'John James', party: 'R', action: 'FLIP', center: [42.8701, -82.8854] },
-            // Montana - NEW
-            'MT-01': { rep: 'Ryan Zinke', party: 'R', action: 'FLIP', center: [47.0527, -109.6470] },
-            // Nebraska - NEW
-            'NE-02': { rep: 'Don Bacon', party: 'R', action: 'FLIP', center: [41.2565, -95.9345] },
-            // Nevada
-            'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398] },
-            'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656] },
-            'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640] },
-            // New Hampshire - NEW
-            'NH-01': { rep: 'Chris Pappas', party: 'D', action: 'HOLD', center: [43.0059, -71.0132] },
-            'NH-02': { rep: 'Annie Kuster', party: 'D', action: 'HOLD', center: [43.7022, -72.2896] },
             // New Jersey
             'NJ-03': { rep: 'Herb Conaway', party: 'D', action: 'HOLD', center: [39.9751, -74.6114] },
             'NJ-07': { rep: 'Thomas Kean Jr.', party: 'R', action: 'FLIP', center: [40.7357, -74.8331] },
             'NJ-09': { rep: 'Nellie Pou', party: 'D', action: 'HOLD', center: [40.8956, -74.1418] },
-            // New Mexico - NEW
-            'NM-02': { rep: 'Gabe Vasquez', party: 'D', action: 'HOLD', center: [32.3199, -106.7637] },
-            // New York
+            // Nevada
+            'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398] },
+            'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656] },
+            'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640] },
+            // New York - NEW DISTRICTS
             'NY-03': { rep: 'Tom Suozzi', party: 'D', action: 'HOLD', center: [40.7891, -73.5267] },
             'NY-04': { rep: 'Anthony D\'Esposito', party: 'R', action: 'FLIP', center: [40.6501, -73.5837] },
             'NY-17': { rep: 'Mike Lawler', party: 'R', action: 'FLIP', center: [41.1635, -73.9268] },
             'NY-19': { rep: 'Marc Molinaro', party: 'R', action: 'FLIP', center: [42.1497, -74.0822] },
-            // North Carolina - NEW
-            'NC-01': { rep: 'Don Davis', party: 'D', action: 'HOLD', center: [35.7804, -77.3871] },
-            // Ohio - NEW
-            'OH-01': { rep: 'Greg Landsman', party: 'D', action: 'HOLD', center: [39.1031, -84.5120] },
-            'OH-09': { rep: 'Marcy Kaptur', party: 'D', action: 'HOLD', center: [41.4533, -83.5379] },
-            'OH-13': { rep: 'Emilia Sykes', party: 'D', action: 'HOLD', center: [41.0814, -81.5190] },
-            // Oregon - NEW
-            'OR-04': { rep: 'Val Hoyle', party: 'D', action: 'HOLD', center: [43.8041, -123.0868] },
-            'OR-05': { rep: 'Janelle Bynum', party: 'D', action: 'HOLD', center: [44.9429, -122.9337] },
-            'OR-06': { rep: 'Andrea Salinas', party: 'D', action: 'HOLD', center: [45.3573, -122.6068] },
             // Pennsylvania
             'PA-07': { rep: 'Susan Wild', party: 'D', action: 'HOLD', center: [40.6066, -75.4502] },
             'PA-08': { rep: 'Matt Cartwright', party: 'D', action: 'HOLD', center: [41.2194, -75.6116] },
             'PA-10': { rep: 'Scott Perry', party: 'R', action: 'FLIP', center: [40.1897, -76.9829] },
             'PA-17': { rep: 'Chris Deluzio', party: 'D', action: 'HOLD', center: [40.6080, -80.0274] },
-            // Texas - NEW
-            'TX-28': { rep: 'Henry Cuellar', party: 'D', action: 'HOLD', center: [27.5306, -99.4803] },
-            'TX-34': { rep: 'Vicente Gonzalez', party: 'D', action: 'HOLD', center: [26.2034, -97.6970] },
             // Virginia
             'VA-02': { rep: 'Jen Kiggans', party: 'R', action: 'FLIP', center: [36.9092, -76.3302] },
             'VA-07': { rep: 'Eugene Vindman', party: 'D', action: 'HOLD', center: [38.4954, -77.5585] },
-            'VA-10': { rep: 'Jennifer Wexton', party: 'D', action: 'HOLD', center: [38.7997, -77.3963] },
-            // Washington - NEW
-            'WA-03': { rep: 'Marie Gluesenkamp Perez', party: 'D', action: 'HOLD', center: [45.6387, -122.6615] },
-            'WA-08': { rep: 'Kim Schrier', party: 'D', action: 'HOLD', center: [47.3809, -121.5708] },
-            // Wisconsin - NEW
-            'WI-03': { rep: 'Derrick Van Orden', party: 'R', action: 'FLIP', center: [43.8501, -90.9743] }
+            'VA-10': { rep: 'Jennifer Wexton', party: 'D', action: 'HOLD', center: [38.7997, -77.3963] }
         };
 
         var districtMappings = {
@@ -612,514 +568,15 @@
             "Connecticut": ["CT-05"],
             "Florida": ["FL-23", "FL-25"],
             "Illinois": ["IL-06", "IL-17"],
-            "Indiana": ["IN-01"],  // NEW STATE
-            "Iowa": ["IA-01", "IA-03"],  // NEW STATE
-            "Maine": ["ME-02"],  // NEW STATE
-            "Maryland": ["MD-06"],  // NEW STATE
-            "Michigan": ["MI-07", "MI-08", "MI-10"],
-            "Montana": ["MT-01"],  // NEW STATE
-            "Nebraska": ["NE-02"],  // NEW STATE
-            "Nevada": ["NV-01", "NV-03", "NV-04"],
-            "New Hampshire": ["NH-01", "NH-02"],  // NEW STATE
+            "Michigan": ["MI-07", "MI-08", "MI-10"],  // NEW STATE
             "New Jersey": ["NJ-03", "NJ-07", "NJ-09"],
-            "New Mexico": ["NM-02"],  // NEW STATE
-            "New York": ["NY-03", "NY-04", "NY-17", "NY-19"],
-            "North Carolina": ["NC-01"],  // NEW STATE
-            "Ohio": ["OH-01", "OH-09", "OH-13"],  // NEW STATE
-            "Oregon": ["OR-04", "OR-05", "OR-06"],  // NEW STATE
+            "Nevada": ["NV-01", "NV-03", "NV-04"],
+            "New York": ["NY-03", "NY-04", "NY-17", "NY-19"],  // NEW STATE
             "Pennsylvania": ["PA-07", "PA-08", "PA-10", "PA-17"],
-            "Texas": ["TX-28", "TX-34"],  // NEW STATE
-            "Virginia": ["VA-02", "VA-07", "VA-10"],
-            "Washington": ["WA-03", "WA-08"],  // NEW STATE
-            "Wisconsin": ["WI-03"]  // NEW STATE
+            "Virginia": ["VA-02", "VA-07", "VA-10"]
         };
 
-        // Helper functions
-        function calculateDistance(lat1, lon1, lat2, lon2) {
-            var R = 3959; // Radius of the earth in miles
-            var dLat = (lat2 - lat1) * Math.PI / 180;
-            var dLon = (lon2 - lon1) * Math.PI / 180;
-            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
-                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
-                    Math.sin(dLon/2) * Math.sin(dLon/2);
-            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
-            var d = R * c;
-            return d;
-        }
-
-        function hideLocationSearchField() {
-            var section = document.getElementById('locationInputSection');
-            if (section) section.style.display = 'none';
-        }
-
-        function clearAllResults() {
-            var closestCampusesResult = document.getElementById('closestCampusesResult');
-            if (closestCampusesResult) {
-                closestCampusesResult.innerHTML = '';
-                closestCampusesResult.style.display = 'none';
-            }
-            
-            var closestDistrictsResults = document.getElementById('closestDistrictsResults');
-            if (closestDistrictsResults) {
-                closestDistrictsResults.innerHTML = '';
-                closestDistrictsResults.style.display = 'none';
-            }
-            
-            clearMapAndList();
-        }
-
-        function clearMapAndList() {
-            var mapContainer = document.getElementById('mapContainer');
-            if (mapContainer) mapContainer.style.display = 'none';
-            
-            var collegeList = document.getElementById('collegeList');
-            if (collegeList) collegeList.style.display = 'none';
-            
-            var collegeItems = document.getElementById('collegeItems');
-            if (collegeItems) collegeItems.innerHTML = '';
-        }
-
-        function showLoadingState(container, district) {
-            container.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading campuses for ' + district + '...</h3></div>';
-        }
-
-        function showNoData(state, district) {
-            var collegeItems = document.getElementById('collegeItems');
-            collegeItems.innerHTML = '<div class="no-data">No campus data available for ' + district + ' yet.</div>';
-        }
-
-        function loadDistrictDataWithTimeout(district) {
-            return new Promise(function(resolve, reject) {
-                setTimeout(function() {
-                    loadDistrictData(district, function() {
-                        resolve();
-                    });
-                }, 100);
-            });
-        }
-
-        // FIXED CSV LOADING - Only change from original
-        function loadDistrictData(district, callback) {
-            console.log('📂 Loading CSV data for district:', district);
-            
-            var state = null;
-            for (var stateName in districtMappings) {
-                if (districtMappings[stateName].includes(district)) {
-                    state = stateName;
-                    break;
-                }
-            }
-            
-            if (!state) {
-                console.log('❌ Could not find state for district:', district);
-                if (callback) callback();
-                return;
-            }
-            
-            if (!collegeData[state]) {
-                collegeData[state] = {};
-            }
-            
-            var csvFile = 'data/' + district + '.csv';
-            
-            fetch(csvFile)
-                .then(function(response) {
-                    if (!response.ok) {
-                        throw new Error('CSV file not found: ' + csvFile);
-                    }
-                    return response.text();
-                })
-                .then(function(csvText) {
-                    console.log('✅ Loaded CSV for', district);
-                    
-                    var lines = csvText.split(/\r?\n/);
-                    var colleges = [];
-                    
-                    if (lines.length > 0) {
-                        var headers = parseCSVLine(lines[0]);
-                        console.log('Headers found:', headers);
-                        
-                        var nameIndex = -1;
-                        var latIndex = -1;
-                        var lngIndex = -1;
-                        var enrollmentIndex = -1;
-                        var typeIndex = -1;
-                        var addressIndex = -1;
-                        
-                        for (var h = 0; h < headers.length; h++) {
-                            var header = headers[h].toLowerCase().trim();
-                            if (header === 'name' || header === 'college' || header === 'institution') nameIndex = h;
-                            if (header === 'lat' || header === 'latitude') latIndex = h;
-                            if (header === 'lng' || header === 'lon' || header === 'longitude') lngIndex = h;
-                            if (header === 'enrollment' || header === 'students') enrollmentIndex = h;
-                            if (header === 'type') typeIndex = h;
-                            if (header === 'address' || header === 'location') addressIndex = h;
-                        }
-                        
-                        for (var i = 1; i < lines.length; i++) {
-                            var line = lines[i].trim();
-                            if (!line) continue;
-                            
-                            var cols = parseCSVLine(line);
-                            
-                            if (nameIndex >= 0 && latIndex >= 0 && lngIndex >= 0 && 
-                                cols[nameIndex] && cols[latIndex] && cols[lngIndex]) {
-                                
-                                var college = {
-                                    name: cols[nameIndex].trim(),
-                                    lat: parseFloat(cols[latIndex]),
-                                    lng: parseFloat(cols[lngIndex]),
-                                    enrollment: enrollmentIndex >= 0 && cols[enrollmentIndex] ? parseInt(cols[enrollmentIndex].replace(/,/g, '')) : null,
-                                    type: typeIndex >= 0 && cols[typeIndex] ? cols[typeIndex].trim() : '',
-                                    address: addressIndex >= 0 && cols[addressIndex] ? cols[addressIndex].trim() : ''
-                                };
-                                
-                                if (!isNaN(college.lat) && !isNaN(college.lng)) {
-                                    colleges.push(college);
-                                }
-                            }
-                        }
-                    }
-                    
-                    console.log('📊 Parsed', colleges.length, 'colleges for', district);
-                    collegeData[state][district] = colleges;
-                    
-                    if (callback) callback();
-                })
-                .catch(function(error) {
-                    console.log('⚠️ Could not load CSV for', district + ':', error.message);
-                    collegeData[state][district] = [];
-                    if (callback) callback();
-                });
-        }
-        
-        function parseCSVLine(line) {
-            var result = [];
-            var current = '';
-            var inQuotes = false;
-            
-            for (var i = 0; i < line.length; i++) {
-                var char = line[i];
-                var nextChar = line[i + 1];
-                
-                if (char === '"') {
-                    if (inQuotes && nextChar === '"') {
-                        current += '"';
-                        i++;
-                    } else {
-                        inQuotes = !inQuotes;
-                    }
-                } else if (char === ',' && !inQuotes) {
-                    result.push(current.trim());
-                    current = '';
-                } else {
-                    current += char;
-                }
-            }
-            
-            result.push(current.trim());
-            
-            return result.map(function(field) {
-                if (field.startsWith('"') && field.endsWith('"')) {
-                    return field.slice(1, -1);
-                }
-                return field;
-            });
-        }
-
-        function displayCollegeListWithSections(district, withinColleges, nearColleges) {
-            var collegeItems = document.getElementById('collegeItems');
-            var state = null;
-            
-            for (var stateName in districtMappings) {
-                if (districtMappings[stateName].includes(district)) {
-                    state = stateName;
-                    break;
-                }
-            }
-            
-            var allColleges = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
-            
-            if (allColleges.length === 0) {
-                collegeItems.innerHTML = '<div class="no-data">No campus data available for ' + district + ' yet.</div>';
-                return;
-            }
-            
-            // Sort by enrollment
-            allColleges.sort(function(a, b) {
-                return (b.enrollment || 0) - (a.enrollment || 0);
-            });
-            
-            var html = '';
-            for (var i = 0; i < allColleges.length; i++) {
-                var college = allColleges[i];
-                var suitability = 'low';
-                var suitabilityText = 'Low suitability';
-                
-                if (college.enrollment > 10000) {
-                    suitability = 'high';
-                    suitabilityText = 'High suitability';
-                } else if (college.enrollment > 5000) {
-                    suitability = 'medium';
-                    suitabilityText = 'Medium suitability';
-                }
-                
-                html += '<div class="college-item">';
-                html += '<div style="display: flex; justify-content: space-between; align-items: start;">';
-                html += '<div style="flex: 1;">';
-                html += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin-bottom: 4px;">' + college.name + '</div>';
-                
-                if (college.enrollment) {
-                    html += '<div style="color: #666; font-size: 0.9rem;">📊 ' + college.enrollment.toLocaleString() + ' students</div>';
-                }
-                
-                html += '<div style="margin-top: 8px;">';
-                html += '<span class="suitability-badge suitability-' + suitability + '">' + suitabilityText + '</span>';
-                html += '</div>';
-                html += '</div>';
-                
-                html += '<div style="display: flex; gap: 8px;">';
-                var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + college.lat + ',' + college.lng;
-                html += '<a href="' + mapsUrl + '" target="_blank" class="btn btn-primary" style="text-decoration: none;">📍 Map</a>';
-                html += '</div>';
-                html += '</div>';
-                html += '</div>';
-            }
-            
-            collegeItems.innerHTML = html;
-        }
-
-        function addMarkersToMainMap(colleges) {
-            if (!map || !colleges || colleges.length === 0) return;
-            
-            // Clear existing markers
-            for (var i = 0; i < markers.length; i++) {
-                map.removeLayer(markers[i]);
-            }
-            markers = [];
-            
-            console.log('Adding markers for', colleges.length, 'colleges');
-            
-            // Add a marker for each college
-            for (var i = 0; i < colleges.length; i++) {
-                var college = colleges[i];
-                
-                if (college.lat && college.lng) {
-                    // Determine color based on enrollment
-                    var markerColor = '#f44336'; // red for low
-                    if (college.enrollment > 10000) {
-                        markerColor = '#4caf50'; // green for high
-                    } else if (college.enrollment > 5000) {
-                        markerColor = '#ff9800'; // orange for medium
-                    }
-                    
-                    var marker = L.circleMarker([college.lat, college.lng], {
-                        radius: 8,
-                        fillColor: markerColor,
-                        color: '#fff',
-                        weight: 2,
-                        opacity: 1,
-                        fillOpacity: 0.8
-                    }).addTo(map);
-                    
-                    // Create popup content
-                    var suitability = 'Low';
-                    if (college.enrollment > 10000) {
-                        suitability = 'High';
-                    } else if (college.enrollment > 5000) {
-                        suitability = 'Medium';
-                    }
-                    
-                    var popupContent = '<div style="padding: 10px; min-width: 200px; background: white; border-radius: 8px;">';
-                    popupContent += '<strong style="font-size: 1.1rem; color: #333;">' + college.name + '</strong>';
-                    if (college.enrollment) {
-                        popupContent += '<br><span style="color: #666;">📊 ' + college.enrollment.toLocaleString() + ' students</span>';
-                    }
-                    popupContent += '<br><span style="color: #666;">Suitability: ' + suitability + '</span>';
-                    var mapsUrl = 'https://www.google.com/maps/search/?api=1&query=' + college.lat + ',' + college.lng;
-                    popupContent += '<br><a href="' + mapsUrl + '" target="_blank" style="color: #667eea; text-decoration: none; font-weight: bold;">📍 Get Directions →</a>';
-                    popupContent += '</div>';
-                    
-                    marker.bindPopup(popupContent, {
-                        className: 'compact-popup',
-                        closeButton: false
-                    });
-                    
-                    markers.push(marker);
-                }
-            }
-            
-            // Fit map to show all markers
-            if (markers.length > 0) {
-                var group = new L.featureGroup(markers);
-                map.fitBounds(group.getBounds().pad(0.1));
-            }
-            
-            console.log('✅ Added', markers.length, 'markers to map');
-        }
-
-        function fitMapToSelectedDistrict(district) {
-            if (map && districtData[district]) {
-                var center = districtData[district].center;
-                map.setView(center, 9);
-            }
-        }
-
-        function loadAllSwingDistrictBoundaries(force) {
-            console.log('Loading all swing district boundaries...');
-            
-            if (!map || !districtBoundariesVisible) return;
-            
-            // Remove existing layer if present
-            if (map.allSwingDistrictLayer) {
-                map.removeLayer(map.allSwingDistrictLayer);
-                map.allSwingDistrictLayer = null;
-            }
-            
-            // For now, add markers for each district center as a visual indicator
-            var districtMarkers = [];
-            for (var districtId in districtData) {
-                var data = districtData[districtId];
-                var color = data.party === 'D' ? '#2196f3' : '#f44336';
-                
-                var marker = L.circleMarker(data.center, {
-                    radius: 6,
-                    fillColor: color,
-                    color: '#fff',
-                    weight: 2,
-                    opacity: 1,
-                    fillOpacity: 0.6
-                }).addTo(map);
-                
-                var popupContent = '<div style="text-align: center; padding: 8px;">';
-                popupContent += '<strong>' + districtId + '</strong><br>';
-                popupContent += 'Rep. ' + data.rep + ' (' + data.party + ')<br>';
-                popupContent += data.action;
-                popupContent += '</div>';
-                
-                marker.bindPopup(popupContent);
-                districtMarkers.push(marker);
-            }
-            
-            map.allSwingDistrictLayer = L.layerGroup(districtMarkers);
-        }
-
-        function loadDistrictBoundariesForMap(targetMap, selectedDistrict) {
-            if (!targetMap || !districtBoundariesVisible) return;
-            
-            var state = null;
-            for (var stateName in districtMappings) {
-                var districts = districtMappings[stateName];
-                for (var i = 0; i < districts.length; i++) {
-                    if (districts[i] === selectedDistrict) {
-                        state = stateName;
-                        break;
-                    }
-                }
-                if (state) break;
-            }
-            
-            if (!state) return;
-            
-            var boundaryFiles = {
-                'Alaska': 'data/boundaries/alaska_districts_119th.json',
-                'Arizona': 'data/boundaries/arizona_districts_119th.json',
-                'California': 'data/boundaries/california_districts_119th.json',
-                'Colorado': 'data/boundaries/colorado_districts_119th.json',
-                'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
-                'Florida': 'data/boundaries/florida_districts_119th.json',
-                'Illinois': 'data/boundaries/illinois_districts_119th.json',
-                'Indiana': 'data/boundaries/indiana_districts_119th.json',
-                'Iowa': 'data/boundaries/iowa_districts_119th.json',
-                'Maine': 'data/boundaries/maine_districts_119th.json',
-                'Maryland': 'data/boundaries/maryland_districts_119th.json',
-                'Michigan': 'data/boundaries/michigan_districts_119th.json',
-                'Montana': 'data/boundaries/montana_districts_119th.json',
-                'Nebraska': 'data/boundaries/nebraska_districts_119th.json',
-                'Nevada': 'data/boundaries/nevada_districts_119th.json',
-                'New Hampshire': 'data/boundaries/newhampshire_districts_119th.json',
-                'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
-                'New Mexico': 'data/boundaries/newmexico_districts_119th.json',
-                'New York': 'data/boundaries/newyork_districts_119th.json',
-                'North Carolina': 'data/boundaries/northcarolina_districts_119th.json',
-                'Ohio': 'data/boundaries/ohio_districts_119th.json',
-                'Oregon': 'data/boundaries/oregon_districts_119th.json',
-                'Pennsylvania': 'data/boundaries/pennsylvania_districts_119th.json',
-                'Texas': 'data/boundaries/texas_districts_119th.json',
-                'Virginia': 'data/boundaries/virginia_districts_119th.json',
-                'Washington': 'data/boundaries/washington_districts_119th.json',
-                'Wisconsin': 'data/boundaries/wisconsin_districts_119th.json'
-            };
-            
-            var boundaryFile = boundaryFiles[state];
-            if (boundaryFile) {
-                console.log('Loading boundary file for', state, ':', boundaryFile);
-                
-                fetch(boundaryFile)
-                    .then(function(response) {
-                        if (!response.ok) {
-                            throw new Error('Boundary file not found: ' + boundaryFile);
-                        }
-                        return response.json();
-                    })
-                    .then(function(geoJson) {
-                        // Remove existing district layer
-                        if (districtLayer) {
-                            targetMap.removeLayer(districtLayer);
-                        }
-                        
-                        // Filter for selected district
-                        var selectedFeatures = {
-                            type: 'FeatureCollection',
-                            features: geoJson.features.filter(function(feature) {
-                                var props = feature.properties;
-                                var districtNum = props.DISTRICT || props.CD119FP || props.CDNAM || '';
-                                
-                                // Handle at-large districts
-                                if (selectedDistrict.includes('-AL') && (districtNum === '00' || districtNum === '0' || districtNum === 'AL')) {
-                                    return true;
-                                }
-                                
-                                // Extract district number from selectedDistrict (e.g., "CA-27" -> "27")
-                                var targetNum = selectedDistrict.split('-')[1];
-                                if (targetNum && targetNum !== 'AL') {
-                                    targetNum = parseInt(targetNum).toString(); // Remove leading zeros
-                                    var checkNum = parseInt(districtNum).toString();
-                                    return targetNum === checkNum;
-                                }
-                                
-                                return false;
-                            })
-                        };
-                        
-                        if (selectedFeatures.features.length > 0) {
-                            districtLayer = L.geoJSON(selectedFeatures, {
-                                style: function(feature) {
-                                    return {
-                                        fillColor: '#667eea',
-                                        fillOpacity: 0.2,
-                                        color: '#667eea',
-                                        weight: 3,
-                                        opacity: 0.8
-                                    };
-                                },
-                                onEachFeature: function(feature, layer) {
-                                    layer.bindPopup('<div style="text-align: center; padding: 8px;"><strong>' + selectedDistrict + '</strong></div>');
-                                }
-                            }).addTo(targetMap);
-                            
-                            console.log('✅ Loaded boundary for', selectedDistrict);
-                        } else {
-                            console.log('⚠️ No matching boundary found for', selectedDistrict);
-                        }
-                    })
-                    .catch(function(error) {
-                        console.log('⚠️ Could not load boundary file:', error.message);
-                    });
-            }
-        }
-
-        // MAIN FUNCTION - Find closest campuses  
+        // MAIN FUNCTION - Find closest campuses
         function findClosestCampuses() {
             console.log('🔄 WORKING: Starting findClosestCampuses...');
             
@@ -1554,7 +1011,7 @@
             console.log('🌎 EXPLORE: Starting national map exploration...');
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 63 competitive congressional districts across 25 states.</p></div>';
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 41 competitive congressional districts across 13 states.</p></div>';
             resultsContainer.style.display = 'block';
             
             var mapContainer = document.getElementById('mapContainer');
@@ -1564,7 +1021,7 @@
             
             setTimeout(function() {
                 var html = '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 30px; margin-top: -22px;">All 2026 Swing Districts (63 Total)</h2>';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 30px; margin-top: -22px;">All 2026 Swing Districts</h2>';
                 html += '</div>';
                 
                 resultsContainer.innerHTML = html;
@@ -1801,7 +1258,1093 @@
             }, 50);
         }
 
-        console.log("🎯 Drive Scout: Script fully loaded and ready!");
+        function loadDistrictBoundariesForMap(targetMap, selectedDistrict) {
+            var state = null;
+            for (var stateName in districtMappings) {
+                var districts = districtMappings[stateName];
+                for (var i = 0; i < districts.length; i++) {
+                    if (districts[i] === selectedDistrict) {
+                        state = stateName;
+                        break;
+                    }
+                }
+                if (state) break;
+            }
+            
+            if (!state) return;
+            
+            var boundaryFiles = {
+                'Alaska': 'data/boundaries/alaska_districts_119th.json',
+                'Arizona': 'data/boundaries/arizona_districts_119th.json',
+                'California': 'data/boundaries/california_districts_119th.json',
+                'Colorado': 'data/boundaries/colorado_districts_119th.json',
+                'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
+                'Florida': 'data/boundaries/florida_districts_119th.json',
+                'Illinois': 'data/boundaries/illinois_districts_119th.json',
+                'Michigan': 'data/boundaries/michigan_districts_119th.json',  // NEW
+                'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
+                'Nevada': 'data/boundaries/nevada_districts_119th.json',
+                'New York': 'data/boundaries/newyork_districts_119th.json',  // NEW
+                'Pennsylvania': 'data/boundaries/pennsylvania_districts_119th.json',
+                'Virginia': 'data/boundaries/virginia_districts_119th.json'
+            };
+            
+            var boundaryFile = boundaryFiles[state];
+            if (!boundaryFile) return;
+            
+            fetch(boundaryFile)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('Could not load boundary file: ' + response.status);
+                    }
+                    return response.json();
+                })
+                .then(function(geojsonData) {
+                    if (!geojsonData || !geojsonData.features) {
+                        return;
+                    }
+                    
+                    function districtStyle(feature) {
+                        var featureDistrictId = getDistrictId(feature);
+                        var districtInfo = districtData[featureDistrictId];
+                        var isSelected = selectedDistrict && featureDistrictId === selectedDistrict;
+                        
+                        if (!districtInfo) {
+                            return { opacity: 0, fillOpacity: 0 };
+                        }
+                        
+                        var color = '#666666';
+                        var fillColor = 'transparent';
+                        var weight = 2;
+                        var opacity = 0.7;
+                        var fillOpacity = 0.1;
+                        
+                        if (districtInfo.action === 'FLIP') {
+                            color = '#DC143C';
+                            weight = 3;
+                        } else if (districtInfo.action === 'HOLD') {
+                            color = '#4169E1';
+                            weight = 3;
+                        }
+                        
+                        if (isSelected) {
+                            weight = 5;
+                            opacity = 1.0;
+                            fillOpacity = 0.25;
+                            fillColor = color;
+                        }
+                        
+                        return {
+                            color: color,
+                            weight: weight,
+                            opacity: opacity,
+                            fillColor: fillColor,
+                            fillOpacity: fillOpacity
+                        };
+                    }
+                    
+                    function onEachDistrict(feature, layer) {
+                        var featureDistrictId = getDistrictId(feature);
+                        var districtInfo = districtData[featureDistrictId];
+                        var isSelected = selectedDistrict && featureDistrictId === selectedDistrict;
+                        
+                        if (districtInfo) {
+                            var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                            var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                            
+                            var distanceText = '';
+                            if (window.lastUserLocation && districtInfo.center) {
+                                var distance = calculateDistance(
+                                    window.lastUserLocation.lat, 
+                                    window.lastUserLocation.lng, 
+                                    districtInfo.center[0], 
+                                    districtInfo.center[1]
+                                );
+                                distanceText = '<div style="color: #666; font-size: 0.85rem; font-style: italic; margin: 2px 0 6px 0;">' + Math.round(distance) + ' miles away</div>';
+                            }
+                            
+                            var popupContent = '<div style="padding: 8px 12px; border-left: 4px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + '; margin: 0; line-height: 1.2;">';
+                            popupContent += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin: 0 0 2px 0;">' + featureDistrictId;
+                            if (isSelected) {
+                                popupContent += ' <span style="background: #4CAF50; color: white; padding: 1px 6px; border-radius: 8px; font-size: 0.7rem; margin-left: 4px;">CURRENT</span>';
+                            }
+                            popupContent += '</div>';
+                            popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
+                            popupContent += distanceText;
+                            popupContent += '<div style="text-align: center; margin: 6px 0 0 0;">';
+                            popupContent += '<button onclick="showCampusesFromPopup(\'' + featureDistrictId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
+                            popupContent += '</div></div>';
+                            
+                            layer.bindPopup(popupContent, { 
+                                maxWidth: 200, 
+                                className: 'compact-popup',
+                                closeButton: true,
+                                autoPan: true,
+                                offset: [0, -5]
+                            });
+                            
+                            if (!isSelected) {
+                                layer.on({
+                                    mouseover: function(e) {
+                                        layer.setStyle({
+                                            weight: 4,
+                                            opacity: 0.9
+                                        });
+                                    },
+                                    mouseout: function(e) {
+                                        layer.setStyle(districtStyle(feature));
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    
+                    districtLayer = L.geoJSON(geojsonData, {
+                        style: districtStyle,
+                        onEachFeature: onEachDistrict,
+                        filter: function(feature) {
+                            var featureDistrictId = getDistrictId(feature);
+                            return districtData.hasOwnProperty(featureDistrictId);
+                        }
+                    }).addTo(targetMap);
+                    
+                    targetMap.districtLayer = districtLayer;
+                })
+                .catch(function(error) {
+                    console.log('Error loading district boundaries:', error);
+                });
+        }
+
+        function loadAllSwingDistrictBoundaries() {
+            if (!map) return;
+            
+            if (map.allSwingDistrictLayer && arguments[0] !== 'force') {
+                return;
+            }
+            
+            if (map.allSwingDistrictLayer) {
+                map.removeLayer(map.allSwingDistrictLayer);
+                map.allSwingDistrictLayer = null;
+            }
+            
+            // Only load states that are visible or needed - optimize for performance
+            var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 'Michigan', 'New Jersey', 'Nevada', 'New York', 'Pennsylvania', 'Virginia'];
+            var allBoundariesData = { type: "FeatureCollection", features: [] };
+            var loadedStates = 0;
+            var failedStates = 0;
+            
+            var boundaryFiles = {
+                'Alaska': 'data/boundaries/alaska_districts_119th.json',
+                'Arizona': 'data/boundaries/arizona_districts_119th.json',
+                'California': 'data/boundaries/california_districts_119th.json',
+                'Colorado': 'data/boundaries/colorado_districts_119th.json',
+                'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
+                'Florida': 'data/boundaries/florida_districts_119th.json',
+                'Illinois': 'data/boundaries/illinois_districts_119th.json',
+                'Michigan': 'data/boundaries/michigan_districts_119th.json',
+                'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
+                'Nevada': 'data/boundaries/nevada_districts_119th.json',
+                'New York': 'data/boundaries/newyork_districts_119th.json',
+                'Pennsylvania': 'data/boundaries/pennsylvania_districts_119th.json',
+                'Virginia': 'data/boundaries/virginia_districts_119th.json'
+            };
+            
+            // Load all states in parallel with shorter timeout
+            var promises = [];
+            
+            for (var i = 0; i < statesToLoad.length; i++) {
+                var state = statesToLoad[i];
+                var boundaryFile = boundaryFiles[state];
+                if (boundaryFile) {
+                    var promise = fetch(boundaryFile)
+                        .then(function(response) {
+                            if (response.ok) {
+                                return response.json();
+                            }
+                            throw new Error('Failed to load');
+                        })
+                        .then(function(geojsonData) {
+                            if (geojsonData && geojsonData.features) {
+                                return geojsonData.features;
+                            }
+                            return [];
+                        })
+                        .catch(function(error) {
+                            console.log('Failed to load boundary file:', error);
+                            return [];
+                        });
+                    
+                    promises.push(promise);
+                }
+            }
+            
+            Promise.all(promises).then(function(results) {
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i] && results[i].length > 0) {
+                        allBoundariesData.features = allBoundariesData.features.concat(results[i]);
+                    }
+                }
+                
+                if (allBoundariesData.features.length > 0) {
+                    addAllSwingDistrictBoundaries(allBoundariesData);
+                }
+            });
+        }
+
+        function addAllSwingDistrictBoundaries(boundariesData) {
+            if (!map || !boundariesData || boundariesData.features.length === 0) return;
+            
+            function allSwingDistrictStyle(feature) {
+                var districtId = getDistrictId(feature);
+                var districtInfo = districtData[districtId];
+                
+                if (!districtInfo) {
+                    return { opacity: 0, fillOpacity: 0 };
+                }
+                
+                var color = '#666666';
+                var fillColor = 'transparent';
+                var weight = 2;
+                var opacity = 0.7;
+                var fillOpacity = 0.15;
+                
+                if (districtInfo.action === 'FLIP') {
+                    color = '#DC143C';
+                    fillColor = '#DC143C';
+                } else if (districtInfo.action === 'HOLD') {
+                    color = '#4169E1';
+                    fillColor = '#4169E1';
+                }
+                
+                return {
+                    color: color,
+                    weight: weight,
+                    opacity: opacity,
+                    fillColor: fillColor,
+                    fillOpacity: fillOpacity
+                };
+            }
+            
+            function onEachAllSwingDistrict(feature, layer) {
+                var districtId = getDistrictId(feature);
+                var districtInfo = districtData[districtId];
+                
+                if (districtInfo) {
+                    var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                    var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                    
+                    var distanceText = '';
+                    if (window.lastUserLocation && districtInfo.center) {
+                        var distance = calculateDistance(
+                            window.lastUserLocation.lat, 
+                            window.lastUserLocation.lng, 
+                            districtInfo.center[0], 
+                            districtInfo.center[1]
+                        );
+                        distanceText = '<div style="color: #666; font-size: 0.85rem; font-style: italic; margin: 2px 0 6px 0;">' + Math.round(distance) + ' miles away</div>';
+                    }
+                    
+                    var popupContent = '<div style="padding: 8px 12px; border-left: 4px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + '; margin: 0; line-height: 1.2;">';
+                    popupContent += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin: 0 0 2px 0;">' + districtId + '</div>';
+                    popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
+                    popupContent += distanceText;
+                    popupContent += '<div style="text-align: center; margin: 6px 0 0 0;">';
+                    popupContent += '<button onclick="showCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
+                    popupContent += '</div></div>';
+                    
+                    layer.bindPopup(popupContent, { 
+                        maxWidth: 200, 
+                        className: 'compact-popup',
+                        closeButton: true,
+                        autoPan: true,
+                        offset: [0, -5]
+                    });
+                    
+                    layer.on({
+                        mouseover: function(e) {
+                            layer.setStyle({
+                                weight: 3,
+                                opacity: 1.0,
+                                fillOpacity: 0.25
+                            });
+                        },
+                        mouseout: function(e) {
+                            layer.setStyle(allSwingDistrictStyle(feature));
+                        }
+                    });
+                }
+            }
+            
+            map.allSwingDistrictLayer = L.geoJSON(boundariesData, {
+                style: allSwingDistrictStyle,
+                onEachFeature: onEachAllSwingDistrict,
+                filter: function(feature) {
+                    var districtId = getDistrictId(feature);
+                    return districtData.hasOwnProperty(districtId);
+                }
+            }).addTo(map);
+        }
+
+        function displayCollegesWithoutMapInit(state, district) {
+            var collegeItems = document.getElementById('collegeItems');
+            var collegeList = document.getElementById('collegeList');
+            
+            showLoadingState(collegeItems, district);
+            collegeList.style.display = 'block';
+            
+            var mapContainer = document.getElementById('mapContainer');
+            if (mapContainer) mapContainer.style.display = 'block';
+
+            loadDistrictDataWithTimeout(district).then(function() {
+                var collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
+                
+                var allColleges = [];
+                var withinColleges = [];
+                var nearColleges = [];
+
+                if (Array.isArray(collegeDataForDistrict)) {
+                    allColleges = collegeDataForDistrict;
+                    withinColleges = collegeDataForDistrict;
+                } else if (collegeDataForDistrict && typeof collegeDataForDistrict === 'object') {
+                    withinColleges = collegeDataForDistrict.within || [];
+                    nearColleges = collegeDataForDistrict.near || [];
+                    allColleges = withinColleges.concat(nearColleges);
+                }
+                
+                allColleges = allColleges.filter(function(college) {
+                    return college && college.name && 
+                           college.lat !== null && college.lng !== null &&
+                           !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng));
+                });
+                
+                if (allColleges.length === 0) {
+                    showNoData(state, district);
+                } else {
+                    displayCollegeListWithSections(district, withinColleges, nearColleges);
+                    
+                    setTimeout(function() {
+                        addMarkersToMainMap(allColleges);
+                    }, 500);
+                }
+            }).catch(function(error) {
+                showNoData(state, district);
+            });
+        }
+
+        function fitMapToSelectedDistrict(selectedDistrict) {
+            if (!map || !districtLayer) {
+                if (selectedDistrict && districtData[selectedDistrict]) {
+                    var districtInfo = districtData[selectedDistrict];
+                    
+                    if (selectedDistrict === 'AK-AL') {
+                        map.setView([districtInfo.center[0], districtInfo.center[1]], 3);
+                        return;
+                    }
+                    
+                    map.setView([districtInfo.center[0], districtInfo.center[1]], 8);
+                }
+                return;
+            }
+            
+            if (selectedDistrict === 'AK-AL') {
+                var alaskaCenter = districtData['AK-AL'].center;
+                map.setView([alaskaCenter[0], alaskaCenter[1]], 3);
+                return;
+            }
+            
+            var selectedFeatures = [];
+            districtLayer.eachLayer(function(layer) {
+                if (layer.feature && layer.feature.properties) {
+                    var featureDistrictId = getDistrictId(layer.feature);
+                    if (featureDistrictId === selectedDistrict) {
+                        selectedFeatures.push(layer);
+                    }
+                }
+            });
+            
+            if (selectedFeatures.length > 0) {
+                var group = L.featureGroup(selectedFeatures);
+                var bounds = group.getBounds();
+                
+                var padding = [60, 60];
+                var maxZoom = 10;
+                
+                if (selectedDistrict === 'CA-13' || selectedDistrict === 'CO-03') {
+                    maxZoom = 9;
+                    padding = [70, 70];
+                }
+                
+                if (selectedDistrict.startsWith('CA-')) {
+                    maxZoom = 9;
+                    padding = [70, 70];
+                }
+                
+                if (selectedDistrict.startsWith('NJ-')) {
+                    maxZoom = 10;
+                    padding = [50, 50];
+                }
+                
+                if (selectedDistrict.startsWith('PA-') || selectedDistrict.startsWith('MI-') || selectedDistrict.startsWith('NY-')) {
+                    maxZoom = 9;
+                    padding = [60, 60];
+                }
+                
+                if (selectedDistrict.startsWith('VA-')) {
+                    maxZoom = 9;
+                    padding = [60, 60];
+                }
+                
+                map.fitBounds(bounds, { 
+                    padding: padding,
+                    maxZoom: maxZoom
+                });
+            }
+        }
+
+        function addMarkersToMainMap(colleges) {
+            if (!map || !colleges || colleges.length === 0) return;
+
+            clearMarkers();
+            
+            var group = L.featureGroup();
+
+            for (var i = 0; i < colleges.length; i++) {
+                var college = colleges[i];
+                if (!college.lat || !college.lng) continue;
+
+                var lat = parseFloat(college.lat);
+                var lng = parseFloat(college.lng);
+                
+                if (isNaN(lat) || isNaN(lng)) continue;
+
+                var iconColor = getSuitabilityColor(college.suitability);
+                
+                var marker = L.marker([lat, lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: '<div style="background-color: ' + iconColor + '; width: 20px; height: 20px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.3);"></div>',
+                        iconSize: [20, 20],
+                        iconAnchor: [10, 10]
+                    })
+                });
+
+                var popupContent = '<div style="text-align: center; padding: 4px;">' +
+                    '<div style="font-weight: bold; margin-bottom: 2px; color: #333; font-size: 0.9rem;">' + college.name + '</div>' +
+                    '<div style="font-size: 0.8rem; color: #666;">Rating: <strong>' + college.suitability + '</strong></div>' +
+                    '</div>';
+                marker.bindPopup(popupContent);
+                
+                marker.addTo(map);
+                group.addLayer(marker);
+                markers.push(marker);
+            }
+        }
+
+        // Helper functions
+        function calculateDistance(lat1, lng1, lat2, lng2) {
+            var R = 3959;
+            var dLat = (lat2 - lat1) * Math.PI / 180;
+            var dLng = (lng2 - lng1) * Math.PI / 180;
+            var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                      Math.sin(dLng/2) * Math.sin(dLng/2);
+            var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+            return R * c;
+        }
+
+        function clearAllResults() {
+            var closestDistrictsResults = document.getElementById('closestDistrictsResults');
+            if (closestDistrictsResults) {
+                closestDistrictsResults.innerHTML = '';
+                closestDistrictsResults.style.display = 'none';
+            }
+            
+            var closestCampusesResult = document.getElementById('closestCampusesResult');
+            if (closestCampusesResult) {
+                closestCampusesResult.style.display = 'none';
+                closestCampusesResult.innerHTML = '';
+            }
+            
+            var mainMapContainer = document.getElementById('mapContainer');
+            var mainCollegeList = document.getElementById('collegeList');
+            if (mainMapContainer) mainMapContainer.style.display = 'none';
+            if (mainCollegeList) mainCollegeList.style.display = 'none';
+        }
+
+        function clearMapAndList() {
+            var mainMapContainer = document.getElementById('mapContainer');
+            var mainCollegeList = document.getElementById('collegeList');
+            
+            if (mainMapContainer) {
+                mainMapContainer.style.display = 'none';
+            }
+            
+            if (mainCollegeList) {
+                mainCollegeList.style.display = 'none';
+            }
+            
+            if (map) {
+                clearMarkers();
+                if (districtLayer) {
+                    map.removeLayer(districtLayer);
+                    districtLayer = null;
+                }
+                if (map.allSwingDistrictLayer) {
+                    map.removeLayer(map.allSwingDistrictLayer);
+                    map.allSwingDistrictLayer = null;
+                }
+            }
+        }
+
+        function hideLocationSearchField() {
+            var locationInputSection = document.getElementById('locationInputSection');
+            if (locationInputSection && locationInputSection.style.display !== 'none') {
+                locationInputSection.style.display = 'none';
+            }
+        }
+
+        function clearMarkers() {
+            for (var i = 0; i < markers.length; i++) {
+                if (map && markers[i]) {
+                    map.removeLayer(markers[i]);
+                }
+            }
+            markers = [];
+            
+            if (userLocationMarker && map) {
+                map.removeLayer(userLocationMarker);
+                userLocationMarker = null;
+            }
+        }
+
+        function showLoadingState(container, district) {
+            container.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading ' + district + ' college data...</h3><p>Using CSV latitude/longitude coordinates for accuracy.</p></div>';
+        }
+
+        function showNoData(state, district) {
+            var collegeItems = document.getElementById('collegeItems');
+            var collegeList = document.getElementById('collegeList');
+            
+            if (!collegeItems || !collegeList) return;
+            
+            collegeItems.innerHTML = 
+                '<div class="no-data">' +
+                    '<h3>Ready for ' + district + ' data</h3>' +
+                    '<p><strong>To add your data:</strong></p>' +
+                    '<ol style="text-align: left; max-width: 500px; margin: 20px auto;">' +
+                        '<li>Export the <strong>' + district + '</strong> tab from your Google Sheet as CSV</li>' +
+                        '<li>Name the file <strong>' + district + '.csv</strong></li>' +
+                        '<li>Upload it to a <strong>data/</strong> folder on your website</li>' +
+                        '<li>Include Latitude and Longitude columns with precise coordinates</li>' +
+                        '<li>The app will automatically use CSV coordinates (no geocoding needed)</li>' +
+                    '</ol>' +
+                    '<p style="margin-top: 20px;"><em>This district is mapped but waiting for CSV data with lat/lng coordinates.</em></p>' +
+                '</div>';
+            collegeList.style.display = 'block';
+        }
+
+        function loadDistrictDataWithTimeout(district) {
+            return new Promise(function(resolve, reject) {
+                var state = null;
+                for (var stateName in districtMappings) {
+                    var districts = districtMappings[stateName];
+                    for (var i = 0; i < districts.length; i++) {
+                        if (districts[i] === district) {
+                            state = stateName;
+                            break;
+                        }
+                    }
+                    if (state) break;
+                }
+                
+                if (!state) {
+                    resolve();
+                    return;
+                }
+                
+                if (collegeData[state] && collegeData[state][district] && 
+                    collegeData[state][district].length > 0) {
+                    resolve();
+                    return;
+                }
+
+                var possibleFilenames = [
+                    'data/' + district + '.csv',
+                    'data/' + district.replace('-', '') + '.csv',
+                    district + '.csv',
+                    district.replace('-', '') + '.csv'
+                ];
+
+                var loadPromise = Promise.resolve();
+                var csvText = null;
+                var successfulUrl = null;
+
+                for (var i = 0; i < possibleFilenames.length; i++) {
+                    var filename = possibleFilenames[i];
+                    loadPromise = loadPromise.then(function(currentFilename) {
+                        return function() {
+                            if (csvText) return;
+                            
+                            var timeoutPromise = new Promise(function(_, reject) {
+                                setTimeout(function() {
+                                    reject(new Error('Timeout after 3 seconds'));
+                                }, 3000);
+                            });
+                            
+                            return Promise.race([fetch(currentFilename), timeoutPromise])
+                                .then(function(response) {
+                                    if (response.ok) {
+                                        return response.text().then(function(text) {
+                                            csvText = text;
+                                            successfulUrl = currentFilename;
+                                        });
+                                    }
+                                })
+                                .catch(function(error) {
+                                    // Ignore individual fetch errors
+                                });
+                        };
+                    }(filename));
+                }
+
+                loadPromise.then(function() {
+                    if (!csvText) {
+                        resolve();
+                        return;
+                    }
+
+                    parseCSV(csvText, district).then(function(colleges) {
+                        if (state && colleges) {
+                            if (!collegeData[state]) collegeData[state] = {};
+                            collegeData[state][district] = colleges;
+                        }
+                        resolve();
+                    }).catch(function(error) {
+                        resolve();
+                    });
+                }).catch(function(error) {
+                    resolve();
+                });
+            });
+        }
+
+        function parseCSV(csvText, district) {
+            return new Promise(function(resolve) {
+                var lines = csvText.split('\n').filter(function(line) {
+                    return line.trim();
+                });
+                
+                if (lines.length < 2) {
+                    resolve({ within: [], near: [] });
+                    return;
+                }
+
+                var colleges = { within: [], near: [] };
+                var headers = [];
+                var headerRowFound = false;
+
+                for (var i = 0; i < lines.length; i++) {
+                    var line = lines[i].trim().replace(/\r$/, '');
+                    var values = parseCSVLine(line);
+                    
+                    if (values.length === 0 || values.every(function(v) { return !v || v.trim() === ''; })) {
+                        continue;
+                    }
+
+                    if (!headerRowFound) {
+                        headers = values.map(function(h) { return h ? h.trim() : ''; });
+                        headerRowFound = true;
+                        continue;
+                    }
+
+                    var college = parseCollegeData(values, headers, district);
+                    
+                    if (college && college.name && 
+                        college.lat !== null && college.lng !== null &&
+                        !isNaN(parseFloat(college.lat)) && !isNaN(parseFloat(college.lng))) {
+                        
+                        if (!college.suitability || college.suitability === '') {
+                            college.suitability = calculateDriveRating(college);
+                        }
+                        
+                        if (college.suitability !== 'EXCLUDE') {
+                            var targetSection = college.section === 'near' ? 'near' : 'within';
+                            colleges[targetSection].push(college);
+                        }
+                    }
+                }
+
+                resolve(colleges);
+            });
+        }
+
+        function parseCSVLine(line) {
+            var result = [];
+            var current = '';
+            var inQuotes = false;
+            var i = 0;
+
+            while (i < line.length) {
+                var char = line[i];
+                
+                if (char === '"') {
+                    if (inQuotes && line[i + 1] === '"') {
+                        current += '"';
+                        i += 2;
+                        continue;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    result.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+                i++;
+            }
+            
+            result.push(current.trim());
+            return result.map(function(item) {
+                return item.replace(/^"|"$/g, '');
+            });
+        }
+
+        function parseCollegeData(values, headers, district) {
+            var college = {
+                name: '',
+                district: district,
+                section: 'within',
+                enrollment: '2000',
+                campusSize: null,
+                suitability: '',
+                type: 'College',
+                lat: null,
+                lng: null,
+                notes: '',
+                address: ''
+            };
+
+            for (var j = 0; j < headers.length; j++) {
+                var header = headers[j] ? headers[j].trim() : '';
+                var value = values[j] ? values[j].trim() : '';
+                
+                if (!header) continue;
+
+                var headerLower = header.toLowerCase();
+                
+                if (headerLower === 'section') {
+                    college.section = value.toLowerCase().includes('near') ? 'near' : 'within';
+                } else if (headerLower === 'institution') {
+                    college.name = value;
+                } else if (headerLower === 'type') {
+                    college.type = value;
+                } else if (headerLower === 'address') {
+                    college.address = value;
+                } else if (headerLower === 'latitude') {
+                    var latValue = parseFloat(value);
+                    if (!isNaN(latValue) && latValue >= -90 && latValue <= 90) {
+                        college.lat = latValue;
+                    }
+                } else if (headerLower === 'longitude') {
+                    var lngValue = parseFloat(value);
+                    if (!isNaN(lngValue) && lngValue >= -180 && lngValue <= 180) {
+                        college.lng = lngValue;
+                    }
+                } else if (headerLower === 'enrollment') {
+                    college.enrollment = value;
+                } else if (headerLower === 'campus size') {
+                    var campusSizeValue = parseFloat(value);
+                    if (!isNaN(campusSizeValue)) {
+                        college.campusSize = campusSizeValue;
+                    }
+                } else if (headerLower === 'suitability') {
+                    if (value && value.trim() !== '') {
+                        college.suitability = value.trim();
+                    }
+                } else if (headerLower === 'notes') {
+                    college.notes = value;
+                }
+            }
+
+            return college;
+        }
+
+        function calculateDriveRating(college) {
+            var score = 0;
+            var type = (college.type || '').toLowerCase();
+            var notes = (college.notes || '').toLowerCase();
+            
+            if (type.includes('online') || type.includes('virtual') || 
+                notes.includes('online') || notes.includes('virtual')) {
+                return 'EXCLUDE';
+            }
+            
+            if (type.includes('building-only') || notes.includes('building-only')) {
+                return 'EXCLUDE';
+            }
+            
+            var enrollmentStr = String(college.enrollment || '0');
+            var enrollment = parseInt(enrollmentStr.replace(/,/g, '')) || 0;
+            
+            if (enrollment >= 5000) score += 40;
+            else if (enrollment >= 2000) score += 25;
+            else if (enrollment >= 1000) score += 15;
+            
+            if (type.includes('community')) score += 30;
+            else if (type.includes('public')) score += 20;
+            else if (type.includes('university')) score += 15;
+            
+            var campusSize = parseFloat(college.campusSize) || 0;
+            if (campusSize >= 50) score += 20;
+            else if (campusSize >= 25) score += 15;
+            else if (campusSize >= 10) score += 10;
+            
+            if (score >= 60) return 'High';
+            else if (score >= 30) return 'Medium';
+            else return 'Low';
+        }
+
+        function displayCollegeListWithSections(district, withinColleges, nearColleges) {
+            var container = document.getElementById('collegeItems');
+            if (!container) return;
+            
+            container.innerHTML = '';
+
+            if (withinColleges.length > 0) {
+                var withinSection = document.createElement('div');
+                withinSection.innerHTML = '<h2 style="margin-bottom: 20px; color: white; border-bottom: 2px solid #667eea; padding-bottom: 10px;">COLLEGES IN ' + district + '</h2>';
+                container.appendChild(withinSection);
+
+                for (var i = 0; i < withinColleges.length; i++) {
+                    var collegeElement = createCollegeElement(withinColleges[i]);
+                    container.appendChild(collegeElement);
+                }
+            }
+
+            if (nearColleges.length > 0) {
+                var nearSection = document.createElement('div');
+                nearSection.innerHTML = '<h2 style="margin: 40px 0 20px 0; color: white; border-bottom: 2px solid #764ba2; padding-bottom: 10px;">COLLEGES NEAR ' + district + '</h2>';
+                container.appendChild(nearSection);
+
+                for (var i = 0; i < nearColleges.length; i++) {
+                    var collegeElement = createCollegeElement(nearColleges[i]);
+                    container.appendChild(collegeElement);
+                }
+            }
+        }
+
+        function createCollegeElement(college) {
+            var div = document.createElement('div');
+            div.className = 'college-item';
+            
+            var addressDisplay = college.address || 'Address not available';
+            var district = college.district || 'Unknown';
+            var collegeName = college.name || 'College';
+            var state = district.split('-')[0] || 'XX';
+            var districtCode = district.replace('-', '');
+            
+            var distanceText = '';
+            if (window.lastUserLocation && college.lat && college.lng) {
+                var distance = calculateDistance(
+                    window.lastUserLocation.lat, 
+                    window.lastUserLocation.lng, 
+                    parseFloat(college.lat), 
+                    parseFloat(college.lng)
+                );
+                distanceText = '<div style="color: #666; font-size: 0.8rem; font-style: italic; margin-top: 2px;"><em>' + Math.round(distance) + ' miles away</em></div>';
+            }
+            
+            div.innerHTML = '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin-bottom: 4px;">' + college.name + '</div>' +
+                '<div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">' +
+                    '<div style="flex: 1; text-align: left;">' +
+                        '<div style="color: #666; font-size: 0.85rem; line-height: 1.2;">' + addressDisplay + '</div>' +
+                        distanceText +
+                    '</div>' +
+                    '<div style="margin-left: 15px; flex-shrink: 0; text-align: right;">' +
+                        '<div style="font-size: 0.75rem; color: #666; font-weight: 600; margin-bottom: 2px;">DRIVE RATING:</div>' +
+                        '<span class="suitability-badge suitability-' + college.suitability.toLowerCase() + '" style="font-size: 0.75rem; padding: 3px 8px;">' + college.suitability + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div style="display: flex; gap: 8px;">' +
+                    '<a href="https://www.google.com/maps/search/' + encodeURIComponent(addressDisplay) + '" target="_blank" class="btn btn-primary" style="padding: 4px 10px; font-size: 0.75rem;">🗺️ Directions</a>' +
+                    '<button class="btn btn-tertiary" onclick="openMobilizeWithAutoFill(\'' + district + '\', \'' + collegeName.replace(/'/g, "\\'") + '\', \'' + state + '\', \'' + districtCode + '\')" style="padding: 4px 10px; font-size: 0.75rem;">🗳️ Set Up Voter Drive</button>' +
+                '</div>';
+
+            return div;
+        }
+
+        function openMobilizeWithAutoFill(district, collegeName, state, districtCode) {
+            var title = district + ' - ' + collegeName + ' - Register Democrats to save the world!';
+            
+            window.open('https://www.mobilize.us/dashboard/ft6/event-campaign/699/', '_blank');
+            
+            setTimeout(function() {
+                alert('Drive Scout Tip: After the Mobilize form loads, look for:\n\n' +
+                      '📝 Default title: Paste this text:\n"' + title + '"\n\n' +
+                      '🏷️ Tag options: Add these tags:\n"Drive", "' + state + '", "' + districtCode + '"');
+            }, 1000);
+        }
+
+        function getSuitabilityColor(suitability) {
+            switch (suitability) {
+                case 'High': return '#28a745';
+                case 'Medium': return '#ffc107';
+                case 'Low': return '#dc3545';
+                default: return '#6c757d';
+            }
+        }
+
+        function getDistrictId(feature) {
+            if (!feature.properties) return null;
+            
+            var props = feature.properties;
+            var districtId = null;
+            
+            if (props.DISTRICT) {
+                districtId = props.DISTRICT;
+            } else if (props.CD118FP) {
+                districtId = props.CD118FP;
+            } else if (props.CD119FP) {
+                districtId = props.CD119FP;
+            } else if (props.NAMELSAD) {
+                var match = props.NAMELSAD.match(/Congressional District (\d+)/);
+                if (match) {
+                    var state = getStateAbbreviation(props);
+                    districtId = state + '-' + match[1].padStart(2, '0');
+                }
+            } else if (props.NAME) {
+                districtId = props.NAME;
+            } else if (props.GEOID) {
+                districtId = props.GEOID;
+            }
+            
+            if (districtId && /^\d+$/.test(districtId)) {
+                var state = getStateAbbreviation(props);
+                
+                if (state === 'AK' && districtId === '00') {
+                    districtId = 'AK-AL';
+                } else {
+                    districtId = state + '-' + districtId.padStart(2, '0');
+                }
+            }
+            
+            return districtId;
+        }
+        
+        function getStateAbbreviation(properties) {
+            if (properties.STATEFP) {
+                var stateMap = {
+                    '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
+                    '09': 'CT', '12': 'FL', '17': 'IL', '26': 'MI',
+                    '32': 'NV', '34': 'NJ', '36': 'NY', '42': 'PA', 
+                    '51': 'VA'
+                };
+                return stateMap[properties.STATEFP] || 'XX';
+            }
+            
+            if (properties.GEOID && properties.GEOID.length >= 2) {
+                var stateCode = properties.GEOID.substring(0, 2);
+                var stateMap = {
+                    '02': 'AK', '04': 'AZ', '06': 'CA', '08': 'CO', 
+                    '09': 'CT', '12': 'FL', '17': 'IL', '26': 'MI',
+                    '32': 'NV', '34': 'NJ', '36': 'NY', '42': 'PA', 
+                    '51': 'VA'
+                };
+                return stateMap[stateCode] || 'XX';
+            }
+            
+            return 'XX';
+        }
+
+        // Initialize the app
+        function init() {
+            console.log('🎯 Drive Scout: App initialized with all 41 swing districts');
+            
+            for (var state in districtMappings) {
+                collegeData[state] = {};
+                var districts = districtMappings[state];
+                for (var i = 0; i < districts.length; i++) {
+                    collegeData[state][districts[i]] = [];
+                }
+            }
+        }
+
+        // Start the app when DOM loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎯 Drive Scout: DOM loaded, initializing with all districts...');
+            
+            setTimeout(function() {
+                init();
+            }, 100);
+        });
+
+        // Global function for popup buttons
+        window.showCampusesFromPopup = function(districtId) {
+            console.log('🎯 BUTTON CLICK: showCampusesFromPopup called for:', districtId);
+            
+            if (map) map.closePopup();
+            
+            var foundState = null;
+            for (var state in districtMappings) {
+                var districts = districtMappings[state];
+                for (var i = 0; i < districts.length; i++) {
+                    if (districts[i] === districtId) {
+                        foundState = state;
+                        break;
+                    }
+                }
+                if (foundState) break;
+            }
+            
+            if (!foundState) {
+                console.log('❌ POPUP: State not found for district:', districtId);
+                alert('Error: Could not find state for district ' + districtId);
+                return;
+            }
+            
+            console.log('✅ POPUP: Found state', foundState, 'for district', districtId);
+            
+            var resultContainer = document.getElementById('closestCampusesResult');
+            if (resultContainer) {
+                var districtInfo = districtData[districtId];
+                var partyBackgroundColor = districtInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                var partyBorderColor = districtInfo.party === 'D' ? '#2196f3' : '#f44336';
+                
+                var distanceText = '';
+                if (window.lastUserLocation) {
+                    var distance = calculateDistance(
+                        window.lastUserLocation.lat, 
+                        window.lastUserLocation.lng, 
+                        districtInfo.center[0], 
+                        districtInfo.center[1]
+                    );
+                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
+                }
+                
+                resultContainer.innerHTML = 
+                    '<div style="background: ' + partyBackgroundColor + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorderColor + '; margin: 6px 0 0 0 !important;">' +
+                        '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">' +
+                            'Swing district: ' + districtId +
+                        '</div>' +
+                        '<div style="color: #666; margin-bottom: 0;">' +
+                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                        '</div>' +
+                    '</div>';
+                resultContainer.style.display = 'block';
+            }
+            
+            var closestDistrictsResults = document.getElementById('closestDistrictsResults');
+            if (closestDistrictsResults) {
+                closestDistrictsResults.style.display = 'none';
+            }
+            
+            displayCollegesWithoutMapInit(foundState, districtId);
+        };
+
+        showCampusesFromPopup = window.showCampusesFromPopup;
+
+        console.log("🎯 Drive Scout loaded successfully with 41 total swing districts!");
     </script>
 </body>
 </html>
