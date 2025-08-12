@@ -1283,10 +1283,13 @@
                     map.selectedDistrict = selectedDistrict;
                     map.selectedState = state;
                     
+                    // Update the global current selected district
                     currentSelectedDistrict = selectedDistrict;
 
+                    // Load all districts first (with normal styling)
                     loadAllSwingDistrictBoundaries();
                     
+                    // Then load the selected state's districts with the selected one highlighted
                     setTimeout(function() {
                         loadDistrictBoundariesForMap(map, selectedDistrict);
                     }, 500);
@@ -1295,9 +1298,21 @@
                         var currentZoom = map.getZoom();
                         
                         if (currentZoom <= 6 && districtBoundariesVisible) {
+                            // At zoomed out view, show all districts
                             loadAllSwingDistrictBoundaries();
+                            // Remove state-specific layer when zoomed out
+                            if (districtLayer) {
+                                map.removeLayer(districtLayer);
+                                districtLayer = null;
+                            }
                         } else if (currentZoom > 6 && districtBoundariesVisible && selectedDistrict) {
+                            // At zoomed in view, show state districts with selection highlighted
                             loadDistrictBoundariesForMap(map, selectedDistrict);
+                            // Remove the all-districts layer when zoomed in
+                            if (map.allSwingDistrictLayer) {
+                                map.removeLayer(map.allSwingDistrictLayer);
+                                map.allSwingDistrictLayer = null;
+                            }
                         }
                     });
 
@@ -1309,6 +1324,12 @@
         }
 
         function loadDistrictBoundariesForMap(targetMap, selectedDistrict) {
+            // First, remove existing district layer to ensure clean slate
+            if (districtLayer) {
+                targetMap.removeLayer(districtLayer);
+                districtLayer = null;
+            }
+            
             var state = null;
             for (var stateName in districtMappings) {
                 var districts = districtMappings[stateName];
@@ -1377,22 +1398,23 @@
                             return { opacity: 0, fillOpacity: 0 };
                         }
                         
+                        // Default styling for non-selected districts
                         var color = '#666666';
                         var fillColor = 'transparent';
                         var weight = 2;
                         var opacity = 0.7;
                         var fillOpacity = 0.1;
                         
+                        // Color based on action but normal weight for non-selected
                         if (districtInfo.action === 'FLIP') {
                             color = '#DC143C';
-                            weight = 3;
                         } else if (districtInfo.action === 'HOLD') {
                             color = '#4169E1';
-                            weight = 3;
                         }
                         
+                        // Override styling only for the selected district
                         if (isSelected) {
-                            weight = 5;
+                            weight = 5;  // Thicker border only for selected
                             opacity = 1.0;
                             fillOpacity = 0.25;
                             fillColor = color;
@@ -1673,6 +1695,20 @@
             
             var mapContainer = document.getElementById('mapContainer');
             if (mapContainer) mapContainer.style.display = 'block';
+
+            // Update the global current selected district when showing colleges without map init
+            currentSelectedDistrict = district;
+            
+            // If map exists, update district boundaries to highlight the new selection
+            if (map && districtBoundariesVisible) {
+                // Remove old district layer
+                if (districtLayer) {
+                    map.removeLayer(districtLayer);
+                    districtLayer = null;
+                }
+                // Reload with new selection
+                loadDistrictBoundariesForMap(map, district);
+            }
 
             loadDistrictDataWithTimeout(district).then(function() {
                 var collegeDataForDistrict = collegeData[state] && collegeData[state][district] ? collegeData[state][district] : [];
