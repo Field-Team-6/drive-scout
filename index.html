@@ -956,7 +956,7 @@
             }
         }
 
-        // Find closest districts
+        // Find closest districts with ZIP code fallback
         function findClosestDistricts() {
             hideLocationSearchField();
             clearMapAndList();
@@ -968,34 +968,80 @@
 
             navigator.geolocation.getCurrentPosition(
                 function(position) {
-                    var userLat = position.coords.latitude;
-                    var userLng = position.coords.longitude;
-                    window.lastUserLocation = { lat: userLat, lng: userLng };
-                    
-                    var districtDistances = [];
-                    for (var districtId in districtData) {
-                        var data = districtData[districtId];
-                        var distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
-                        districtDistances.push({
-                            id: districtId,
-                            distance: distance,
-                            data: data
-                        });
-                    }
-                    
-                    districtDistances.sort(function(a, b) {
-                        return a.distance - b.distance;
-                    });
-                    
-                    window.allDistrictsByDistance = districtDistances;
-                    window.currentlyDisplayed = 0;
-                    
-                    displayDistrictResults(0, 5);
+                    // Success - got user's location
+                    processDistrictsLocation(position.coords.latitude, position.coords.longitude);
                 },
                 function(error) {
-                    resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Location Error</h3><p>Unable to get your location: ' + error.message + '</p></div>';
+                    // Error or denied - ask for ZIP code
+                    resultsContainer.innerHTML = '';
+                    resultsContainer.style.display = 'none';
+                    
+                    var zipCode = prompt('Please enter your ZIP code to find the closest swing districts:');
+                    if (zipCode && zipCode.trim()) {
+                        findClosestDistrictsByZip(zipCode.trim());
+                    }
                 }
             );
+        }
+
+        // New function to handle ZIP code lookup for districts
+        function findClosestDistrictsByZip(zipCode) {
+            console.log('🔄 WORKING: Finding closest districts by ZIP code:', zipCode);
+            
+            var resultsContainer = document.getElementById('closestDistrictsResults');
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding closest swing districts...</h3><p>Looking up ZIP code location.</p></div>';
+            resultsContainer.style.display = 'block';
+            
+            // Use OpenStreetMap Nominatim API to geocode the ZIP code
+            var geocodeUrl = 'https://nominatim.openstreetmap.org/search?format=json&postalcode=' + encodeURIComponent(zipCode) + '&country=USA';
+            
+            fetch(geocodeUrl)
+                .then(function(response) {
+                    return response.json();
+                })
+                .then(function(data) {
+                    if (data && data.length > 0) {
+                        var location = data[0];
+                        var lat = parseFloat(location.lat);
+                        var lng = parseFloat(location.lon);
+                        
+                        console.log('✅ Found ZIP code location:', lat, lng);
+                        processDistrictsLocation(lat, lng);
+                    } else {
+                        resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>ZIP Code Not Found</h3><p>Could not find location for ZIP code: ' + zipCode + '. Please try again.</p></div>';
+                    }
+                })
+                .catch(function(error) {
+                    console.log('❌ Error geocoding ZIP code:', error);
+                    resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Search Error</h3><p>Unable to look up ZIP code. Please try again.</p></div>';
+                });
+        }
+
+        // Extracted function to process location and find closest districts
+        function processDistrictsLocation(userLat, userLng) {
+            var resultsContainer = document.getElementById('closestDistrictsResults');
+            
+            window.lastUserLocation = { lat: userLat, lng: userLng };
+            
+            var districtDistances = [];
+            for (var districtId in districtData) {
+                var data = districtData[districtId];
+                var distance = calculateDistance(userLat, userLng, data.center[0], data.center[1]);
+                districtDistances.push({
+                    id: districtId,
+                    distance: distance,
+                    data: data
+                });
+            }
+            
+            districtDistances.sort(function(a, b) {
+                return a.distance - b.distance;
+            });
+            
+            window.allDistrictsByDistance = districtDistances;
+            window.currentlyDisplayed = 0;
+            
+            displayDistrictResults(0, 5);
         }
 
         function displayDistrictResults(startIndex, count) {
