@@ -692,6 +692,8 @@
         var districtBoundariesVisible = true;
         var districtLayer = null;
         var currentSelectedDistrict = null;
+        var savedZipCode = null;  // Store ZIP code for reuse
+        var savedZipLocation = null;  // Store geocoded location for reuse
         
         // District data - UPDATED WITH ALL 63 DISTRICTS (41 original + 22 new)
         var districtData = {
@@ -836,13 +838,20 @@
                     processUserLocation(position.coords.latitude, position.coords.longitude);
                 },
                 function(error) {
-                    // Error or denied - ask for ZIP code
+                    // Error or denied - check for saved ZIP first
                     btn.innerHTML = '🔍 Find closest swing district campuses!';
                     btn.disabled = false;
                     
-                    var zipCode = prompt('Please enter your ZIP code to find the closest swing district:');
-                    if (zipCode && zipCode.trim()) {
-                        findClosestCampusesByZip(zipCode.trim());
+                    if (savedZipLocation) {
+                        // Reuse saved ZIP location
+                        console.log('✅ Reusing saved ZIP code location:', savedZipCode);
+                        processUserLocation(savedZipLocation.lat, savedZipLocation.lng);
+                    } else {
+                        // Ask for ZIP code
+                        var zipCode = prompt('Please enter your ZIP code to find the closest swing district:');
+                        if (zipCode && zipCode.trim()) {
+                            findClosestCampusesByZip(zipCode.trim());
+                        }
                     }
                 }
             );
@@ -855,6 +864,13 @@
             var btn = document.getElementById('findClosestCampusesBtn');
             btn.innerHTML = '🔍 Finding closest swing district...';
             btn.disabled = true;
+            
+            // Check if we already geocoded this ZIP
+            if (savedZipCode === zipCode && savedZipLocation) {
+                console.log('✅ Reusing cached location for ZIP:', zipCode);
+                processUserLocation(savedZipLocation.lat, savedZipLocation.lng);
+                return;
+            }
             
             // Use OpenStreetMap Nominatim API to geocode the ZIP code
             var geocodeUrl = 'https://nominatim.openstreetmap.org/search?format=json&postalcode=' + encodeURIComponent(zipCode) + '&country=USA';
@@ -870,6 +886,11 @@
                         var lng = parseFloat(location.lon);
                         
                         console.log('✅ Found ZIP code location:', lat, lng);
+                        
+                        // Save ZIP and location for reuse
+                        savedZipCode = zipCode;
+                        savedZipLocation = { lat: lat, lng: lng };
+                        
                         processUserLocation(lat, lng);
                     } else {
                         alert('Could not find location for ZIP code: ' + zipCode + '. Please try again.');
@@ -972,13 +993,22 @@
                     processDistrictsLocation(position.coords.latitude, position.coords.longitude);
                 },
                 function(error) {
-                    // Error or denied - ask for ZIP code
+                    // Error or denied - check for saved ZIP first
                     resultsContainer.innerHTML = '';
                     resultsContainer.style.display = 'none';
                     
-                    var zipCode = prompt('Please enter your ZIP code to find the closest swing districts:');
-                    if (zipCode && zipCode.trim()) {
-                        findClosestDistrictsByZip(zipCode.trim());
+                    if (savedZipLocation) {
+                        // Reuse saved ZIP location
+                        console.log('✅ Reusing saved ZIP code location:', savedZipCode);
+                        resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding closest swing districts...</h3><p>Using your saved ZIP code location.</p></div>';
+                        resultsContainer.style.display = 'block';
+                        processDistrictsLocation(savedZipLocation.lat, savedZipLocation.lng);
+                    } else {
+                        // Ask for ZIP code
+                        var zipCode = prompt('Please enter your ZIP code to find the closest swing districts:');
+                        if (zipCode && zipCode.trim()) {
+                            findClosestDistrictsByZip(zipCode.trim());
+                        }
                     }
                 }
             );
@@ -989,6 +1019,16 @@
             console.log('🔄 WORKING: Finding closest districts by ZIP code:', zipCode);
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
+            
+            // Check if we already geocoded this ZIP
+            if (savedZipCode === zipCode && savedZipLocation) {
+                console.log('✅ Reusing cached location for ZIP:', zipCode);
+                resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding closest swing districts...</h3><p>Using your saved ZIP code location.</p></div>';
+                resultsContainer.style.display = 'block';
+                processDistrictsLocation(savedZipLocation.lat, savedZipLocation.lng);
+                return;
+            }
+            
             resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding closest swing districts...</h3><p>Looking up ZIP code location.</p></div>';
             resultsContainer.style.display = 'block';
             
@@ -1006,6 +1046,11 @@
                         var lng = parseFloat(location.lon);
                         
                         console.log('✅ Found ZIP code location:', lat, lng);
+                        
+                        // Save ZIP and location for reuse
+                        savedZipCode = zipCode;
+                        savedZipLocation = { lat: lat, lng: lng };
+                        
                         processDistrictsLocation(lat, lng);
                     } else {
                         resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>ZIP Code Not Found</h3><p>Could not find location for ZIP code: ' + zipCode + '. Please try again.</p></div>';
