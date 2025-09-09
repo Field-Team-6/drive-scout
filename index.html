@@ -621,12 +621,12 @@
             
             <div class="faq-item">
                 <div class="faq-question">What is Drive Scout?</div>
-                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives — in the 63 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
+                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives – in the 61 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
             </div>
             
             <div class="faq-item">
                 <div class="faq-question">Do I need to get permission from a college before holding a voter drive?</div>
-                <div class="faq-answer">You do not! Voter registration is constitutionally protected activity — and a public service. Usually, all is good. Rarely, they ask us to leave, which we do politely, and go find another campus.</div>
+                <div class="faq-answer">You do not! Voter registration is constitutionally protected activity – and a public service. Usually, all is good. Rarely, they ask us to leave, which we do politely, and go find another campus.</div>
             </div>
             
             <div class="faq-item">
@@ -681,7 +681,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        console.log("🎯 Drive Scout: Loading with all 63 districts including new additions");
+        console.log("🎯 Drive Scout: Loading with all 61 districts");
         
         // Global variables
         var map;
@@ -695,7 +695,7 @@
         var savedZipCode = null;  // Store ZIP code for reuse
         var savedZipLocation = null;  // Store geocoded location for reuse
         
-        // District data - UPDATED WITH ALL 63 DISTRICTS (41 original + 22 new)
+        // District data - UPDATED WITH 61 DISTRICTS (NH REMOVED)
         var districtData = {
             // Alaska
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
@@ -725,48 +725,45 @@
             // Illinois
             'IL-06': { rep: 'Sean Casten', party: 'D', action: 'HOLD', center: [41.8781, -88.0074] },
             'IL-17': { rep: 'Eric Sorensen', party: 'D', action: 'HOLD', center: [41.2519, -90.5775] },
-            // Indiana - NEW
+            // Indiana
             'IN-01': { rep: 'Frank Mrvan', party: 'D', action: 'HOLD', center: [41.5894, -87.3353] },
-            // Iowa - NEW
+            // Iowa
             'IA-01': { rep: 'Mariannette Miller-Meeks', party: 'R', action: 'FLIP', center: [41.6611, -91.5302] },
             'IA-03': { rep: 'Zach Nunn', party: 'R', action: 'FLIP', center: [41.5868, -93.6250] },
-            // Maine - NEW
+            // Maine
             'ME-02': { rep: 'Jared Golden', party: 'D', action: 'HOLD', center: [45.2538, -69.4455] },
-            // Maryland - NEW
+            // Maryland
             'MD-06': { rep: 'April McClain Delaney', party: 'D', action: 'HOLD', center: [39.6428, -77.7200] },
             // Michigan
             'MI-07': { rep: 'Tom Barrett', party: 'R', action: 'FLIP', center: [42.5803, -84.2436] },
             'MI-08': { rep: 'Kristen McDonald Rivet', party: 'D', action: 'HOLD', center: [43.0125, -83.6875] },
             'MI-10': { rep: 'John James', party: 'R', action: 'FLIP', center: [42.8701, -82.8854] },
-            // Montana - NEW
+            // Montana
             'MT-01': { rep: 'Ryan Zinke', party: 'R', action: 'FLIP', center: [48.1920, -114.3168] },
-            // Nebraska - NEW
+            // Nebraska
             'NE-02': { rep: 'Don Bacon', party: 'R', action: 'FLIP', center: [41.2565, -95.9345] },
             // Nevada
             'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398] },
             'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656] },
             'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640] },
-            // New Hampshire - NEW
-            'NH-01': { rep: 'Chris Pappas', party: 'D', action: 'HOLD', center: [43.0059, -71.0132] },
-            'NH-02': { rep: 'Annie Kuster', party: 'D', action: 'HOLD', center: [43.6425, -72.2534] },
             // New Jersey
             'NJ-03': { rep: 'Herb Conaway', party: 'D', action: 'HOLD', center: [39.9751, -74.6114] },
             'NJ-07': { rep: 'Thomas Kean Jr.', party: 'R', action: 'FLIP', center: [40.7357, -74.8331] },
             'NJ-09': { rep: 'Nellie Pou', party: 'D', action: 'HOLD', center: [40.8956, -74.1418] },
-            // New Mexico - NEW
+            // New Mexico
             'NM-02': { rep: 'Gabe Vasquez', party: 'D', action: 'HOLD', center: [32.3199, -106.7637] },
             // New York
             'NY-03': { rep: 'Tom Suozzi', party: 'D', action: 'HOLD', center: [40.7891, -73.5267] },
             'NY-04': { rep: 'Anthony D\'Esposito', party: 'R', action: 'FLIP', center: [40.6501, -73.5837] },
             'NY-17': { rep: 'Mike Lawler', party: 'R', action: 'FLIP', center: [41.1635, -73.9268] },
             'NY-19': { rep: 'Marc Molinaro', party: 'R', action: 'FLIP', center: [42.1497, -74.0822] },
-            // North Carolina - NEW
+            // North Carolina
             'NC-01': { rep: 'Don Davis', party: 'D', action: 'HOLD', center: [35.9132, -77.7905] },
-            // Ohio - NEW
+            // Ohio
             'OH-01': { rep: 'Greg Landsman', party: 'D', action: 'HOLD', center: [39.1031, -84.5120] },
             'OH-09': { rep: 'Marcy Kaptur', party: 'D', action: 'HOLD', center: [41.5051, -83.6924] },
             'OH-13': { rep: 'Emilia Sykes', party: 'D', action: 'HOLD', center: [41.0814, -81.5190] },
-            // Oregon - NEW
+            // Oregon
             'OR-04': { rep: 'Val Hoyle', party: 'D', action: 'HOLD', center: [43.8041, -123.0868] },
             'OR-05': { rep: 'Janelle Bynum', party: 'D', action: 'HOLD', center: [45.0523, -122.6765] },
             'OR-06': { rep: 'Andrea Salinas', party: 'D', action: 'HOLD', center: [45.5152, -122.6784] },
@@ -775,17 +772,17 @@
             'PA-08': { rep: 'Matt Cartwright', party: 'D', action: 'HOLD', center: [41.2194, -75.6116] },
             'PA-10': { rep: 'Scott Perry', party: 'R', action: 'FLIP', center: [40.1897, -76.9829] },
             'PA-17': { rep: 'Chris Deluzio', party: 'D', action: 'HOLD', center: [40.6080, -80.0274] },
-            // Texas - NEW
+            // Texas
             'TX-28': { rep: 'Henry Cuellar', party: 'D', action: 'HOLD', center: [27.5306, -99.4803] },
             'TX-34': { rep: 'Vicente Gonzalez', party: 'D', action: 'HOLD', center: [26.2034, -97.6611] },
             // Virginia
             'VA-02': { rep: 'Jen Kiggans', party: 'R', action: 'FLIP', center: [36.9092, -76.3302] },
             'VA-07': { rep: 'Eugene Vindman', party: 'D', action: 'HOLD', center: [38.4954, -77.5585] },
             'VA-10': { rep: 'Jennifer Wexton', party: 'D', action: 'HOLD', center: [38.7997, -77.3963] },
-            // Washington - NEW
+            // Washington
             'WA-03': { rep: 'Marie Gluesenkamp Perez', party: 'D', action: 'HOLD', center: [45.9286, -122.6051] },
             'WA-08': { rep: 'Kim Schrier', party: 'D', action: 'HOLD', center: [47.4791, -121.7309] },
-            // Wisconsin - NEW
+            // Wisconsin
             'WI-03': { rep: 'Derrick Van Orden', party: 'R', action: 'FLIP', center: [43.8488, -91.2488] }
         };
 
@@ -797,26 +794,25 @@
             "Connecticut": ["CT-05"],
             "Florida": ["FL-23", "FL-25"],
             "Illinois": ["IL-06", "IL-17"],
-            "Indiana": ["IN-01"],  // NEW STATE
-            "Iowa": ["IA-01", "IA-03"],  // NEW STATE
-            "Maine": ["ME-02"],  // NEW STATE
-            "Maryland": ["MD-06"],  // NEW STATE
+            "Indiana": ["IN-01"],
+            "Iowa": ["IA-01", "IA-03"],
+            "Maine": ["ME-02"],
+            "Maryland": ["MD-06"],
             "Michigan": ["MI-07", "MI-08", "MI-10"],
-            "Montana": ["MT-01"],  // NEW STATE
-            "Nebraska": ["NE-02"],  // NEW STATE
+            "Montana": ["MT-01"],
+            "Nebraska": ["NE-02"],
             "Nevada": ["NV-01", "NV-03", "NV-04"],
-            "New Hampshire": ["NH-01", "NH-02"],  // NEW STATE
             "New Jersey": ["NJ-03", "NJ-07", "NJ-09"],
-            "New Mexico": ["NM-02"],  // NEW STATE
+            "New Mexico": ["NM-02"],
             "New York": ["NY-03", "NY-04", "NY-17", "NY-19"],
-            "North Carolina": ["NC-01"],  // NEW STATE
-            "Ohio": ["OH-01", "OH-09", "OH-13"],  // NEW STATE
-            "Oregon": ["OR-04", "OR-05", "OR-06"],  // NEW STATE
+            "North Carolina": ["NC-01"],
+            "Ohio": ["OH-01", "OH-09", "OH-13"],
+            "Oregon": ["OR-04", "OR-05", "OR-06"],
             "Pennsylvania": ["PA-07", "PA-08", "PA-10", "PA-17"],
-            "Texas": ["TX-28", "TX-34"],  // NEW STATE
+            "Texas": ["TX-28", "TX-34"],
             "Virginia": ["VA-02", "VA-07", "VA-10"],
-            "Washington": ["WA-03", "WA-08"],  // NEW STATE
-            "Wisconsin": ["WI-03"]  // NEW STATE
+            "Washington": ["WA-03", "WA-08"],
+            "Wisconsin": ["WI-03"]
         };
 
         // MAIN FUNCTION - Find closest campuses with ZIP code fallback
@@ -1392,7 +1388,7 @@
             console.log('🌎 EXPLORE: Starting national map exploration...');
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 63 competitive congressional districts across 25 states.</p></div>';
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 61 competitive congressional districts across 26 states.</p></div>';
             resultsContainer.style.display = 'block';
             
             var mapContainer = document.getElementById('mapContainer');
@@ -1683,26 +1679,25 @@
                 'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
                 'Florida': 'data/boundaries/florida_districts_119th.json',
                 'Illinois': 'data/boundaries/illinois_districts_119th.json',
-                'Indiana': 'data/boundaries/indiana_districts_119th.json',  // NEW
-                'Iowa': 'data/boundaries/iowa_districts_119th.json',  // NEW
-                'Maine': 'data/boundaries/maine_districts_119th.json',  // NEW
-                'Maryland': 'data/boundaries/maryland_districts_119th.json',  // NEW
+                'Indiana': 'data/boundaries/indiana_districts_119th.json',
+                'Iowa': 'data/boundaries/iowa_districts_119th.json',
+                'Maine': 'data/boundaries/maine_districts_119th.json',
+                'Maryland': 'data/boundaries/maryland_districts_119th.json',
                 'Michigan': 'data/boundaries/michigan_districts_119th.json',
-                'Montana': 'data/boundaries/montana_districts_119th.json',  // NEW
-                'Nebraska': 'data/boundaries/nebraska_districts_119th.json',  // NEW
+                'Montana': 'data/boundaries/montana_districts_119th.json',
+                'Nebraska': 'data/boundaries/nebraska_districts_119th.json',
                 'Nevada': 'data/boundaries/nevada_districts_119th.json',
-                'New Hampshire': 'data/boundaries/newhampshire_districts_119th.json',  // NEW
                 'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
-                'New Mexico': 'data/boundaries/newmexico_districts_119th.json',  // NEW
+                'New Mexico': 'data/boundaries/newmexico_districts_119th.json',
                 'New York': 'data/boundaries/newyork_districts_119th.json',
-                'North Carolina': 'data/boundaries/northcarolina_districts_119th.json',  // NEW
-                'Ohio': 'data/boundaries/ohio_districts_119th.json',  // NEW
-                'Oregon': 'data/boundaries/oregon_districts_119th.json',  // NEW
+                'North Carolina': 'data/boundaries/northcarolina_districts_119th.json',
+                'Ohio': 'data/boundaries/ohio_districts_119th.json',
+                'Oregon': 'data/boundaries/oregon_districts_119th.json',
                 'Pennsylvania': 'data/boundaries/pennsylvania_districts_119th.json',
-                'Texas': 'data/boundaries/texas_districts_119th.json',  // NEW
+                'Texas': 'data/boundaries/texas_districts_119th.json',
                 'Virginia': 'data/boundaries/virginia_districts_119th.json',
-                'Washington': 'data/boundaries/washington_districts_119th.json',  // NEW
-                'Wisconsin': 'data/boundaries/wisconsin_districts_119th.json'  // NEW
+                'Washington': 'data/boundaries/washington_districts_119th.json',
+                'Wisconsin': 'data/boundaries/wisconsin_districts_119th.json'
             };
             
             var boundaryFile = boundaryFiles[state];
@@ -1844,10 +1839,10 @@
                 map.allSwingDistrictLayer = null;
             }
             
-            // Load all states with swing districts
+            // Load all states with swing districts (NH removed)
             var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 
                                'Indiana', 'Iowa', 'Maine', 'Maryland', 'Michigan', 'Montana', 'Nebraska', 'Nevada', 
-                               'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'Ohio', 
+                               'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'Ohio', 
                                'Oregon', 'Pennsylvania', 'Texas', 'Virginia', 'Washington', 'Wisconsin'];
             var allBoundariesData = { type: "FeatureCollection", features: [] };
             
@@ -1867,7 +1862,6 @@
                 'Montana': 'data/boundaries/montana_districts_119th.json',
                 'Nebraska': 'data/boundaries/nebraska_districts_119th.json',
                 'Nevada': 'data/boundaries/nevada_districts_119th.json',
-                'New Hampshire': 'data/boundaries/newhampshire_districts_119th.json',
                 'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
                 'New Mexico': 'data/boundaries/newmexico_districts_119th.json',
                 'New York': 'data/boundaries/newyork_districts_119th.json',
@@ -2833,7 +2827,7 @@
 
         // Initialize the app
         function init() {
-            console.log('🎯 Drive Scout: App initialized with all 63 swing districts');
+            console.log('🎯 Drive Scout: App initialized with all 61 swing districts');
             
             for (var state in districtMappings) {
                 collegeData[state] = {};
@@ -2846,7 +2840,7 @@
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 Drive Scout: DOM loaded, initializing with all 63 districts...');
+            console.log('🎯 Drive Scout: DOM loaded, initializing with all 61 districts...');
             
             setTimeout(function() {
                 init();
@@ -2918,7 +2912,7 @@
 
         showCampusesFromPopup = window.showCampusesFromPopup;
 
-        console.log("🎯 Drive Scout loaded successfully with 63 total swing districts!");
+        console.log("🎯 Drive Scout loaded successfully with 61 total swing districts!");
     </script>
 </body>
 </html>
