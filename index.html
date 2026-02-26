@@ -665,7 +665,7 @@
             
             <div class="faq-item" style="border-bottom: none; text-align: center; padding-top: 10px;">
                 <div class="faq-answer" style="font-size: 1rem;">
-                    <strong>Any questions or feedback? Contact us at: <a href="mailto:info@FieldTeam6.org">info@FieldTeam6.org</a></strong><br><br>
+                    <strong>Any questions or feedback? Contact us at: <a href="/cdn-cgi/l/email-protection#c3aaada5ac8385aaa6afa797a6a2aef5edacb1a4"><span class="__cf_email__" data-cfemail="4b22252d240b0d222e272f1f2e2a267d6524392c">[email&#160;protected]</span></a></strong><br><br>
                     <em style="font-size: 1.2rem; color: #667eea; font-weight: bold;">Go get 'em, tiger!</em>
                 </div>
             </div>
@@ -679,7 +679,7 @@
         </div>
     </div>
 
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         console.log("🎯 Drive Scout: Loading with all 61 districts");
         
@@ -705,15 +705,10 @@
             'AZ-04': { rep: 'Greg Stanton', party: 'D', action: 'HOLD', center: [33.4152, -111.8315] },
             'AZ-06': { rep: 'Juan Ciscomani', party: 'R', action: 'FLIP', center: [32.2319, -110.9501] },
             // California
-            'CA-09': { rep: 'Josh Harder', party: 'D', action: 'HOLD', center: [37.6391, -121.0018] },
-            'CA-13': { rep: 'Adam Gray', party: 'D', action: 'HOLD', center: [37.3022, -120.4832] },
-            'CA-21': { rep: 'Jim Costa', party: 'D', action: 'HOLD', center: [36.7315, -119.7985] },
-            'CA-22': { rep: 'David Valadao', party: 'R', action: 'FLIP', center: [35.3733, -119.0187] },
-            'CA-27': { rep: 'George Whitesides', party: 'D', action: 'HOLD', center: [34.2411, -118.5289] },
-            'CA-41': { rep: 'Ken Calvert', party: 'R', action: 'FLIP', center: [33.9735, -117.3298] },
-            'CA-45': { rep: 'Derek Tran', party: 'D', action: 'HOLD', center: [33.6405, -117.8443] },
-            'CA-47': { rep: 'Dave Min', party: 'D', action: 'HOLD', center: [33.7838, -118.1141] },
-            'CA-49': { rep: 'Mike Levin', party: 'D', action: 'HOLD', center: [33.1281, -117.3078] },
+            'CA-13': { rep: 'Adam Gray', party: 'D', action: 'HOLD', center: [37.2239, -120.8040] },
+            'CA-22': { rep: 'David Valadao', party: 'R', action: 'FLIP', center: [36.0233, -119.6704] },
+            'CA-45': { rep: 'Derek Tran', party: 'D', action: 'HOLD', center: [33.8107, -117.9985] },
+            'CA-48': { rep: 'Darrell Issa', party: 'R', action: 'FLIP', center: [33.3112, -116.6033] },
             // Colorado
             'CO-03': { rep: 'Jeff Hurd', party: 'R', action: 'FLIP', center: [39.5501, -107.7996] },
             'CO-08': { rep: 'Gabe Evans', party: 'R', action: 'FLIP', center: [39.8561, -104.6737] },
@@ -773,8 +768,8 @@
             'PA-10': { rep: 'Scott Perry', party: 'R', action: 'FLIP', center: [40.1897, -76.9829] },
             'PA-17': { rep: 'Chris Deluzio', party: 'D', action: 'HOLD', center: [40.6080, -80.0274] },
             // Texas
-            'TX-28': { rep: 'Henry Cuellar', party: 'D', action: 'HOLD', center: [27.5306, -99.4803] },
-            'TX-34': { rep: 'Vicente Gonzalez', party: 'D', action: 'HOLD', center: [26.2034, -97.6611] },
+            'TX-28': { rep: 'Henry Cuellar', party: 'D', action: 'HOLD', center: [27.8325, -98.9521] },
+            'TX-34': { rep: 'Vicente Gonzalez', party: 'D', action: 'HOLD', center: [26.9057, -97.5972] },
             // Virginia
             'VA-02': { rep: 'Jen Kiggans', party: 'R', action: 'FLIP', center: [36.9092, -76.3302] },
             'VA-07': { rep: 'Eugene Vindman', party: 'D', action: 'HOLD', center: [38.4954, -77.5585] },
@@ -789,7 +784,7 @@
         var districtMappings = {
             "Alaska": ["AK-AL"],
             "Arizona": ["AZ-01", "AZ-02", "AZ-04", "AZ-06"],
-            "California": ["CA-09", "CA-13", "CA-21", "CA-22", "CA-27", "CA-41", "CA-45", "CA-47", "CA-49"],
+            "California": ["CA-13", "CA-22", "CA-45", "CA-48"],
             "Colorado": ["CO-03", "CO-08"],
             "Connecticut": ["CT-05"],
             "Florida": ["FL-23", "FL-25"],
@@ -2109,8 +2104,8 @@
                 var padding = [60, 60];
                 var maxZoom = 10;
                 
-                if (selectedDistrict === 'CA-13' || selectedDistrict === 'CO-03') {
-                    maxZoom = 9;
+                if (selectedDistrict === 'CA-13' || selectedDistrict === 'CA-48' || selectedDistrict === 'CO-03') {
+                    maxZoom = 8;
                     padding = [70, 70];
                 }
                 
@@ -2907,12 +2902,4 @@
                 closestDistrictsResults.style.display = 'none';
             }
             
-            displayCollegesWithoutMapInit(foundState, districtId);
-        };
-
-        showCampusesFromPopup = window.showCampusesFromPopup;
-
-        console.log("🎯 Drive Scout loaded successfully with 61 total swing districts!");
-    </script>
-</body>
-</html>
+            displayCo
