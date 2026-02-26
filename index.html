@@ -554,7 +554,7 @@
             
             <div style="background: transparent; padding: 0; margin: 8px 0; text-align: center;">
                 <button id="findClosestCampusesBtn" onclick="findClosestCampuses()" class="main-action-button">
-                    🔍 Find closest swing district campuses!
+                    Find closest swing district campuses!
                 </button>
                 <div style="color: white; font-size: 1.1rem; opacity: 0.9; margin: 10px 0;">
                     Or for advanced activists:
@@ -615,18 +615,18 @@
         
         <div id="faqContainer" class="faq-container">
             <div class="faq-header">
-                <h2>🎯 Drive Scout FAQ</h2>
+                <h2>ðŸŽ¯ Drive Scout FAQ</h2>
                 <button class="faq-close" onclick="toggleFAQ()">Close FAQ</button>
             </div>
             
             <div class="faq-item">
                 <div class="faq-question">What is Drive Scout?</div>
-                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives – in the 61 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
+                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives â€” in the 63 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
             </div>
             
             <div class="faq-item">
                 <div class="faq-question">Do I need to get permission from a college before holding a voter drive?</div>
-                <div class="faq-answer">You do not! Voter registration is constitutionally protected activity – and a public service. Usually, all is good. Rarely, they ask us to leave, which we do politely, and go find another campus.</div>
+                <div class="faq-answer">You do not! Voter registration is constitutionally protected activity â€” and a public service. Usually, all is good. Rarely, they ask us to leave, which we do politely, and go find another campus.</div>
             </div>
             
             <div class="faq-item">
@@ -665,23 +665,23 @@
             
             <div class="faq-item" style="border-bottom: none; text-align: center; padding-top: 10px;">
                 <div class="faq-answer" style="font-size: 1rem;">
-                    <strong>Any questions or feedback? Contact us at: <a href="/cdn-cgi/l/email-protection#c3aaada5ac8385aaa6afa797a6a2aef5edacb1a4"><span class="__cf_email__" data-cfemail="4b22252d240b0d222e272f1f2e2a267d6524392c">[email&#160;protected]</span></a></strong><br><br>
+                    <strong>Any questions or feedback? Contact us at: <a href="mailto:info@FieldTeam6.org">info@FieldTeam6.org</a></strong><br><br>
                     <em style="font-size: 1.2rem; color: #667eea; font-weight: bold;">Go get 'em, tiger!</em>
                 </div>
             </div>
         </div>
         
         <div style="text-align: center; color: black; font-size: 0.9rem; line-height: 1.4; margin-bottom: 20px;">
-            ©2025 Drive Scout<br>
+            Â©2025 Drive Scout<br>
             PRIVACY NOTICE: Drive Scout collects no data.<br>
             Paid for by Field Team 6. www.fieldteam6.org.<br>
             Not authorized by any candidate or candidate's committee.
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        console.log("🎯 Drive Scout: Loading with all 61 districts");
+        console.log("ðŸŽ¯ Drive Scout: Loading with all 63 districts including new additions");
         
         // Global variables
         var map;
@@ -695,7 +695,7 @@
         var savedZipCode = null;  // Store ZIP code for reuse
         var savedZipLocation = null;  // Store geocoded location for reuse
         
-        // District data - UPDATED WITH 61 DISTRICTS (NH REMOVED)
+        // District data - UPDATED WITH ALL 63 DISTRICTS (41 original + 22 new)
         var districtData = {
             // Alaska
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
@@ -720,45 +720,48 @@
             // Illinois
             'IL-06': { rep: 'Sean Casten', party: 'D', action: 'HOLD', center: [41.8781, -88.0074] },
             'IL-17': { rep: 'Eric Sorensen', party: 'D', action: 'HOLD', center: [41.2519, -90.5775] },
-            // Indiana
+            // Indiana - NEW
             'IN-01': { rep: 'Frank Mrvan', party: 'D', action: 'HOLD', center: [41.5894, -87.3353] },
-            // Iowa
+            // Iowa - NEW
             'IA-01': { rep: 'Mariannette Miller-Meeks', party: 'R', action: 'FLIP', center: [41.6611, -91.5302] },
             'IA-03': { rep: 'Zach Nunn', party: 'R', action: 'FLIP', center: [41.5868, -93.6250] },
-            // Maine
+            // Maine - NEW
             'ME-02': { rep: 'Jared Golden', party: 'D', action: 'HOLD', center: [45.2538, -69.4455] },
-            // Maryland
+            // Maryland - NEW
             'MD-06': { rep: 'April McClain Delaney', party: 'D', action: 'HOLD', center: [39.6428, -77.7200] },
             // Michigan
             'MI-07': { rep: 'Tom Barrett', party: 'R', action: 'FLIP', center: [42.5803, -84.2436] },
             'MI-08': { rep: 'Kristen McDonald Rivet', party: 'D', action: 'HOLD', center: [43.0125, -83.6875] },
             'MI-10': { rep: 'John James', party: 'R', action: 'FLIP', center: [42.8701, -82.8854] },
-            // Montana
+            // Montana - NEW
             'MT-01': { rep: 'Ryan Zinke', party: 'R', action: 'FLIP', center: [48.1920, -114.3168] },
-            // Nebraska
+            // Nebraska - NEW
             'NE-02': { rep: 'Don Bacon', party: 'R', action: 'FLIP', center: [41.2565, -95.9345] },
             // Nevada
             'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398] },
             'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656] },
             'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640] },
+            // New Hampshire - NEW
+            'NH-01': { rep: 'Chris Pappas', party: 'D', action: 'HOLD', center: [43.0059, -71.0132] },
+            'NH-02': { rep: 'Annie Kuster', party: 'D', action: 'HOLD', center: [43.6425, -72.2534] },
             // New Jersey
             'NJ-03': { rep: 'Herb Conaway', party: 'D', action: 'HOLD', center: [39.9751, -74.6114] },
             'NJ-07': { rep: 'Thomas Kean Jr.', party: 'R', action: 'FLIP', center: [40.7357, -74.8331] },
             'NJ-09': { rep: 'Nellie Pou', party: 'D', action: 'HOLD', center: [40.8956, -74.1418] },
-            // New Mexico
+            // New Mexico - NEW
             'NM-02': { rep: 'Gabe Vasquez', party: 'D', action: 'HOLD', center: [32.3199, -106.7637] },
             // New York
             'NY-03': { rep: 'Tom Suozzi', party: 'D', action: 'HOLD', center: [40.7891, -73.5267] },
             'NY-04': { rep: 'Anthony D\'Esposito', party: 'R', action: 'FLIP', center: [40.6501, -73.5837] },
             'NY-17': { rep: 'Mike Lawler', party: 'R', action: 'FLIP', center: [41.1635, -73.9268] },
             'NY-19': { rep: 'Marc Molinaro', party: 'R', action: 'FLIP', center: [42.1497, -74.0822] },
-            // North Carolina
+            // North Carolina - NEW
             'NC-01': { rep: 'Don Davis', party: 'D', action: 'HOLD', center: [35.9132, -77.7905] },
-            // Ohio
+            // Ohio - NEW
             'OH-01': { rep: 'Greg Landsman', party: 'D', action: 'HOLD', center: [39.1031, -84.5120] },
             'OH-09': { rep: 'Marcy Kaptur', party: 'D', action: 'HOLD', center: [41.5051, -83.6924] },
             'OH-13': { rep: 'Emilia Sykes', party: 'D', action: 'HOLD', center: [41.0814, -81.5190] },
-            // Oregon
+            // Oregon - NEW
             'OR-04': { rep: 'Val Hoyle', party: 'D', action: 'HOLD', center: [43.8041, -123.0868] },
             'OR-05': { rep: 'Janelle Bynum', party: 'D', action: 'HOLD', center: [45.0523, -122.6765] },
             'OR-06': { rep: 'Andrea Salinas', party: 'D', action: 'HOLD', center: [45.5152, -122.6784] },
@@ -767,17 +770,17 @@
             'PA-08': { rep: 'Matt Cartwright', party: 'D', action: 'HOLD', center: [41.2194, -75.6116] },
             'PA-10': { rep: 'Scott Perry', party: 'R', action: 'FLIP', center: [40.1897, -76.9829] },
             'PA-17': { rep: 'Chris Deluzio', party: 'D', action: 'HOLD', center: [40.6080, -80.0274] },
-            // Texas
+            // Texas - NEW
             'TX-28': { rep: 'Henry Cuellar', party: 'D', action: 'HOLD', center: [27.8325, -98.9521] },
             'TX-34': { rep: 'Vicente Gonzalez', party: 'D', action: 'HOLD', center: [26.9057, -97.5972] },
             // Virginia
             'VA-02': { rep: 'Jen Kiggans', party: 'R', action: 'FLIP', center: [36.9092, -76.3302] },
             'VA-07': { rep: 'Eugene Vindman', party: 'D', action: 'HOLD', center: [38.4954, -77.5585] },
             'VA-10': { rep: 'Jennifer Wexton', party: 'D', action: 'HOLD', center: [38.7997, -77.3963] },
-            // Washington
+            // Washington - NEW
             'WA-03': { rep: 'Marie Gluesenkamp Perez', party: 'D', action: 'HOLD', center: [45.9286, -122.6051] },
             'WA-08': { rep: 'Kim Schrier', party: 'D', action: 'HOLD', center: [47.4791, -121.7309] },
-            // Wisconsin
+            // Wisconsin - NEW
             'WI-03': { rep: 'Derrick Van Orden', party: 'R', action: 'FLIP', center: [43.8488, -91.2488] }
         };
 
@@ -789,30 +792,31 @@
             "Connecticut": ["CT-05"],
             "Florida": ["FL-23", "FL-25"],
             "Illinois": ["IL-06", "IL-17"],
-            "Indiana": ["IN-01"],
-            "Iowa": ["IA-01", "IA-03"],
-            "Maine": ["ME-02"],
-            "Maryland": ["MD-06"],
+            "Indiana": ["IN-01"],  // NEW STATE
+            "Iowa": ["IA-01", "IA-03"],  // NEW STATE
+            "Maine": ["ME-02"],  // NEW STATE
+            "Maryland": ["MD-06"],  // NEW STATE
             "Michigan": ["MI-07", "MI-08", "MI-10"],
-            "Montana": ["MT-01"],
-            "Nebraska": ["NE-02"],
+            "Montana": ["MT-01"],  // NEW STATE
+            "Nebraska": ["NE-02"],  // NEW STATE
             "Nevada": ["NV-01", "NV-03", "NV-04"],
+            "New Hampshire": ["NH-01", "NH-02"],  // NEW STATE
             "New Jersey": ["NJ-03", "NJ-07", "NJ-09"],
-            "New Mexico": ["NM-02"],
+            "New Mexico": ["NM-02"],  // NEW STATE
             "New York": ["NY-03", "NY-04", "NY-17", "NY-19"],
-            "North Carolina": ["NC-01"],
-            "Ohio": ["OH-01", "OH-09", "OH-13"],
-            "Oregon": ["OR-04", "OR-05", "OR-06"],
+            "North Carolina": ["NC-01"],  // NEW STATE
+            "Ohio": ["OH-01", "OH-09", "OH-13"],  // NEW STATE
+            "Oregon": ["OR-04", "OR-05", "OR-06"],  // NEW STATE
             "Pennsylvania": ["PA-07", "PA-08", "PA-10", "PA-17"],
-            "Texas": ["TX-28", "TX-34"],
+            "Texas": ["TX-28", "TX-34"],  // NEW STATE
             "Virginia": ["VA-02", "VA-07", "VA-10"],
-            "Washington": ["WA-03", "WA-08"],
-            "Wisconsin": ["WI-03"]
+            "Washington": ["WA-03", "WA-08"],  // NEW STATE
+            "Wisconsin": ["WI-03"]  // NEW STATE
         };
 
         // MAIN FUNCTION - Find closest campuses with ZIP code fallback
         function findClosestCampuses() {
-            console.log('🔄 WORKING: Starting findClosestCampuses...');
+            console.log('ðŸ”„ WORKING: Starting findClosestCampuses...');
             
             hideLocationSearchField();
             clearAllResults();
@@ -820,7 +824,7 @@
             var btn = document.getElementById('findClosestCampusesBtn');
             var resultContainer = document.getElementById('closestCampusesResult');
             
-            btn.innerHTML = '🔍 Finding closest swing district...';
+            btn.innerHTML = 'ðŸ” Finding closest swing district...';
             btn.disabled = true;
             
             navigator.geolocation.getCurrentPosition(
@@ -830,12 +834,12 @@
                 },
                 function(error) {
                     // Error or denied - check for saved ZIP first
-                    btn.innerHTML = '🔍 Find closest swing district campuses!';
+                    btn.innerHTML = 'Find closest swing district campuses!';
                     btn.disabled = false;
                     
                     if (savedZipLocation) {
                         // Reuse saved ZIP location
-                        console.log('✅ Reusing saved ZIP code location:', savedZipCode);
+                        console.log('âœ… Reusing saved ZIP code location:', savedZipCode);
                         processUserLocation(savedZipLocation.lat, savedZipLocation.lng);
                     } else {
                         // Ask for ZIP code
@@ -850,15 +854,15 @@
 
         // New function to handle ZIP code lookup
         function findClosestCampusesByZip(zipCode) {
-            console.log('🔄 WORKING: Finding closest campuses by ZIP code:', zipCode);
+            console.log('ðŸ”„ WORKING: Finding closest campuses by ZIP code:', zipCode);
             
             var btn = document.getElementById('findClosestCampusesBtn');
-            btn.innerHTML = '🔍 Finding closest swing district...';
+            btn.innerHTML = 'ðŸ” Finding closest swing district...';
             btn.disabled = true;
             
             // Check if we already geocoded this ZIP
             if (savedZipCode === zipCode && savedZipLocation) {
-                console.log('✅ Reusing cached location for ZIP:', zipCode);
+                console.log('âœ… Reusing cached location for ZIP:', zipCode);
                 processUserLocation(savedZipLocation.lat, savedZipLocation.lng);
                 return;
             }
@@ -876,7 +880,7 @@
                         var lat = parseFloat(location.lat);
                         var lng = parseFloat(location.lon);
                         
-                        console.log('✅ Found ZIP code location:', lat, lng);
+                        console.log('âœ… Found ZIP code location:', lat, lng);
                         
                         // Save ZIP and location for reuse
                         savedZipCode = zipCode;
@@ -885,14 +889,14 @@
                         processUserLocation(lat, lng);
                     } else {
                         alert('Could not find location for ZIP code: ' + zipCode + '. Please try again.');
-                        btn.innerHTML = '🔍 Find closest swing district campuses!';
+                        btn.innerHTML = 'Find closest swing district campuses!';
                         btn.disabled = false;
                     }
                 })
                 .catch(function(error) {
-                    console.log('❌ Error geocoding ZIP code:', error);
+                    console.log('âŒ Error geocoding ZIP code:', error);
                     alert('Error looking up ZIP code. Please try again.');
-                    btn.innerHTML = '🔍 Find closest swing district campuses!';
+                    btn.innerHTML = 'Find closest swing district campuses!';
                     btn.disabled = false;
                 });
         }
@@ -927,7 +931,7 @@
                             'Swing district: ' + closestDistrict +
                         '</div>' +
                         '<div style="color: #666; margin-bottom: 0;">' +
-                            '<em>' + Math.round(shortestDistance) + ' miles away</em> • Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                            '<em>' + Math.round(shortestDistance) + ' miles away</em> â€¢ Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action +
                         '</div>' +
                     '</div>';
                 resultContainer.style.display = 'block';
@@ -949,7 +953,7 @@
                 }
             }
             
-            btn.innerHTML = '🔍 Find closest swing district campuses!';
+            btn.innerHTML = 'Find closest swing district campuses!';
             btn.disabled = false;
         }
 
@@ -990,7 +994,7 @@
                     
                     if (savedZipLocation) {
                         // Reuse saved ZIP location
-                        console.log('✅ Reusing saved ZIP code location:', savedZipCode);
+                        console.log('âœ… Reusing saved ZIP code location:', savedZipCode);
                         resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding closest swing districts...</h3><p>Using your saved ZIP code location.</p></div>';
                         resultsContainer.style.display = 'block';
                         processDistrictsLocation(savedZipLocation.lat, savedZipLocation.lng);
@@ -1007,13 +1011,13 @@
 
         // New function to handle ZIP code lookup for districts
         function findClosestDistrictsByZip(zipCode) {
-            console.log('🔄 WORKING: Finding closest districts by ZIP code:', zipCode);
+            console.log('ðŸ”„ WORKING: Finding closest districts by ZIP code:', zipCode);
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
             
             // Check if we already geocoded this ZIP
             if (savedZipCode === zipCode && savedZipLocation) {
-                console.log('✅ Reusing cached location for ZIP:', zipCode);
+                console.log('âœ… Reusing cached location for ZIP:', zipCode);
                 resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding closest swing districts...</h3><p>Using your saved ZIP code location.</p></div>';
                 resultsContainer.style.display = 'block';
                 processDistrictsLocation(savedZipLocation.lat, savedZipLocation.lng);
@@ -1036,7 +1040,7 @@
                         var lat = parseFloat(location.lat);
                         var lng = parseFloat(location.lon);
                         
-                        console.log('✅ Found ZIP code location:', lat, lng);
+                        console.log('âœ… Found ZIP code location:', lat, lng);
                         
                         // Save ZIP and location for reuse
                         savedZipCode = zipCode;
@@ -1048,7 +1052,7 @@
                     }
                 })
                 .catch(function(error) {
-                    console.log('❌ Error geocoding ZIP code:', error);
+                    console.log('âŒ Error geocoding ZIP code:', error);
                     resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Search Error</h3><p>Unable to look up ZIP code. Please try again.</p></div>';
                 });
         }
@@ -1091,7 +1095,7 @@
             
             if (startIndex === 0) {
                 html += '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 20px;">🎯 Closest Swing Districts</h2>';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 20px;">ðŸŽ¯ Closest Swing Districts</h2>';
             } else {
                 html += '<div class="district-results-container">';
             }
@@ -1105,7 +1109,7 @@
                 html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
                 html += '<div>';
                 html += '<div style="font-weight: bold; font-size: 1.2rem; color: #333;">' + district.id + '</div>';
-                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> • Rep. ' + district.data.rep + ' (' + district.data.party + ') • ' + district.data.action + '</div>';
+                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> â€¢ Rep. ' + district.data.rep + ' (' + district.data.party + ') â€¢ ' + district.data.action + '</div>';
                 html += '</div>';
                 html += '<div>';
                 html += '<button onclick="showDistrictCampusesSimplified(\'' + district.id + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
@@ -1162,7 +1166,7 @@
                     '<div style="display: flex; justify-content: space-between; align-items: center;">' +
                         '<div>' +
                             '<div style="font-weight: bold; font-size: 1.2rem; color: #333;">' + district.id + '</div>' +
-                            '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> • Rep. ' + district.data.rep + ' (' + district.data.party + ') • ' + district.data.action + '</div>' +
+                            '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> â€¢ Rep. ' + district.data.rep + ' (' + district.data.party + ') â€¢ ' + district.data.action + '</div>' +
                         '</div>' +
                         '<div>' +
                             '<button onclick="showDistrictCampusesSimplified(\'' + district.id + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>' +
@@ -1215,7 +1219,7 @@
                         districtInfo.center[0], 
                         districtInfo.center[1]
                     );
-                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
+                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> â€¢ ';
                 }
                 
                 resultContainer.innerHTML = 
@@ -1224,7 +1228,7 @@
                             'Swing district: ' + districtId +
                         '</div>' +
                         '<div style="color: #666; margin-bottom: 0;">' +
-                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action +
                         '</div>' +
                     '</div>';
                 resultContainer.style.display = 'block';
@@ -1272,7 +1276,7 @@
         }
 
         function searchByLocation(locationQuery) {
-            console.log('🔄 LOCATION SEARCH: Starting search for:', locationQuery);
+            console.log('ðŸ”„ LOCATION SEARCH: Starting search for:', locationQuery);
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
             resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding swing districts near ' + locationQuery + '...</h3><p>Searching for location and calculating distances.</p></div>';
@@ -1290,7 +1294,7 @@
                         var userLat = parseFloat(location.lat);
                         var userLng = parseFloat(location.lon);
                         
-                        console.log('✅ LOCATION SEARCH: Found location:', location.display_name, userLat, userLng);
+                        console.log('âœ… LOCATION SEARCH: Found location:', location.display_name, userLat, userLng);
                         
                         window.lastUserLocation = { lat: userLat, lng: userLng };
                         
@@ -1318,7 +1322,7 @@
                     }
                 })
                 .catch(function(error) {
-                    console.log('❌ LOCATION SEARCH: Error:', error);
+                    console.log('âŒ LOCATION SEARCH: Error:', error);
                     resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Search Error</h3><p>Unable to search for "' + locationQuery + '". Please try again.</p></div>';
                 });
         }
@@ -1334,7 +1338,7 @@
             
             if (startIndex === 0) {
                 html += '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 15px;">🎯 Swing Districts Near "' + searchQuery + '"</h2>';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 15px;">ðŸŽ¯ Swing Districts Near "' + searchQuery + '"</h2>';
                 html += '<div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: white; text-align: center; margin-bottom: 20px; font-size: 0.9rem;">';
                 html += '<strong>Found:</strong> ' + foundLocation;
                 html += '</div>';
@@ -1351,7 +1355,7 @@
                 html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
                 html += '<div>';
                 html += '<div style="font-weight: bold; font-size: 1.2rem; color: #333;">' + district.id + '</div>';
-                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> • Rep. ' + district.data.rep + ' (' + district.data.party + ') • ' + district.data.action + '</div>';
+                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> â€¢ Rep. ' + district.data.rep + ' (' + district.data.party + ') â€¢ ' + district.data.action + '</div>';
                 html += '</div>';
                 html += '<div>';
                 html += '<button onclick="showDistrictCampusesSimplified(\'' + district.id + '\')" style="background: #667eea; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
@@ -1380,10 +1384,10 @@
             clearMapAndList();
             clearAllResults();
             
-            console.log('🌎 EXPLORE: Starting national map exploration...');
+            console.log('ðŸŒŽ EXPLORE: Starting national map exploration...');
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 61 competitive congressional districts across 26 states.</p></div>';
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 63 competitive congressional districts across 25 states.</p></div>';
             resultsContainer.style.display = 'block';
             
             var mapContainer = document.getElementById('mapContainer');
@@ -1401,7 +1405,7 @@
         }
 
         function initializeNationalMap() {
-            console.log('🌎 EXPLORE: Initializing national map...');
+            console.log('ðŸŒŽ EXPLORE: Initializing national map...');
             
             if (map) {
                 map.remove();
@@ -1416,7 +1420,7 @@
                     }).setView([39.8283, -98.5795], 3);
                     
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                        attribution: '© OpenStreetMap contributors © CARTO',
+                        attribution: 'Â© OpenStreetMap contributors Â© CARTO',
                         maxZoom: 15,
                         minZoom: 1
                     }).addTo(map);
@@ -1436,9 +1440,9 @@
 
                     loadAllSwingDistrictBoundaries();
                     
-                    console.log('✅ EXPLORE: National map initialized successfully');
+                    console.log('âœ… EXPLORE: National map initialized successfully');
                 } else {
-                    console.log('❌ EXPLORE: Leaflet not loaded');
+                    console.log('âŒ EXPLORE: Leaflet not loaded');
                 }
             }, 50);
         }
@@ -1468,7 +1472,7 @@
                         userLocationMarker = L.marker([userLat, userLng], {
                             icon: L.divIcon({
                                 className: 'user-location-marker',
-                                html: '<div style="background: #FF4444; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 6px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">📍</div>',
+                                html: '<div style="background: #FF4444; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 6px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">ðŸ“</div>',
                                 iconSize: [20, 20],
                                 iconAnchor: [10, 10]
                             })
@@ -1588,7 +1592,7 @@
                     }).setView([39.8283, -98.5795], 8);
                     
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                        attribution: '© OpenStreetMap contributors © CARTO',
+                        attribution: 'Â© OpenStreetMap contributors Â© CARTO',
                         maxZoom: 15,
                         minZoom: 1
                     }).addTo(map);
@@ -1674,25 +1678,26 @@
                 'Connecticut': 'data/boundaries/connecticut_districts_119th.json',
                 'Florida': 'data/boundaries/florida_districts_119th.json',
                 'Illinois': 'data/boundaries/illinois_districts_119th.json',
-                'Indiana': 'data/boundaries/indiana_districts_119th.json',
-                'Iowa': 'data/boundaries/iowa_districts_119th.json',
-                'Maine': 'data/boundaries/maine_districts_119th.json',
-                'Maryland': 'data/boundaries/maryland_districts_119th.json',
+                'Indiana': 'data/boundaries/indiana_districts_119th.json',  // NEW
+                'Iowa': 'data/boundaries/iowa_districts_119th.json',  // NEW
+                'Maine': 'data/boundaries/maine_districts_119th.json',  // NEW
+                'Maryland': 'data/boundaries/maryland_districts_119th.json',  // NEW
                 'Michigan': 'data/boundaries/michigan_districts_119th.json',
-                'Montana': 'data/boundaries/montana_districts_119th.json',
-                'Nebraska': 'data/boundaries/nebraska_districts_119th.json',
+                'Montana': 'data/boundaries/montana_districts_119th.json',  // NEW
+                'Nebraska': 'data/boundaries/nebraska_districts_119th.json',  // NEW
                 'Nevada': 'data/boundaries/nevada_districts_119th.json',
+                'New Hampshire': 'data/boundaries/newhampshire_districts_119th.json',  // NEW
                 'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
-                'New Mexico': 'data/boundaries/newmexico_districts_119th.json',
+                'New Mexico': 'data/boundaries/newmexico_districts_119th.json',  // NEW
                 'New York': 'data/boundaries/newyork_districts_119th.json',
-                'North Carolina': 'data/boundaries/northcarolina_districts_119th.json',
-                'Ohio': 'data/boundaries/ohio_districts_119th.json',
-                'Oregon': 'data/boundaries/oregon_districts_119th.json',
+                'North Carolina': 'data/boundaries/northcarolina_districts_119th.json',  // NEW
+                'Ohio': 'data/boundaries/ohio_districts_119th.json',  // NEW
+                'Oregon': 'data/boundaries/oregon_districts_119th.json',  // NEW
                 'Pennsylvania': 'data/boundaries/pennsylvania_districts_119th.json',
-                'Texas': 'data/boundaries/texas_districts_119th.json',
+                'Texas': 'data/boundaries/texas_districts_119th.json',  // NEW
                 'Virginia': 'data/boundaries/virginia_districts_119th.json',
-                'Washington': 'data/boundaries/washington_districts_119th.json',
-                'Wisconsin': 'data/boundaries/wisconsin_districts_119th.json'
+                'Washington': 'data/boundaries/washington_districts_119th.json',  // NEW
+                'Wisconsin': 'data/boundaries/wisconsin_districts_119th.json'  // NEW
             };
             
             var boundaryFile = boundaryFiles[state];
@@ -1776,7 +1781,7 @@
                                 popupContent += ' <span style="background: #4CAF50; color: white; padding: 1px 6px; border-radius: 8px; font-size: 0.7rem; margin-left: 4px;">CURRENT</span>';
                             }
                             popupContent += '</div>';
-                            popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
+                            popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action + '</div>';
                             popupContent += distanceText;
                             popupContent += '<div style="text-align: center; margin: 6px 0 0 0;">';
                             popupContent += '<button onclick="showCampusesFromPopup(\'' + featureDistrictId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
@@ -1834,10 +1839,10 @@
                 map.allSwingDistrictLayer = null;
             }
             
-            // Load all states with swing districts (NH removed)
+            // Load all states with swing districts
             var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 
                                'Indiana', 'Iowa', 'Maine', 'Maryland', 'Michigan', 'Montana', 'Nebraska', 'Nevada', 
-                               'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'Ohio', 
+                               'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'Ohio', 
                                'Oregon', 'Pennsylvania', 'Texas', 'Virginia', 'Washington', 'Wisconsin'];
             var allBoundariesData = { type: "FeatureCollection", features: [] };
             
@@ -1857,6 +1862,7 @@
                 'Montana': 'data/boundaries/montana_districts_119th.json',
                 'Nebraska': 'data/boundaries/nebraska_districts_119th.json',
                 'Nevada': 'data/boundaries/nevada_districts_119th.json',
+                'New Hampshire': 'data/boundaries/newhampshire_districts_119th.json',
                 'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
                 'New Mexico': 'data/boundaries/newmexico_districts_119th.json',
                 'New York': 'data/boundaries/newyork_districts_119th.json',
@@ -1967,7 +1973,7 @@
                     
                     var popupContent = '<div style="padding: 8px 12px; border-left: 4px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + '; margin: 0; line-height: 1.2;">';
                     popupContent += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin: 0 0 2px 0;">' + districtId + '</div>';
-                    popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action + '</div>';
+                    popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action + '</div>';
                     popupContent += distanceText;
                     popupContent += '<div style="text-align: center; margin: 6px 0 0 0;">';
                     popupContent += '<button onclick="showCampusesFromPopup(\'' + districtId + '\')" style="background: #667eea; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
@@ -2104,8 +2110,8 @@
                 var padding = [60, 60];
                 var maxZoom = 10;
                 
-                if (selectedDistrict === 'CA-13' || selectedDistrict === 'CA-48' || selectedDistrict === 'CO-03') {
-                    maxZoom = 8;
+                if (selectedDistrict === 'CA-13' || selectedDistrict === 'CO-03' || selectedDistrict === 'CA-48') {
+                    maxZoom = 9;
                     padding = [70, 70];
                 }
                 
@@ -2656,8 +2662,8 @@
                     '</div>' +
                 '</div>' +
                 '<div style="display: flex; gap: 8px;">' +
-                    '<a href="https://www.google.com/maps/search/' + encodeURIComponent(addressDisplay) + '" target="_blank" class="btn btn-primary" style="padding: 4px 10px; font-size: 0.75rem;">🗺️ Directions</a>' +
-                    '<a href="https://www.mobilize.us/ft6/c/lead-a-voter-drive/event/create/" target="_blank" class="btn btn-tertiary" style="padding: 4px 10px; font-size: 0.75rem;">🗳️ Set Up Voter Drive</a>' +
+                    '<a href="https://www.google.com/maps/search/' + encodeURIComponent(addressDisplay) + '" target="_blank" class="btn btn-primary" style="padding: 4px 10px; font-size: 0.75rem;">ðŸ—ºï¸ Directions</a>' +
+                    '<a href="https://www.mobilize.us/ft6/c/lead-a-voter-drive/event/create/" target="_blank" class="btn btn-tertiary" style="padding: 4px 10px; font-size: 0.75rem;">ðŸ—³ï¸ Set Up Voter Drive</a>' +
                 '</div>';
 
             return div;
@@ -2822,7 +2828,7 @@
 
         // Initialize the app
         function init() {
-            console.log('🎯 Drive Scout: App initialized with all 61 swing districts');
+            console.log('ðŸŽ¯ Drive Scout: App initialized with all 63 swing districts');
             
             for (var state in districtMappings) {
                 collegeData[state] = {};
@@ -2835,7 +2841,7 @@
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🎯 Drive Scout: DOM loaded, initializing with all 61 districts...');
+            console.log('ðŸŽ¯ Drive Scout: DOM loaded, initializing with all 63 districts...');
             
             setTimeout(function() {
                 init();
@@ -2844,7 +2850,7 @@
 
         // Global function for popup buttons
         window.showCampusesFromPopup = function(districtId) {
-            console.log('🎯 BUTTON CLICK: showCampusesFromPopup called for:', districtId);
+            console.log('ðŸŽ¯ BUTTON CLICK: showCampusesFromPopup called for:', districtId);
             
             if (map) map.closePopup();
             
@@ -2861,12 +2867,12 @@
             }
             
             if (!foundState) {
-                console.log('❌ POPUP: State not found for district:', districtId);
+                console.log('âŒ POPUP: State not found for district:', districtId);
                 alert('Error: Could not find state for district ' + districtId);
                 return;
             }
             
-            console.log('✅ POPUP: Found state', foundState, 'for district', districtId);
+            console.log('âœ… POPUP: Found state', foundState, 'for district', districtId);
             
             var resultContainer = document.getElementById('closestCampusesResult');
             if (resultContainer) {
@@ -2882,7 +2888,7 @@
                         districtInfo.center[0], 
                         districtInfo.center[1]
                     );
-                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> • ';
+                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> â€¢ ';
                 }
                 
                 resultContainer.innerHTML = 
@@ -2891,7 +2897,7 @@
                             'Swing district: ' + districtId +
                         '</div>' +
                         '<div style="color: #666; margin-bottom: 0;">' +
-                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') • ' + districtInfo.action +
+                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action +
                         '</div>' +
                     '</div>';
                 resultContainer.style.display = 'block';
@@ -2902,4 +2908,12 @@
                 closestDistrictsResults.style.display = 'none';
             }
             
-            displayCo
+            displayCollegesWithoutMapInit(foundState, districtId);
+        };
+
+        showCampusesFromPopup = window.showCampusesFromPopup;
+
+        console.log("ðŸŽ¯ Drive Scout loaded successfully with 63 total swing districts!");
+    </script>
+</body>
+</html>
