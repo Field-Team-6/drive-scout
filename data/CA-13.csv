@@ -1,0 +1,8 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Suitability,Phone,Website,Notes
+Within,Modesto Junior College,Community College,435 College Avenue,Modesto,CA,95350,37.6375,-120.9925,19000,High,(209) 575-6498,mjc.edu,Largest community college in district; two campuses (East & West); strong transfer programs
+Within,UC Merced,Public University,5200 North Lake Road,Merced,CA,95343,37.3660,-120.4248,9000,High,(209) 228-4400,ucmerced.edu,Newest UC campus; fast-growing; highly diverse student body; Hispanic-serving institution
+Within,Merced College,Community College,3600 M Street,Merced,CA,95348,37.3186,-120.4644,10000,High,(209) 384-6000,mccd.edu,Large community college serving Merced area; strong STEM center
+Within,CSU Stanislaus - Stockton Campus,Public University,612 E Magnolia Street,Stockton,CA,95202,37.9544,-121.2867,2000,Medium,(209) 667-3201,csustan.edu,Satellite campus of Stan State in downtown Stockton
+Near,CSU Stanislaus - Turlock (Main),Public University,One University Circle,Turlock,CA,95382,37.5258,-120.8554,10000,High,(209) 667-3201,csustan.edu,Just outside district; 10000+ students; Hispanic-serving institution; beautiful campus
+Near,San Joaquin Delta College,Community College,5151 Pacific Avenue,Stockton,CA,95207,37.9767,-121.3227,20000,High,(209) 954-5151,deltacollege.edu,Just outside district border in Stockton; one of the largest community colleges in the region
+Near,University of the Pacific,Private University,3601 Pacific Avenue,Stockton,CA,95211,37.9816,-121.3105,6000,Medium,(209) 946-2344,pacific.edu,Just outside district; private university; strong pharmacy and engineering programs

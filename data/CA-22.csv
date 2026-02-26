@@ -1,0 +1,9 @@
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Suitability,Phone,Website,Notes
+Within,COS Hanford Educational Center,Community College,925 13th Avenue,Hanford,CA,93230,36.3160,-119.6380,3000,High,(559) 583-2500,cos.edu,Full-service campus of College of the Sequoias; home to police and fire academies
+Within,COS Tulare College Center,Community College,4999 East Bardsley Avenue,Tulare,CA,93274,36.2077,-119.3473,2500,High,(559) 688-3000,cos.edu,Full-service campus; home to COS agriculture programs
+Within,Porterville College,Community College,100 East College Avenue,Porterville,CA,93257,36.0495,-119.0428,4500,High,(559) 791-2200,portervillecollege.edu,Part of Kern Community College District; established 1927; serves southern Tulare County
+Near,College of the Sequoias - Visalia (Main),Community College,915 South Mooney Boulevard,Visalia,CA,93277,36.3107,-119.3263,11000,High,(559) 730-3700,cos.edu,Main campus just outside district; largest COS campus; strong transfer rates
+Near,Bakersfield College,Community College,1801 Panorama Drive,Bakersfield,CA,93305,35.3842,-119.0393,27000,High,(661) 395-4011,bakersfieldcollege.edu,Near southern border of district; third oldest community college in CA; massive enrollment
+Near,CSU Bakersfield,Public University,9001 Stockdale Highway,Bakersfield,CA,93311,35.3481,-119.1043,10000,High,(661) 654-2782,csub.edu,Near southern border; 50+ degree programs; NCAA Division I athletics
+Near,West Hills College - Lemoore,Community College,555 College Avenue,Lemoore,CA,93245,36.3021,-119.7818,5000,Medium,(559) 925-3000,westhillscollege.com,Just outside western border of district; serves Kings County
+Near,Fresno Pacific University - Visalia,Private University,1717 South Court Street,Visalia,CA,93277,36.3380,-119.3280,500,Low,(559) 453-2000,fresno.edu,Small satellite campus just outside district; Christian university
