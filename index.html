@@ -621,7 +621,7 @@
             
             <div class="faq-item">
                 <div class="faq-question">What is Drive Scout?</div>
-                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives  &mdash;  in the 63 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
+                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives  &mdash;  in the 58 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
             </div>
             
             <div class="faq-item">
@@ -681,7 +681,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        console.log("&#127919; Drive Scout: Loading with all 63 districts including new additions");
+        console.log("&#127919; Drive Scout: Loading with all 58 districts including new additions");
         
         // Global variables
         var map;
@@ -695,7 +695,7 @@
         var savedZipCode = null;  // Store ZIP code for reuse
         var savedZipLocation = null;  // Store geocoded location for reuse
         
-        // District data - UPDATED WITH ALL 63 DISTRICTS (41 original + 22 new)
+        // District data - UPDATED WITH ALL 58 DISTRICTS
         var districtData = {
             // Alaska
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
@@ -704,17 +704,8 @@
             'AZ-02': { rep: 'Eli Crane', party: 'R', action: 'FLIP', center: [35.1983, -111.6513] },
             'AZ-04': { rep: 'Greg Stanton', party: 'D', action: 'HOLD', center: [33.4152, -111.8315] },
             'AZ-06': { rep: 'Juan Ciscomani', party: 'R', action: 'FLIP', center: [32.2319, -110.9501] },
-            // California
-            'CA-09': { rep: 'Josh Harder', party: 'D', action: 'HOLD', center: [37.6391, -121.0018] },
-            'CA-13': { rep: 'Adam Gray', party: 'D', action: 'HOLD', center: [37.3022, -120.4832] },
-            'CA-21': { rep: 'Jim Costa', party: 'D', action: 'HOLD', center: [36.7315, -119.7985] },
-            'CA-22': { rep: 'David Valadao', party: 'R', action: 'FLIP', center: [35.3733, -119.0187] },
-            'CA-27': { rep: 'George Whitesides', party: 'D', action: 'HOLD', center: [34.2411, -118.5289] },
-            'CA-41': { rep: 'Ken Calvert', party: 'R', action: 'FLIP', center: [33.9735, -117.3298] },
-            'CA-45': { rep: 'Derek Tran', party: 'D', action: 'HOLD', center: [33.6405, -117.8443] },
-            'CA-47': { rep: 'Dave Min', party: 'D', action: 'HOLD', center: [33.7838, -118.1141] },
-            'CA-49': { rep: 'Mike Levin', party: 'D', action: 'HOLD', center: [33.1281, -117.3078] },
-            // Colorado
+            // California            'CA-13': { rep: 'Adam Gray', party: 'D', action: 'HOLD', center: [37.3022, -120.4832] },            'CA-22': { rep: 'David Valadao', party: 'R', action: 'FLIP', center: [35.3733, -119.0187] },            'CA-45': { rep: 'Derek Tran', party: 'D', action: 'HOLD', center: [33.6405, -117.8443] },
+            'CA-48': { rep: 'Darrell Issa', party: 'R', action: 'FLIP', center: [33.13, -116.95] },            // Colorado
             'CO-03': { rep: 'Jeff Hurd', party: 'R', action: 'FLIP', center: [39.5501, -107.7996] },
             'CO-08': { rep: 'Gabe Evans', party: 'R', action: 'FLIP', center: [39.8561, -104.6737] },
             // Connecticut
@@ -792,7 +783,7 @@
         var districtMappings = {
             "Alaska": ["AK-AL"],
             "Arizona": ["AZ-01", "AZ-02", "AZ-04", "AZ-06"],
-            "California": ["CA-09", "CA-13", "CA-21", "CA-22", "CA-27", "CA-41", "CA-45", "CA-47", "CA-49"],
+            "California": ["CA-13", "CA-22", "CA-45", "CA-48"],
             "Colorado": ["CO-03", "CO-08"],
             "Connecticut": ["CT-05"],
             "Florida": ["FL-23", "FL-25"],
@@ -1392,7 +1383,7 @@
             console.log('&#127758; EXPLORE: Starting national map exploration...');
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 63 competitive congressional districts across 25 states.</p></div>';
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 58 competitive congressional districts across 27 states.</p></div>';
             resultsContainer.style.display = 'block';
             
             var mapContainer = document.getElementById('mapContainer');
@@ -2833,7 +2824,7 @@
 
         // Initialize the app
         function init() {
-            console.log('&#127919; Drive Scout: App initialized with all 63 swing districts');
+            console.log('&#127919; Drive Scout: App initialized with all 58 swing districts');
             
             for (var state in districtMappings) {
                 collegeData[state] = {};
@@ -2846,7 +2837,7 @@
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('&#127919; Drive Scout: DOM loaded, initializing with all 63 districts...');
+            console.log('&#127919; Drive Scout: DOM loaded, initializing with all 58 districts...');
             
             setTimeout(function() {
                 init();
@@ -2918,7 +2909,7 @@
 
         showCampusesFromPopup = window.showCampusesFromPopup;
 
-        console.log("&#127919; Drive Scout loaded successfully with 63 total swing districts!");
+        console.log("&#127919; Drive Scout loaded successfully with 58 total swing districts!");
     </script>
 </body>
 </html>
