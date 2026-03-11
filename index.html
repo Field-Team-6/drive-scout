@@ -1608,35 +1608,8 @@
                     // Update the global current selected district
                     currentSelectedDistrict = selectedDistrict;
 
-                    // Load all districts first (with normal styling)
-                    loadAllSwingDistrictBoundaries();
-                    
-                    // Then load the selected state's districts with the selected one highlighted
-                    setTimeout(function() {
-                        loadDistrictBoundariesForMap(map, selectedDistrict);
-                    }, 500);
-
-                    map.on('zoomend', function() {
-                        var currentZoom = map.getZoom();
-                        
-                        if (currentZoom <= 6 && districtBoundariesVisible) {
-                            // At zoomed out view, show all districts
-                            loadAllSwingDistrictBoundaries();
-                            // Remove state-specific layer when zoomed out
-                            if (districtLayer) {
-                                map.removeLayer(districtLayer);
-                                districtLayer = null;
-                            }
-                        } else if (currentZoom > 6 && districtBoundariesVisible && selectedDistrict) {
-                            // At zoomed in view, show state districts with selection highlighted
-                            loadDistrictBoundariesForMap(map, selectedDistrict);
-                            // Remove the all-districts layer when zoomed in
-                            if (map.allSwingDistrictLayer) {
-                                map.removeLayer(map.allSwingDistrictLayer);
-                                map.allSwingDistrictLayer = null;
-                            }
-                        }
-                    });
+                    // Load only the selected state's districts (with selected one highlighted)
+                    loadDistrictBoundariesForMap(map, selectedDistrict);
 
                     setTimeout(function() {
                         fitMapToSelectedDistrict(selectedDistrict);
