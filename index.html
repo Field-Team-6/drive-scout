@@ -554,7 +554,7 @@
             
             <div style="background: transparent; padding: 0; margin: 8px 0; text-align: center;">
                 <button id="findClosestCampusesBtn" onclick="findClosestCampuses()" class="main-action-button">
-                    ðŸ” Find closest swing district campuses!
+                    🔍 Find closest swing district campuses!
                 </button>
                 <div style="color: white; font-size: 1.1rem; opacity: 0.9; margin: 10px 0;">
                     Or for advanced activists:
@@ -615,18 +615,18 @@
         
         <div id="faqContainer" class="faq-container">
             <div class="faq-header">
-                <h2>ðŸŽ¯ Drive Scout FAQ</h2>
+                <h2>&#127919; Drive Scout FAQ</h2>
                 <button class="faq-close" onclick="toggleFAQ()">Close FAQ</button>
             </div>
             
             <div class="faq-item">
                 <div class="faq-question">What is Drive Scout?</div>
-                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives â€” in the 63 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
+                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives  &mdash;  in the 63 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
             </div>
             
             <div class="faq-item">
                 <div class="faq-question">Do I need to get permission from a college before holding a voter drive?</div>
-                <div class="faq-answer">You do not! Voter registration is constitutionally protected activity â€” and a public service. Usually, all is good. Rarely, they ask us to leave, which we do politely, and go find another campus.</div>
+                <div class="faq-answer">You do not! Voter registration is constitutionally protected activity  &mdash;  and a public service. Usually, all is good. Rarely, they ask us to leave, which we do politely, and go find another campus.</div>
             </div>
             
             <div class="faq-item">
@@ -672,7 +672,7 @@
         </div>
         
         <div style="text-align: center; color: black; font-size: 0.9rem; line-height: 1.4; margin-bottom: 20px;">
-            Â©2026 Drive Scout<br>
+            &copy;2026 Drive Scout<br>
             PRIVACY NOTICE: Drive Scout collects no data.<br>
             Paid for by Field Team 6. www.fieldteam6.org.<br>
             Not authorized by any candidate or candidate's committee.
@@ -681,7 +681,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        console.log("ðŸŽ¯ Drive Scout: Loading with all 63 districts including new additions");
+        console.log("&#127919; Drive Scout: Loading with all 63 districts including new additions");
         
         // Global variables
         var map;
@@ -821,7 +821,7 @@
 
         // MAIN FUNCTION - Find closest campuses with ZIP code fallback
         function findClosestCampuses() {
-            console.log('ðŸ”„ WORKING: Starting findClosestCampuses...');
+            console.log('🔄 WORKING: Starting findClosestCampuses...');
             
             hideLocationSearchField();
             clearAllResults();
@@ -829,7 +829,7 @@
             var btn = document.getElementById('findClosestCampusesBtn');
             var resultContainer = document.getElementById('closestCampusesResult');
             
-            btn.innerHTML = 'ðŸ” Finding closest swing district...';
+            btn.innerHTML = '🔍 Finding closest swing district...';
             btn.disabled = true;
             
             navigator.geolocation.getCurrentPosition(
@@ -839,12 +839,12 @@
                 },
                 function(error) {
                     // Error or denied - check for saved ZIP first
-                    btn.innerHTML = 'ðŸ” Find closest swing district campuses!';
+                    btn.innerHTML = '🔍 Find closest swing district campuses!';
                     btn.disabled = false;
                     
                     if (savedZipLocation) {
                         // Reuse saved ZIP location
-                        console.log('âœ… Reusing saved ZIP code location:', savedZipCode);
+                        console.log('✅ Reusing saved ZIP code location:', savedZipCode);
                         processUserLocation(savedZipLocation.lat, savedZipLocation.lng);
                     } else {
                         // Ask for ZIP code
@@ -859,15 +859,15 @@
 
         // New function to handle ZIP code lookup
         function findClosestCampusesByZip(zipCode) {
-            console.log('ðŸ”„ WORKING: Finding closest campuses by ZIP code:', zipCode);
+            console.log('🔄 WORKING: Finding closest campuses by ZIP code:', zipCode);
             
             var btn = document.getElementById('findClosestCampusesBtn');
-            btn.innerHTML = 'ðŸ” Finding closest swing district...';
+            btn.innerHTML = '🔍 Finding closest swing district...';
             btn.disabled = true;
             
             // Check if we already geocoded this ZIP
             if (savedZipCode === zipCode && savedZipLocation) {
-                console.log('âœ… Reusing cached location for ZIP:', zipCode);
+                console.log('✅ Reusing cached location for ZIP:', zipCode);
                 processUserLocation(savedZipLocation.lat, savedZipLocation.lng);
                 return;
             }
@@ -885,7 +885,7 @@
                         var lat = parseFloat(location.lat);
                         var lng = parseFloat(location.lon);
                         
-                        console.log('âœ… Found ZIP code location:', lat, lng);
+                        console.log('✅ Found ZIP code location:', lat, lng);
                         
                         // Save ZIP and location for reuse
                         savedZipCode = zipCode;
@@ -894,14 +894,14 @@
                         processUserLocation(lat, lng);
                     } else {
                         alert('Could not find location for ZIP code: ' + zipCode + '. Please try again.');
-                        btn.innerHTML = 'ðŸ” Find closest swing district campuses!';
+                        btn.innerHTML = '🔍 Find closest swing district campuses!';
                         btn.disabled = false;
                     }
                 })
                 .catch(function(error) {
-                    console.log('âŒ Error geocoding ZIP code:', error);
+                    console.log('❌ Error geocoding ZIP code:', error);
                     alert('Error looking up ZIP code. Please try again.');
-                    btn.innerHTML = 'ðŸ” Find closest swing district campuses!';
+                    btn.innerHTML = '🔍 Find closest swing district campuses!';
                     btn.disabled = false;
                 });
         }
@@ -936,7 +936,7 @@
                             'Swing district: ' + closestDistrict +
                         '</div>' +
                         '<div style="color: #666; margin-bottom: 0;">' +
-                            '<em>' + Math.round(shortestDistance) + ' miles away</em> â€¢ Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action +
+                            '<em>' + Math.round(shortestDistance) + ' miles away</em> &bull; Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') &bull; ' + districtInfo.action +
                         '</div>' +
                     '</div>';
                 resultContainer.style.display = 'block';
@@ -958,7 +958,7 @@
                 }
             }
             
-            btn.innerHTML = 'ðŸ” Find closest swing district campuses!';
+            btn.innerHTML = '🔍 Find closest swing district campuses!';
             btn.disabled = false;
         }
 
@@ -999,7 +999,7 @@
                     
                     if (savedZipLocation) {
                         // Reuse saved ZIP location
-                        console.log('âœ… Reusing saved ZIP code location:', savedZipCode);
+                        console.log('✅ Reusing saved ZIP code location:', savedZipCode);
                         resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding closest swing districts...</h3><p>Using your saved ZIP code location.</p></div>';
                         resultsContainer.style.display = 'block';
                         processDistrictsLocation(savedZipLocation.lat, savedZipLocation.lng);
@@ -1016,13 +1016,13 @@
 
         // New function to handle ZIP code lookup for districts
         function findClosestDistrictsByZip(zipCode) {
-            console.log('ðŸ”„ WORKING: Finding closest districts by ZIP code:', zipCode);
+            console.log('🔄 WORKING: Finding closest districts by ZIP code:', zipCode);
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
             
             // Check if we already geocoded this ZIP
             if (savedZipCode === zipCode && savedZipLocation) {
-                console.log('âœ… Reusing cached location for ZIP:', zipCode);
+                console.log('✅ Reusing cached location for ZIP:', zipCode);
                 resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding closest swing districts...</h3><p>Using your saved ZIP code location.</p></div>';
                 resultsContainer.style.display = 'block';
                 processDistrictsLocation(savedZipLocation.lat, savedZipLocation.lng);
@@ -1045,7 +1045,7 @@
                         var lat = parseFloat(location.lat);
                         var lng = parseFloat(location.lon);
                         
-                        console.log('âœ… Found ZIP code location:', lat, lng);
+                        console.log('✅ Found ZIP code location:', lat, lng);
                         
                         // Save ZIP and location for reuse
                         savedZipCode = zipCode;
@@ -1057,7 +1057,7 @@
                     }
                 })
                 .catch(function(error) {
-                    console.log('âŒ Error geocoding ZIP code:', error);
+                    console.log('❌ Error geocoding ZIP code:', error);
                     resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Search Error</h3><p>Unable to look up ZIP code. Please try again.</p></div>';
                 });
         }
@@ -1100,7 +1100,7 @@
             
             if (startIndex === 0) {
                 html += '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 20px;">ðŸŽ¯ Closest Swing Districts</h2>';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 20px;">&#127919; Closest Swing Districts</h2>';
             } else {
                 html += '<div class="district-results-container">';
             }
@@ -1114,7 +1114,7 @@
                 html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
                 html += '<div>';
                 html += '<div style="font-weight: bold; font-size: 1.2rem; color: #333;">' + district.id + '</div>';
-                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> â€¢ Rep. ' + district.data.rep + ' (' + district.data.party + ') â€¢ ' + district.data.action + '</div>';
+                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> &bull; Rep. ' + district.data.rep + ' (' + district.data.party + ') &bull; ' + district.data.action + '</div>';
                 html += '</div>';
                 html += '<div>';
                 html += '<button onclick="showDistrictCampusesSimplified(\'' + district.id + '\')" style="background: #3D9BE9; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
@@ -1171,7 +1171,7 @@
                     '<div style="display: flex; justify-content: space-between; align-items: center;">' +
                         '<div>' +
                             '<div style="font-weight: bold; font-size: 1.2rem; color: #333;">' + district.id + '</div>' +
-                            '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> â€¢ Rep. ' + district.data.rep + ' (' + district.data.party + ') â€¢ ' + district.data.action + '</div>' +
+                            '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> &bull; Rep. ' + district.data.rep + ' (' + district.data.party + ') &bull; ' + district.data.action + '</div>' +
                         '</div>' +
                         '<div>' +
                             '<button onclick="showDistrictCampusesSimplified(\'' + district.id + '\')" style="background: #3D9BE9; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>' +
@@ -1224,7 +1224,7 @@
                         districtInfo.center[0], 
                         districtInfo.center[1]
                     );
-                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> â€¢ ';
+                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> &bull; ';
                 }
                 
                 resultContainer.innerHTML = 
@@ -1233,7 +1233,7 @@
                             'Swing district: ' + districtId +
                         '</div>' +
                         '<div style="color: #666; margin-bottom: 0;">' +
-                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action +
+                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') &bull; ' + districtInfo.action +
                         '</div>' +
                     '</div>';
                 resultContainer.style.display = 'block';
@@ -1281,7 +1281,7 @@
         }
 
         function searchByLocation(locationQuery) {
-            console.log('ðŸ”„ LOCATION SEARCH: Starting search for:', locationQuery);
+            console.log('🔄 LOCATION SEARCH: Starting search for:', locationQuery);
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
             resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Finding swing districts near ' + locationQuery + '...</h3><p>Searching for location and calculating distances.</p></div>';
@@ -1299,7 +1299,7 @@
                         var userLat = parseFloat(location.lat);
                         var userLng = parseFloat(location.lon);
                         
-                        console.log('âœ… LOCATION SEARCH: Found location:', location.display_name, userLat, userLng);
+                        console.log('✅ LOCATION SEARCH: Found location:', location.display_name, userLat, userLng);
                         
                         window.lastUserLocation = { lat: userLat, lng: userLng };
                         
@@ -1327,7 +1327,7 @@
                     }
                 })
                 .catch(function(error) {
-                    console.log('âŒ LOCATION SEARCH: Error:', error);
+                    console.log('❌ LOCATION SEARCH: Error:', error);
                     resultsContainer.innerHTML = '<div style="text-align: center; padding: 40px; color: white;"><h3>Search Error</h3><p>Unable to search for "' + locationQuery + '". Please try again.</p></div>';
                 });
         }
@@ -1343,7 +1343,7 @@
             
             if (startIndex === 0) {
                 html += '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 15px;">ðŸŽ¯ Swing Districts Near "' + searchQuery + '"</h2>';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 15px;">&#127919; Swing Districts Near "' + searchQuery + '"</h2>';
                 html += '<div style="background: rgba(255,255,255,0.1); padding: 12px; border-radius: 8px; color: white; text-align: center; margin-bottom: 20px; font-size: 0.9rem;">';
                 html += '<strong>Found:</strong> ' + foundLocation;
                 html += '</div>';
@@ -1360,7 +1360,7 @@
                 html += '<div style="display: flex; justify-content: space-between; align-items: center;">';
                 html += '<div>';
                 html += '<div style="font-weight: bold; font-size: 1.2rem; color: #333;">' + district.id + '</div>';
-                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> â€¢ Rep. ' + district.data.rep + ' (' + district.data.party + ') â€¢ ' + district.data.action + '</div>';
+                html += '<div style="color: #666; margin: 4px 0;"><em>' + Math.round(district.distance) + ' miles away</em> &bull; Rep. ' + district.data.rep + ' (' + district.data.party + ') &bull; ' + district.data.action + '</div>';
                 html += '</div>';
                 html += '<div>';
                 html += '<button onclick="showDistrictCampusesSimplified(\'' + district.id + '\')" style="background: #3D9BE9; color: white; padding: 8px 16px; border: none; border-radius: 6px; font-size: 0.9rem; cursor: pointer; font-weight: bold;">Show campuses</button>';
@@ -1389,7 +1389,7 @@
             clearMapAndList();
             clearAllResults();
             
-            console.log('ðŸŒŽ EXPLORE: Starting national map exploration...');
+            console.log('&#127758; EXPLORE: Starting national map exploration...');
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
             resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 63 competitive congressional districts across 25 states.</p></div>';
@@ -1410,7 +1410,7 @@
         }
 
         function initializeNationalMap() {
-            console.log('ðŸŒŽ EXPLORE: Initializing national map...');
+            console.log('&#127758; EXPLORE: Initializing national map...');
             
             if (map) {
                 map.remove();
@@ -1425,7 +1425,7 @@
                     }).setView([39.8283, -98.5795], 3);
                     
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                        attribution: 'Â© OpenStreetMap contributors Â© CARTO',
+                        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
                         maxZoom: 15,
                         minZoom: 1
                     }).addTo(map);
@@ -1445,9 +1445,9 @@
 
                     loadAllSwingDistrictBoundaries();
                     
-                    console.log('âœ… EXPLORE: National map initialized successfully');
+                    console.log('✅ EXPLORE: National map initialized successfully');
                 } else {
-                    console.log('âŒ EXPLORE: Leaflet not loaded');
+                    console.log('❌ EXPLORE: Leaflet not loaded');
                 }
             }, 50);
         }
@@ -1477,7 +1477,7 @@
                         userLocationMarker = L.marker([userLat, userLng], {
                             icon: L.divIcon({
                                 className: 'user-location-marker',
-                                html: '<div style="background: #FF4444; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 6px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">ðŸ“</div>',
+                                html: '<div style="background: #FF4444; width: 20px; height: 20px; border-radius: 50%; border: 3px solid white; box-shadow: 0 3px 6px rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 12px;">📍</div>',
                                 iconSize: [20, 20],
                                 iconAnchor: [10, 10]
                             })
@@ -1597,7 +1597,7 @@
                     }).setView([39.8283, -98.5795], 8);
                     
                     L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                        attribution: 'Â© OpenStreetMap contributors Â© CARTO',
+                        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
                         maxZoom: 15,
                         minZoom: 1
                     }).addTo(map);
@@ -1786,7 +1786,7 @@
                                 popupContent += ' <span style="background: #4CAF50; color: white; padding: 1px 6px; border-radius: 8px; font-size: 0.7rem; margin-left: 4px;">CURRENT</span>';
                             }
                             popupContent += '</div>';
-                            popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action + '</div>';
+                            popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') &bull; ' + districtInfo.action + '</div>';
                             popupContent += distanceText;
                             popupContent += '<div style="text-align: center; margin: 6px 0 0 0;">';
                             popupContent += '<button onclick="showCampusesFromPopup(\'' + featureDistrictId + '\')" style="background: #3D9BE9; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
@@ -1978,7 +1978,7 @@
                     
                     var popupContent = '<div style="padding: 8px 12px; border-left: 4px solid ' + partyBorderColor + '; background: ' + partyBackgroundColor + '; margin: 0; line-height: 1.2;">';
                     popupContent += '<div style="font-weight: bold; font-size: 1.1rem; color: #333; margin: 0 0 2px 0;">' + districtId + '</div>';
-                    popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action + '</div>';
+                    popupContent += '<div style="color: #666; font-size: 0.9rem; margin: 0 0 4px 0;">Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') &bull; ' + districtInfo.action + '</div>';
                     popupContent += distanceText;
                     popupContent += '<div style="text-align: center; margin: 6px 0 0 0;">';
                     popupContent += '<button onclick="showCampusesFromPopup(\'' + districtId + '\')" style="background: #3D9BE9; color: white; padding: 6px 12px; border: none; border-radius: 4px; font-size: 0.85rem; cursor: pointer; font-weight: bold; box-shadow: 0 1px 3px rgba(0,0,0,0.2);">Show Campuses</button>';
@@ -2667,8 +2667,8 @@
                     '</div>' +
                 '</div>' +
                 '<div style="display: flex; gap: 8px;">' +
-                    '<a href="https://www.google.com/maps/search/' + encodeURIComponent(addressDisplay) + '" target="_blank" class="btn btn-primary" style="padding: 4px 10px; font-size: 0.75rem;">ðŸ—ºï¸ Directions</a>' +
-                    '<a href="https://www.mobilize.us/ft6/c/lead-a-voter-drive/event/create/" target="_blank" class="btn btn-tertiary" style="padding: 4px 10px; font-size: 0.75rem;">ðŸ—³ï¸ Set Up Voter Drive</a>' +
+                    '<a href="https://www.google.com/maps/search/' + encodeURIComponent(addressDisplay) + '" target="_blank" class="btn btn-primary" style="padding: 4px 10px; font-size: 0.75rem;">&#128506; Directions</a>' +
+                    '<a href="https://www.mobilize.us/ft6/c/lead-a-voter-drive/event/create/" target="_blank" class="btn btn-tertiary" style="padding: 4px 10px; font-size: 0.75rem;">&#128499; Set Up Voter Drive</a>' +
                 '</div>';
 
             return div;
@@ -2833,7 +2833,7 @@
 
         // Initialize the app
         function init() {
-            console.log('ðŸŽ¯ Drive Scout: App initialized with all 63 swing districts');
+            console.log('&#127919; Drive Scout: App initialized with all 63 swing districts');
             
             for (var state in districtMappings) {
                 collegeData[state] = {};
@@ -2846,7 +2846,7 @@
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('ðŸŽ¯ Drive Scout: DOM loaded, initializing with all 63 districts...');
+            console.log('&#127919; Drive Scout: DOM loaded, initializing with all 63 districts...');
             
             setTimeout(function() {
                 init();
@@ -2855,7 +2855,7 @@
 
         // Global function for popup buttons
         window.showCampusesFromPopup = function(districtId) {
-            console.log('ðŸŽ¯ BUTTON CLICK: showCampusesFromPopup called for:', districtId);
+            console.log('&#127919; BUTTON CLICK: showCampusesFromPopup called for:', districtId);
             
             if (map) map.closePopup();
             
@@ -2872,12 +2872,12 @@
             }
             
             if (!foundState) {
-                console.log('âŒ POPUP: State not found for district:', districtId);
+                console.log('❌ POPUP: State not found for district:', districtId);
                 alert('Error: Could not find state for district ' + districtId);
                 return;
             }
             
-            console.log('âœ… POPUP: Found state', foundState, 'for district', districtId);
+            console.log('✅ POPUP: Found state', foundState, 'for district', districtId);
             
             var resultContainer = document.getElementById('closestCampusesResult');
             if (resultContainer) {
@@ -2893,7 +2893,7 @@
                         districtInfo.center[0], 
                         districtInfo.center[1]
                     );
-                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> â€¢ ';
+                    distanceText = '<em>' + Math.round(distance) + ' miles away</em> &bull; ';
                 }
                 
                 resultContainer.innerHTML = 
@@ -2902,7 +2902,7 @@
                             'Swing district: ' + districtId +
                         '</div>' +
                         '<div style="color: #666; margin-bottom: 0;">' +
-                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') â€¢ ' + districtInfo.action +
+                            distanceText + 'Rep. ' + districtInfo.rep + ' (' + districtInfo.party + ') &bull; ' + districtInfo.action +
                         '</div>' +
                     '</div>';
                 resultContainer.style.display = 'block';
@@ -2918,7 +2918,7 @@
 
         showCampusesFromPopup = window.showCampusesFromPopup;
 
-        console.log("ðŸŽ¯ Drive Scout loaded successfully with 63 total swing districts!");
+        console.log("&#127919; Drive Scout loaded successfully with 63 total swing districts!");
     </script>
 </body>
 </html>
