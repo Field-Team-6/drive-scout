@@ -621,7 +621,7 @@
             
             <div class="faq-item">
                 <div class="faq-question">What is Drive Scout?</div>
-                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives  &mdash;  in the 58 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
+                <div class="faq-answer">Drive Scout helps progressive activists find the best college campuses for voter drives  &mdash;  in the 56 most hotly-contested House districts for 2026! Drive Scout is a project of <a href="https://www.fieldteam6.org" target="_blank">Field Team 6</a>, the one and only national organization laser-focused on registering Democrats in swing districts & states, all year, every year.</div>
             </div>
             
             <div class="faq-item">
@@ -681,7 +681,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        console.log("&#127919; Drive Scout: Loading with all 58 districts including new additions");
+        console.log("&#127919; Drive Scout: Loading with all 56 districts including new additions");
         
         // Global variables
         var map;
@@ -695,7 +695,7 @@
         var savedZipCode = null;  // Store ZIP code for reuse
         var savedZipLocation = null;  // Store geocoded location for reuse
         
-        // District data - UPDATED WITH ALL 58 DISTRICTS
+        // District data - UPDATED WITH ALL 56 DISTRICTS
         var districtData = {
             // Alaska
             'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
@@ -737,9 +737,6 @@
             'NV-01': { rep: 'Dina Titus', party: 'D', action: 'HOLD', center: [36.1699, -115.1398] },
             'NV-03': { rep: 'Susie Lee', party: 'D', action: 'HOLD', center: [36.0395, -115.1656] },
             'NV-04': { rep: 'Steven Horsford', party: 'D', action: 'HOLD', center: [36.2277, -115.2640] },
-            // New Hampshire - NEW
-            'NH-01': { rep: 'Chris Pappas', party: 'D', action: 'HOLD', center: [43.0059, -71.0132] },
-            'NH-02': { rep: 'Annie Kuster', party: 'D', action: 'HOLD', center: [43.6425, -72.2534] },
             // New Jersey
             'NJ-03': { rep: 'Herb Conaway', party: 'D', action: 'HOLD', center: [39.9751, -74.6114] },
             'NJ-07': { rep: 'Thomas Kean Jr.', party: 'R', action: 'FLIP', center: [40.7357, -74.8331] },
@@ -796,7 +793,6 @@
             "Montana": ["MT-01"],  // NEW STATE
             "Nebraska": ["NE-02"],  // NEW STATE
             "Nevada": ["NV-01", "NV-03", "NV-04"],
-            "New Hampshire": ["NH-01", "NH-02"],  // NEW STATE
             "New Jersey": ["NJ-03", "NJ-07", "NJ-09"],
             "New Mexico": ["NM-02"],  // NEW STATE
             "New York": ["NY-03", "NY-04", "NY-17", "NY-19"],
@@ -1383,7 +1379,7 @@
             console.log('&#127758; EXPLORE: Starting national map exploration...');
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 58 competitive congressional districts across 27 states.</p></div>';
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 56 competitive congressional districts across 26 states.</p></div>';
             resultsContainer.style.display = 'block';
             
             var mapContainer = document.getElementById('mapContainer');
@@ -1682,7 +1678,6 @@
                 'Montana': 'data/boundaries/montana_districts_119th.json',  // NEW
                 'Nebraska': 'data/boundaries/nebraska_districts_119th.json',  // NEW
                 'Nevada': 'data/boundaries/nevada_districts_119th.json',
-                'New Hampshire': 'data/boundaries/newhampshire_districts_119th.json',  // NEW
                 'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
                 'New Mexico': 'data/boundaries/newmexico_districts_119th.json',  // NEW
                 'New York': 'data/boundaries/newyork_districts_119th.json',
@@ -1838,7 +1833,7 @@
             // Load all states with swing districts
             var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 
                                'Indiana', 'Iowa', 'Maine', 'Maryland', 'Michigan', 'Montana', 'Nebraska', 'Nevada', 
-                               'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'Ohio', 
+                               'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'Ohio', 
                                'Oregon', 'Pennsylvania', 'Texas', 'Virginia', 'Washington', 'Wisconsin'];
             var allBoundariesData = { type: "FeatureCollection", features: [] };
             
@@ -1858,7 +1853,6 @@
                 'Montana': 'data/boundaries/montana_districts_119th.json',
                 'Nebraska': 'data/boundaries/nebraska_districts_119th.json',
                 'Nevada': 'data/boundaries/nevada_districts_119th.json',
-                'New Hampshire': 'data/boundaries/newhampshire_districts_119th.json',
                 'New Jersey': 'data/boundaries/newjersey_districts_119th.json',
                 'New Mexico': 'data/boundaries/newmexico_districts_119th.json',
                 'New York': 'data/boundaries/newyork_districts_119th.json',
@@ -2824,7 +2818,7 @@
 
         // Initialize the app
         function init() {
-            console.log('&#127919; Drive Scout: App initialized with all 58 swing districts');
+            console.log('&#127919; Drive Scout: App initialized with all 56 swing districts');
             
             for (var state in districtMappings) {
                 collegeData[state] = {};
@@ -2837,7 +2831,7 @@
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('&#127919; Drive Scout: DOM loaded, initializing with all 58 districts...');
+            console.log('&#127919; Drive Scout: DOM loaded, initializing with all 56 districts...');
             
             setTimeout(function() {
                 init();
@@ -2909,7 +2903,7 @@
 
         showCampusesFromPopup = window.showCampusesFromPopup;
 
-        console.log("&#127919; Drive Scout loaded successfully with 58 total swing districts!");
+        console.log("&#127919; Drive Scout loaded successfully with 56 total swing districts!");
     </script>
 </body>
 </html>
