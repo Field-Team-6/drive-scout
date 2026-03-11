@@ -1608,8 +1608,14 @@
                     // Update the global current selected district
                     currentSelectedDistrict = selectedDistrict;
 
-                    // Load only the selected state's districts (with selected one highlighted)
-                    loadDistrictBoundariesForMap(map, selectedDistrict);
+                    // Load ALL swing districts nationally (light styling)
+                    loadAllSwingDistrictBoundaries();
+                    
+                    // Also load selected state's districts with the selected one highlighted
+                    // (this layer sits on top of the national one)
+                    setTimeout(function() {
+                        loadDistrictBoundariesForMap(map, selectedDistrict);
+                    }, 500);
 
                     setTimeout(function() {
                         fitMapToSelectedDistrict(selectedDistrict);
