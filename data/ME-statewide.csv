@@ -1,0 +1,22 @@
+Section,Institution,Type,Address,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Maine,Public University,"168 College Ave, Orono ME 04469",44.8974,-68.6679,12231,3800,High,State flagship; largest campus in Maine; strong quad spaces
+Within,University of Southern Maine,Public University,"96 Falmouth St, Portland ME 04103",43.6648,-70.3100,7200,144,High,Urban campus in Portland; strong foot traffic
+Within,Southern Maine Community College,Community College,"2 Fort Road, South Portland ME 04106",43.6320,-70.2412,6000,100,High,Maine's largest community college; South Portland campus
+Within,Central Maine Community College,Community College,"1250 Turner St, Auburn ME 04210",44.0979,-70.2265,4121,135,High,Large community college; Auburn campus with open spaces
+Within,University of New England,Private University,"11 Hills Beach Rd, Biddeford ME 04005",43.4739,-70.4581,3800,540,Medium,Private; large campus; Biddeford waterfront location
+Within,Bates College,Private College,"2 Andrews Rd, Lewiston ME 04240",44.1056,-70.2031,1800,133,Medium,Prestigious liberal arts; Lewiston; active campus green
+Within,Bowdoin College,Private College,"255 Maine St, Brunswick ME 04011",43.9071,-69.9653,1900,215,Medium,Prestigious liberal arts; Brunswick; beautiful campus quad
+Within,Colby College,Private College,"4000 Mayflower Hill Dr, Waterville ME 04901",44.5638,-69.6627,2100,714,Medium,Liberal arts; Waterville; large campus
+Within,Eastern Maine Community College,Community College,"354 Hogan Rd, Bangor ME 04401",44.7922,-68.7401,2350,72,Medium,Bangor campus; central Maine hub
+Within,Kennebec Valley Community College,Community College,"92 Western Ave, Fairfield ME 04937",44.6004,-69.6221,2400,600,Medium,Large campus in Fairfield; open grounds
+Within,University of Maine at Augusta,Public University,"46 University Dr, Augusta ME 04330",44.3445,-69.7376,4500,159,Medium,Public; Augusta; commuter-heavy but open grounds
+Within,Husson University,Private University,"1 College Circle, Bangor ME 04401",44.7726,-68.7329,2500,208,Medium,Private; Bangor; solid campus size
+Within,Thomas College,Private College,"180 West River Rd, Waterville ME 04901",44.5399,-69.6693,1200,120,Low,Private; small enrollment; Waterville
+Within,University of Maine at Farmington,Public University,"224 Main St, Farmington ME 04938",44.6701,-70.1543,1800,55,Low,Public; small town; modest campus
+Within,York County Community College,Community College,"112 College Dr, Wells ME 04090",43.3195,-70.5770,1782,84,Low,84-acre wooded campus; Wells; smaller enrollment
+Within,University of Maine at Presque Isle,Public University,"181 Main St, Presque Isle ME 04769",46.6823,-68.0166,1800,150,Low,Far northern Maine; growing enrollment
+Within,Northern Maine Community College,Community College,"33 Edgemont Dr, Presque Isle ME 04769",46.6897,-68.0104,1000,87,Low,Small enrollment; Presque Isle; 87-acre campus
+Within,Maine Maritime Academy,Public College,"1 Pleasant St, Castine ME 04420",44.3891,-68.7945,1100,35,Low,Specialized maritime; small campus; Castine
+Within,University of Maine at Fort Kent,Public University,"23 University Dr, Fort Kent ME 04743",47.2591,-68.5904,1200,52,Low,Very rural; far northern Maine; small enrollment
+Within,University of Maine at Machias,Public University,"116 O'Brien Ave, Machias ME 04654",44.7154,-67.4622,1000,42,Low,Very small; coastal far eastern Maine
+Within,Washington County Community College,Community College,"1 College Dr, Calais ME 04619",45.1706,-67.2830,805,400,Low,Very small enrollment; rural Calais; large campus acreage
