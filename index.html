@@ -636,7 +636,12 @@
                         </button>
                     </div>
 
-
+                    <div style="text-align: center; margin-bottom: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 16px;">
+                        <div style="color: white; font-size: 0.9rem; margin-bottom: 10px; opacity: 0.9;">&#127963; Senate target state with no swing House districts:</div>
+                        <button onclick="loadGeorgiaStatewide()" style="background: #02013C; color: #ffd700; border: 2px solid #ffd700; padding: 12px 25px; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                            &#127979; Georgia Senate &mdash; All Campuses
+                        </button>
+                    </div>
                 </div>
                 <div id="closestCampusesResult" style="display: none; margin: 5px 0 0 0 !important; padding: 0 !important;"></div>
             </div>
@@ -3109,11 +3114,39 @@
                 resultContainer.style.display = 'block';
             }
 
-            // If a district from this state is already showing, just append
+            // If a district from this state is already showing, just append statewide extras
             var districtAlreadyShowing = (currentSelectedDistrict && senateDistrictToState[currentSelectedDistrict] === stateAbbr);
             if (districtAlreadyShowing) {
                 loadStatewideCSV(stateAbbr, stateName, true);
                 return;
+            }
+
+            // Find the swing districts for this state
+            var swingDistrictsInState = [];
+            for (var d in senateDistrictToState) {
+                if (senateDistrictToState[d] === stateAbbr) {
+                    swingDistrictsInState.push(d);
+                }
+            }
+
+            // If there are swing districts in this state, load the first one's colleges
+            // then append any additional statewide colleges below
+            if (swingDistrictsInState.length > 0) {
+                var firstDistrict = swingDistrictsInState[0];
+                var foundState = null;
+                for (var s in districtMappings) {
+                    for (var k = 0; k < districtMappings[s].length; k++) {
+                        if (districtMappings[s][k] === firstDistrict) {
+                            foundState = s;
+                            break;
+                        }
+                    }
+                    if (foundState) break;
+                }
+                if (foundState) {
+                    displayColleges(foundState, firstDistrict);
+                    return;
+                }
             }
 
             if (collegeItems) {
@@ -3177,6 +3210,9 @@
             if (!collegeItems) return;
             collegeItems.innerHTML = '';
 
+            // Clear ALL markers from any previously displayed state or district
+            clearMarkers();
+
             var banner = document.createElement('div');
             banner.className = 'senate-banner';
             var bannerText = stateAbbr === 'GA'
@@ -3209,46 +3245,27 @@
             var existing = document.getElementById('statewideSection');
             if (existing) existing.parentNode.removeChild(existing);
 
-            // Build a set of already-displayed college names to avoid duplicates
-            var alreadyShown = {};
-            var existingItems = container.querySelectorAll('.college-item');
-            for (var k = 0; k < existingItems.length; k++) {
-                var nameEl = existingItems[k].querySelector('div[style*="font-weight: bold"]');
-                if (nameEl && nameEl.textContent) {
-                    alreadyShown[nameEl.textContent.trim().toLowerCase()] = true;
-                }
-            }
-
-            // Filter out colleges already shown in the district view
-            var newColleges = [];
-            for (var j = 0; j < colleges.length; j++) {
-                var cname = (colleges[j].name || '').trim().toLowerCase();
-                if (!alreadyShown[cname]) {
-                    newColleges.push(colleges[j]);
-                }
-            }
-
             var section = document.createElement('div');
             section.id = 'statewideSection';
 
             var header = document.createElement('h2');
             header.className = 'senate-colleges-header';
-            header.innerHTML = '&#127963; MORE COLLEGES IN ' + stateName.toUpperCase() + ' (' + newColleges.length + ')';
+            header.innerHTML = '&#127963; ALL COLLEGES IN ' + stateName.toUpperCase() + ' (' + colleges.length + ')';
             section.appendChild(header);
 
-            for (var i = 0; i < newColleges.length; i++) {
-                section.appendChild(createCollegeElement(newColleges[i]));
+            for (var i = 0; i < colleges.length; i++) {
+                section.appendChild(createCollegeElement(colleges[i]));
             }
             container.appendChild(section);
 
             // Add statewide markers WITHOUT clearing existing district markers
-            if (map && newColleges.length > 0) {
+            if (map && colleges.length > 0) {
                 for (var i = 0; i < statewideMarkers.length; i++) {
                     if (map && statewideMarkers[i]) map.removeLayer(statewideMarkers[i]);
                 }
                 statewideMarkers = [];
-                for (var i = 0; i < newColleges.length; i++) {
-                    var college = newColleges[i];
+                for (var i = 0; i < colleges.length; i++) {
+                    var college = colleges[i];
                     if (!college.lat || !college.lng) continue;
                     var lat = parseFloat(college.lat);
                     var lng = parseFloat(college.lng);
@@ -3273,7 +3290,9 @@
             }
 
             var btn = document.getElementById('statewideBtn');
-            if (btn) { btn.innerHTML = '&#10003; Showing all ' + stateName + ' campuses (' + newColleges.length + ' additional)'; btn.disabled = true; }
+            if (btn) { btn.innerHTML = '&#10003; Showing all ' + stateName + ' campuses (' + colleges.length + ')'; btn.disabled = true; }
+
+            setTimeout(function() { section.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
         }
 
         // Green/yellow/red markers for statewide colleges
