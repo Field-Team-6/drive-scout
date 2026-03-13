@@ -636,12 +636,7 @@
                         </button>
                     </div>
 
-                    <div style="text-align: center; margin-bottom: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 16px;">
-                        <div style="color: white; font-size: 0.9rem; margin-bottom: 10px; opacity: 0.9;">&#127963; Senate target state with no swing House districts:</div>
-                        <button onclick="loadGeorgiaStatewide()" style="background: #02013C; color: #ffd700; border: 2px solid #ffd700; padding: 12px 25px; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
-                            &#127979; Georgia Senate &mdash; All Campuses
-                        </button>
-                    </div>
+
                 </div>
                 <div id="closestCampusesResult" style="display: none; margin: 5px 0 0 0 !important; padding: 0 !important;"></div>
             </div>
@@ -3114,39 +3109,11 @@
                 resultContainer.style.display = 'block';
             }
 
-            // If a district from this state is already showing, just append statewide extras
+            // If a district from this state is already showing, just append
             var districtAlreadyShowing = (currentSelectedDistrict && senateDistrictToState[currentSelectedDistrict] === stateAbbr);
             if (districtAlreadyShowing) {
                 loadStatewideCSV(stateAbbr, stateName, true);
                 return;
-            }
-
-            // Find the swing districts for this state
-            var swingDistrictsInState = [];
-            for (var d in senateDistrictToState) {
-                if (senateDistrictToState[d] === stateAbbr) {
-                    swingDistrictsInState.push(d);
-                }
-            }
-
-            // If there are swing districts in this state, load the first one's colleges
-            // then append any additional statewide colleges below
-            if (swingDistrictsInState.length > 0) {
-                var firstDistrict = swingDistrictsInState[0];
-                var foundState = null;
-                for (var s in districtMappings) {
-                    for (var k = 0; k < districtMappings[s].length; k++) {
-                        if (districtMappings[s][k] === firstDistrict) {
-                            foundState = s;
-                            break;
-                        }
-                    }
-                    if (foundState) break;
-                }
-                if (foundState) {
-                    displayColleges(foundState, firstDistrict);
-                    return;
-                }
             }
 
             if (collegeItems) {
@@ -3210,7 +3177,7 @@
             if (!collegeItems) return;
             collegeItems.innerHTML = '';
 
-            // Clear ALL markers from any previously displayed state or district
+            // Clear ALL markers (district and statewide) from any previous view
             clearMarkers();
 
             var banner = document.createElement('div');
@@ -3291,8 +3258,6 @@
 
             var btn = document.getElementById('statewideBtn');
             if (btn) { btn.innerHTML = '&#10003; Showing all ' + stateName + ' campuses (' + colleges.length + ')'; btn.disabled = true; }
-
-            setTimeout(function() { section.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100);
         }
 
         // Green/yellow/red markers for statewide colleges
