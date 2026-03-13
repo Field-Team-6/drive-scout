@@ -733,7 +733,7 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        console.log("&#127919; Drive Scout: Loading with 55 districts — Alaska is Senate-only");
+        console.log("&#127919; Drive Scout: Loading with all 56 districts including new additions");
         
         // Global variables
         var map;
@@ -747,8 +747,10 @@
         var savedZipCode = null;  // Store ZIP code for reuse
         var savedZipLocation = null;  // Store geocoded location for reuse
         
-        // District data - UPDATED WITH ALL 55 DISTRICTS (Alaska is Senate-only, no House swing district)
+        // District data - UPDATED WITH ALL 56 DISTRICTS
         var districtData = {
+            // Alaska
+            'AK-AL': { rep: 'Nicholas Begich', party: 'R', action: 'FLIP', center: [64.0685, -152.2782] },
             // Arizona
             'AZ-01': { rep: 'David Schweikert', party: 'R', action: 'FLIP', center: [33.6061, -111.8781] },
             'AZ-02': { rep: 'Eli Crane', party: 'R', action: 'FLIP', center: [35.1983, -111.6513] },
@@ -832,6 +834,7 @@
         };
 
         var districtMappings = {
+            "Alaska": ["AK-AL"],
             "Arizona": ["AZ-01", "AZ-02", "AZ-04", "AZ-06"],
             "California": ["CA-13", "CA-22", "CA-45", "CA-48"],
             "Colorado": ["CO-03", "CO-08"],
@@ -1432,7 +1435,7 @@
             console.log('&#127758; EXPLORE: Starting national map exploration...');
             
             var resultsContainer = document.getElementById('closestDistrictsResults');
-            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 55 competitive congressional districts across 25 states.</p></div>';
+            resultsContainer.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading national swing districts map...</h3><p>Showing all 56 competitive congressional districts across 26 states.</p></div>';
             resultsContainer.style.display = 'block';
             
             var mapContainer = document.getElementById('mapContainer');
@@ -1442,7 +1445,7 @@
             
             setTimeout(function() {
                 var html = '<div class="district-results-container">';
-                html += '<h2 style="color: white; text-align: center; margin-bottom: 30px; margin-top: -22px;">All 2026 Swing Districts</h2>';
+                html += '<h2 style="color: white; text-align: center; margin-bottom: 30px; margin-top: -22px;">All 2026 Swing Districts and States</h2>';
                 html += '</div>';
                 
                 resultsContainer.innerHTML = html;
@@ -1705,6 +1708,7 @@
             if (!state) return;
             
             var boundaryFiles = {
+                'Alaska': 'data/boundaries/alaska_districts_119th.json',
                 'Arizona': 'data/boundaries/arizona_districts_119th.json',
                 'California': 'data/boundaries/california_districts_119th.json',
                 'Colorado': 'data/boundaries/colorado_districts_119th.json',
@@ -1872,13 +1876,14 @@
             }
             
             // Load all states with swing districts
-            var statesToLoad = ['Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 
+            var statesToLoad = ['Alaska', 'Arizona', 'California', 'Colorado', 'Connecticut', 'Florida', 'Illinois', 
                                'Indiana', 'Iowa', 'Maine', 'Maryland', 'Michigan', 'Montana', 'Nebraska', 'Nevada', 
                                'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'Ohio', 
                                'Oregon', 'Pennsylvania', 'Texas', 'Virginia', 'Washington', 'Wisconsin'];
             var allBoundariesData = { type: "FeatureCollection", features: [] };
             
             var boundaryFiles = {
+                'Alaska': 'data/boundaries/alaska_districts_119th.json',
                 'Arizona': 'data/boundaries/arizona_districts_119th.json',
                 'California': 'data/boundaries/california_districts_119th.json',
                 'Colorado': 'data/boundaries/colorado_districts_119th.json',
@@ -2106,8 +2111,20 @@
             if (!map || !districtLayer) {
                 if (selectedDistrict && districtData[selectedDistrict]) {
                     var districtInfo = districtData[selectedDistrict];
+                    
+                    if (selectedDistrict === 'AK-AL') {
+                        map.setView([districtInfo.center[0], districtInfo.center[1]], 3);
+                        return;
+                    }
+                    
                     map.setView([districtInfo.center[0], districtInfo.center[1]], 8);
                 }
+                return;
+            }
+            
+            if (selectedDistrict === 'AK-AL') {
+                var alaskaCenter = districtData['AK-AL'].center;
+                map.setView([alaskaCenter[0], alaskaCenter[1]], 3);
                 return;
             }
             
@@ -2862,7 +2879,7 @@
 
         // Initialize the app
         function init() {
-            console.log('&#127919; Drive Scout: App initialized with 55 swing districts (Alaska Senate-only)');
+            console.log('&#127919; Drive Scout: App initialized with all 56 swing districts');
             
             for (var state in districtMappings) {
                 collegeData[state] = {};
@@ -2875,7 +2892,7 @@
 
         // Start the app when DOM loads
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('&#127919; Drive Scout: DOM loaded, initializing with 55 districts (Alaska Senate-only)...');
+            console.log('&#127919; Drive Scout: DOM loaded, initializing with all 56 districts...');
             
             setTimeout(function() {
                 init();
@@ -2974,6 +2991,7 @@
         var senateDistrictToState = {
             'OH-01': 'OH', 'OH-09': 'OH', 'OH-13': 'OH',
             'NC-01': 'NC',
+            'AK-AL': 'AK',
             'MI-07': 'MI', 'MI-08': 'MI', 'MI-10': 'MI',
             'ME-02': 'ME',
             'IA-01': 'IA', 'IA-03': 'IA'
@@ -3323,7 +3341,7 @@
             }
         }
 
-        console.log("&#127919; Drive Scout loaded with 55 swing districts + Senate Target States (Alaska is Senate-only)!");
+        console.log("&#127919; Drive Scout loaded with 56 swing districts + Senate Target States!");
     </script>
 </body>
 </html>
