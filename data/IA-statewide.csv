@@ -1,36 +1,42 @@
-Section,Institution,Type,Address,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
-Within,University of Iowa,Public University,"101 Jessup Hall, Iowa City IA 52242",41.6611,-91.5302,32000,1880,High,Flagship; Iowa City; iconic Pentacrest; great open spaces
-Within,Iowa State University,Public University,"2229 Lincoln Way, Ames IA 50011",42.0267,-93.6465,31000,1788,High,Large research university; Ames; beautiful central campus
-Within,University of Northern Iowa,Public University,"1227 W 27th St, Cedar Falls IA 50614",42.5180,-92.4661,9500,913,High,Cedar Falls; large open campus
-Within,Iowa Western Community College,Community College,"2700 College Rd, Council Bluffs IA 51503",41.2722,-95.8658,6000,282,High,Omaha metro area; Council Bluffs; solid enrollment
-Within,Kirkwood Community College,Community College,"6301 Kirkwood Blvd SW, Cedar Rapids IA 52404",41.9611,-91.7157,16000,800,High,Largest community college in Iowa; Cedar Rapids
-Within,Des Moines Area Community College,Community College,"2006 S Ankeny Blvd, Ankeny IA 50023",41.7288,-93.6042,23000,260,High,Huge enrollment; multiple campuses; Des Moines metro
-Within,Eastern Iowa Community College,Community College,"101 W 3rd St, Davenport IA 52801",41.5236,-90.5776,9000,4,High,Quad Cities metro; large enrollment
-Within,Indian Hills Community College,Community College,"525 Grandview Ave, Ottumwa IA 52501",41.0248,-92.4164,5000,400,Medium,Ottumwa; large rural campus; solid enrollment
-Within,Hawkeye Community College,Community College,"1501 E Orange Rd, Waterloo IA 50701",42.5204,-92.3228,5500,320,Medium,Waterloo/Cedar Falls area; solid enrollment
-Within,Iowa Central Community College,Community College,"330 Ave M, Fort Dodge IA 50501",42.5013,-94.1631,4000,325,Medium,Fort Dodge; large campus; moderate enrollment
-Within,Southwestern Community College,Community College,"1501 W Townline St, Creston IA 50801",41.0633,-94.3775,2000,146,Low,Rural south Iowa; small enrollment
-Within,Southeastern Community College,Community College,"1500 W Agency Rd, West Burlington IA 52655",40.8289,-91.1769,3500,200,Medium,Southeast Iowa; Burlington area
-Within,Northeast Iowa Community College,Community College,"1625 Hwy 150 S, Calmar IA 52132",43.1840,-91.8728,5000,200,Medium,Rural northeast Iowa; Calmar; moderate enrollment
-Within,Northwest Iowa Community College,Community College,"603 W Park St, Sheldon IA 51201",43.1841,-95.8522,1500,320,Low,Rural northwest Iowa; very small enrollment
-Within,North Iowa Area Community College,Community College,"500 College Dr, Mason City IA 50401",43.1586,-93.1906,3000,400,Medium,Mason City; large campus; moderate enrollment
-Within,Western Iowa Tech Community College,Community College,"4647 Stone Ave, Sioux City IA 51106",42.4571,-96.3731,5000,145,Medium,Sioux City metro; solid enrollment
-Within,Iowa Lakes Community College,Community College,"19 S 7th St, Estherville IA 51334",43.4011,-94.8320,2500,200,Low,Northwest Iowa; small enrollment
-Within,Marshalltown Community College,Community College,"3700 S Center St, Marshalltown IA 50158",42.0219,-92.9180,1800,160,Low,Central Iowa; small enrollment
-Within,Clinton Community College,Community College,"1000 Lincoln Blvd, Clinton IA 52732",41.8458,-90.2040,1500,25,Low,Small community college; Clinton
-Within,Muscatine Community College,Community College,"152 Colorado St, Muscatine IA 52761",41.4163,-91.0427,1500,45,Low,Small community college; Muscatine
-Within,Ellsworth Community College,Community College,"1100 College Ave, Iowa Falls IA 50126",42.5158,-93.2533,1200,50,Low,Small community college; Iowa Falls
-Within,Drake University,Private University,"2507 University Ave, Des Moines IA 50311",41.6027,-93.6470,5500,150,High,Prestigious private; Des Moines; active campus
-Within,Grinnell College,Private College,"1115 8th Ave, Grinnell IA 50112",41.7444,-92.7237,1700,126,Low,Elite liberal arts; Grinnell; small enrollment
-Within,Luther College,Private College,"700 College Dr, Decorah IA 52101",43.3024,-91.7990,2000,200,Low,Private Lutheran; Decorah; scenic campus; small enrollment
-Within,Coe College,Private College,"1220 First Ave NE, Cedar Rapids IA 52402",42.0049,-91.6327,1500,55,Low,Private; Cedar Rapids; small enrollment
-Within,Cornell College,Private College,"600 First St SW, Mount Vernon IA 52314",41.9224,-91.4215,1100,129,Low,Private liberal arts; Mount Vernon; small enrollment
-Within,Loras College,Private College,"1450 Alta Vista St, Dubuque IA 52001",42.5108,-90.6781,1400,60,Low,Private Catholic; Dubuque; small enrollment
-Within,University of Dubuque,Private University,"2000 University Ave, Dubuque IA 52001",42.5015,-90.7031,2200,77,Low,Private Presbyterian; Dubuque; small enrollment
-Within,Clarke University,Private University,"1550 Clarke Dr, Dubuque IA 52001",42.4864,-90.7053,1200,55,Low,Private Catholic; Dubuque; small enrollment
-Within,Wartburg College,Private College,"100 Wartburg Blvd, Waverly IA 50677",42.7332,-92.4843,1600,118,Low,Private Lutheran; Waverly; small enrollment
-Within,Simpson College,Private College,"701 N C St, Indianola IA 50125",41.3618,-93.5550,1500,75,Low,Private Methodist; Indianola; south of Des Moines
-Within,Buena Vista University,Private University,"610 W 4th St, Storm Lake IA 50588",42.6422,-95.2067,1500,60,Low,Private; Storm Lake; small enrollment
-Within,Central College,Private College,"812 University St, Pella IA 50219",41.4069,-92.9199,1300,130,Low,Private Reformed; Pella; small enrollment
-Within,Upper Iowa University,Private University,"605 Washington St, Fayette IA 52142",42.8394,-91.8027,5000,100,Medium,Private; multiple campuses; moderate total enrollment
-Within,Dordt University,Private University,"700 7th St NE, Sioux Center IA 51250",43.0784,-96.1826,1800,150,Low,Private Christian; Sioux Center; small enrollment
+Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Iowa,Public University,"101 Jessup Hall, Iowa City, IA 52242",Iowa City,IA,52242,41.654537,-91.573275,22130,1880,High,"Large research university with extensive open campus areas, quad spaces"
+Within,Iowa State University,Public University,"2229 Lincoln Way, Ames IA 50011",Ames,IA,50011,42.0267,-93.6465,31000,1788,High,Large research university; Ames; beautiful central campus
+Within,University of Northern Iowa,Public University,"1227 W 27th St, Cedar Falls IA 50614",Cedar Falls,IA,50614,42.5180,-92.4661,9500,913,High,Cedar Falls; large open campus
+Within,Des Moines Area Community College - Ankeny Campus,Community College,"2006 S Ankeny Boulevard, Ankeny, IA 50023",Ankeny,IA,50023,41.706888,-93.610666,23051,304,High,Large community college main campus with extensive outdoor spaces
+Within,Kirkwood Community College - Main Campus,Community College,"6301 Kirkwood Boulevard SW, Cedar Rapids, IA 52404",Cedar Rapids,IA,52404,41.918706,-91.655332,12277,680,High,"Large CC with extensive campus facilities, 14,000+ total students served"
+Within,Drake University,Private University,"2507 University Avenue, Des Moines, IA 50311",Des Moines,IA,50311,41.600473,-93.651544,4685,150,High,Large private university with extensive campus grounds suitable for voter drives
+Within,Iowa Western Community College,Community College,"2700 College Road, Council Bluffs, IA 51503",Council Bluffs,IA,51503,41.272595,-95.801547,5342,250,High,Community college with large campus grounds
+Within,Eastern Iowa Community College,Community College,"101 W 3rd St, Davenport IA 52801",Davenport,IA,52801,41.5236,-90.5776,9000,4,High,Quad Cities metro; large enrollment
+Within,Hawkeye Community College,Community College,"1501 E Orange Rd, Waterloo IA 50701",Waterloo,IA,50701,42.5204,-92.3228,5500,320,Medium,Waterloo/Cedar Falls area; solid enrollment
+Within,Indian Hills Community College,Community College,"525 Grandview Ave, Ottumwa IA 52501",Ottumwa,IA,52501,41.0248,-92.4164,5000,400,Medium,Ottumwa; large rural campus; solid enrollment
+Within,Iowa Central Community College,Community College,"330 Ave M, Fort Dodge IA 50501",Fort Dodge,IA,50501,42.5013,-94.1631,4000,325,Medium,Fort Dodge; large campus; moderate enrollment
+Within,Southeastern Community College - West Burlington,Community College,"1500 West Agency Road, West Burlington, IA 52655",West Burlington,IA,52655,40.812159,-91.173487,3810,180,Medium,"Main campus with athletic facilities, 180-acre campus with open areas"
+Within,Northeast Iowa Community College,Community College,"1625 Hwy 150 S, Calmar IA 52132",Calmar,IA,52132,43.1840,-91.8728,5000,200,Medium,Rural northeast Iowa; Calmar; moderate enrollment
+Within,Western Iowa Tech Community College,Community College,"4647 Stone Ave, Sioux City IA 51106",Sioux City,IA,51106,42.4571,-96.3731,5000,145,Medium,Sioux City metro; solid enrollment
+Within,North Iowa Area Community College,Community College,"500 College Dr, Mason City IA 50401",Mason City,IA,50401,43.1586,-93.1906,3000,400,Medium,Mason City; large campus; moderate enrollment
+Within,Des Moines Area Community College - Urban Campus,Community College,"1100 7th Street, Des Moines, IA 50314",Des Moines,IA,50314,41.597878,-93.627691,3500,40,Medium,Urban campus location with accessible student areas
+Within,Des Moines Area Community College - West Campus,Community College,"5959 Grand Avenue, West Des Moines, IA 50266",West Des Moines,IA,50266,41.5423,-93.789919,2800,226,Medium,West Des Moines campus with outdoor gathering spaces
+Within,Upper Iowa University,Private University,"605 Washington St, Fayette IA 52142",Fayette,IA,52142,42.8394,-91.8027,5000,100,Medium,Private; multiple campuses; moderate total enrollment
+Within,Southwestern Community College,Community College,"1501 West Townline Street, Creston, IA 50801",Creston,IA,50801,41.071249,-94.380716,1503,406,Medium,Rural community college with extensive campus area
+Within,Grand View University,Private University,"1200 Grandview Avenue, Des Moines, IA 50316",Des Moines,IA,50316,41.620515,-93.60441,1949,60,Medium,Small private university with campus quad areas
+Within,Simpson College,Private University,"701 North C Street, Indianola, IA 50125",Indianola,IA,50125,41.365473,-93.563547,1140,85,Low,Small liberal arts college with traditional campus quad
+Within,Iowa Lakes Community College,Community College,"19 S 7th St, Estherville IA 51334",Estherville,IA,51334,43.4011,-94.8320,2500,200,Low,Northwest Iowa; small enrollment
+Within,Marshalltown Community College,Community College,"3700 S Center St, Marshalltown IA 50158",Marshalltown,IA,50158,42.0219,-92.9180,1800,160,Low,Central Iowa; small enrollment
+Within,Northwest Iowa Community College,Community College,"603 W Park St, Sheldon IA 51201",Sheldon,IA,51201,43.1841,-95.8522,1500,320,Low,Rural northwest Iowa; very small enrollment
+Within,Clinton Community College,Community College,"1000 Lincoln Blvd, Clinton IA 52732",Clinton,IA,52732,41.8458,-90.2040,1500,25,Low,Small community college; Clinton
+Within,Muscatine Community College,Community College,"152 Colorado St, Muscatine IA 52761",Muscatine,IA,52761,41.4163,-91.0427,1500,45,Low,Small community college; Muscatine
+Within,Ellsworth Community College,Community College,"1100 College Ave, Iowa Falls IA 50126",Iowa Falls,IA,50126,42.5158,-93.2533,1200,50,Low,Small community college; Iowa Falls
+Within,Grinnell College,Private College,"1115 8th Ave, Grinnell IA 50112",Grinnell,IA,50112,41.7444,-92.7237,1700,126,Low,Elite liberal arts; Grinnell; small enrollment
+Within,Luther College,Private College,"700 College Dr, Decorah IA 52101",Decorah,IA,52101,43.3024,-91.7990,2000,200,Low,Private Lutheran; Decorah; scenic campus; small enrollment
+Within,Coe College,Private College,"1220 First Ave NE, Cedar Rapids IA 52402",Cedar Rapids,IA,52402,42.0049,-91.6327,1500,55,Low,Private; Cedar Rapids; small enrollment
+Within,Cornell College,Private College,"600 First St SW, Mount Vernon IA 52314",Mount Vernon,IA,52314,41.9224,-91.4215,1100,129,Low,Private liberal arts; Mount Vernon; small enrollment
+Within,Loras College,Private College,"1450 Alta Vista St, Dubuque IA 52001",Dubuque,IA,52001,42.5108,-90.6781,1400,60,Low,Private Catholic; Dubuque; small enrollment
+Within,University of Dubuque,Private University,"2000 University Ave, Dubuque IA 52001",Dubuque,IA,52001,42.5015,-90.7031,2200,77,Low,Private Presbyterian; Dubuque; small enrollment
+Within,Clarke University,Private University,"1550 Clarke Dr, Dubuque IA 52001",Dubuque,IA,52001,42.4864,-90.7053,1200,55,Low,Private Catholic; Dubuque; small enrollment
+Within,Wartburg College,Private College,"100 Wartburg Blvd, Waverly IA 50677",Waverly,IA,50677,42.7332,-92.4843,1600,118,Low,Private Lutheran; Waverly; small enrollment
+Within,Buena Vista University,Private University,"610 W 4th St, Storm Lake IA 50588",Storm Lake,IA,50588,42.6422,-95.2067,1500,60,Low,Private; Storm Lake; small enrollment
+Within,Central College,Private College,"812 University St, Pella IA 50219",Pella,IA,50219,41.4069,-92.9199,1300,130,Low,Private Reformed; Pella; small enrollment
+Within,Dordt University,Private University,"700 7th St NE, Sioux Center IA 51250",Sioux Center,IA,51250,43.0784,-96.1826,1800,150,Low,Private Christian; Sioux Center; small enrollment
+Near,Southeastern Community College - Keokuk,Community College,"335 Messenger Road, Keokuk, IA 52632",Keokuk,IA,52632,40.421139,-91.400945,1207,5,Low,"Secondary campus, part of SCC system (3,810 total enrollment)"
+Near,Des Moines Area Community College - Boone Campus,Community College,"1125 Hancock Drive, Boone, IA 50036",Boone,IA,50036,42.046703,-93.875014,1200,62,Low,North of district with athletic facilities and campus grounds
+Near,Des Moines Area Community College - Newton Campus,Community College,"600 N 2nd Avenue West, Newton, IA 50208",Newton,IA,50208,41.70114,-93.060276,1100,20,Low,East of district with campus facilities
