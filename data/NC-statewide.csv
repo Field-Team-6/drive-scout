@@ -3,14 +3,14 @@ Within,University of North Carolina at Chapel Hill,Public University,"103 South 
 Within,NC State University,Public University,"2101 Hillsborough St, Raleigh NC 27695",35.7872,-78.6824,38000,2110,High,Large research university; Raleigh; great open spaces
 Within,UNC Charlotte,Public University,"9201 University City Blvd, Charlotte NC 28223",35.3076,-80.7330,30000,1000,High,Fast-growing; Charlotte; large campus
 Within,Appalachian State University,Public University,"287 Rivers St, Boone NC 28608",36.2163,-81.6845,20000,1400,High,Mountain campus; Boone; strong campus culture
-Within,East Carolina University,Public University,"E 5th St, Greenville NC 27858",35.6076,-77.3654,28000,1650,High,Large campus; Greenville; strong student life
+Within,East Carolina University,Public University,"East Fifth Street, Greenville NC 27858",35.607581,-77.362233,21328,1600,High,Large campus; Greenville; strong student life
 Within,UNC Greensboro,Public University,"1400 Spring Garden St, Greensboro NC 27412",36.0682,-79.8093,20000,210,High,Urban campus; Greensboro
 Within,Western Carolina University,Public University,"1 University Dr, Cullowhee NC 28723",35.3082,-83.1777,12000,600,High,Mountain campus; Cullowhee; scenic open spaces
 Within,UNC Wilmington,Public University,"601 S College Rd, Wilmington NC 28403",34.2266,-77.8706,17000,661,High,Coastal campus; Wilmington; great foot traffic
 Within,North Carolina A&T State University,Public University,"1601 E Market St, Greensboro NC 27411",36.0733,-79.7764,13000,200,High,HBCU; Greensboro; very active campus culture
 Within,Fayetteville State University,Public University,"1200 Murchison Rd, Fayetteville NC 28301",35.0509,-78.9123,7000,156,High,HBCU; Fayetteville; solid enrollment
 Within,UNC Asheville,Public University,"1 University Heights, Asheville NC 28804",35.5979,-82.5633,4000,365,Medium,Small public liberal arts; Asheville; scenic campus
-Within,Elizabeth City State University,Public University,"1704 Weeksville Rd, Elizabeth City NC 27909",36.2862,-76.2250,2200,130,Low,HBCU; Elizabeth City; small enrollment
+Within,Elizabeth City State University,Public University,"1704 Weeksville Road, Elizabeth City NC 27909",36.279389,-76.215758,2047,200,Low,HBCU; Elizabeth City; small enrollment
 Within,UNC Pembroke,Public University,"1 University Dr, Pembroke NC 28372",34.6824,-79.1956,8500,280,High,Native American-serving; Pembroke; growing enrollment
 Within,Winston-Salem State University,Public University,"601 S Martin Luther King Jr Dr, Winston-Salem NC 27110",36.0837,-80.2451,6000,117,High,HBCU; Winston-Salem; solid campus
 Within,North Carolina Central University,Public University,"1801 Fayetteville St, Durham NC 27707",35.9781,-78.8999,8500,105,High,HBCU; Durham; urban campus
@@ -20,7 +20,7 @@ Within,Wake Technical Community College,Community College,"9101 Fayetteville Rd,
 Within,Guilford Technical Community College,Community College,"601 High Point Rd, Jamestown NC 27282",35.9958,-79.9253,13000,535,High,Large campus; Guilford County
 Within,Durham Technical Community College,Community College,"1637 Lawson St, Durham NC 27703",35.9900,-78.8672,9500,85,High,Large urban community college; Durham
 Within,Forsyth Technical Community College,Community College,"2100 Silas Creek Pkwy, Winston-Salem NC 27103",36.0709,-80.3225,9000,100,High,Large community college; Winston-Salem
-Within,Pitt Community College,Community College,"1986 Pitt Tech Rd, Winterville NC 28590",35.5281,-77.3944,8500,300,High,Large campus; eastern NC; near Greenville
+Within,Pitt Community College,Community College,"1986 Pitt Tech Road, Winterville NC 28590",35.550984,-77.408002,7688,294,High,Large campus; eastern NC; near Greenville
 Within,Gaston College,Community College,"201 Hwy 321 S, Dallas NC 28034",35.3234,-81.1742,5500,168,Medium,Gaston County; solid enrollment
 Within,Johnston Community College,Community College,"245 College Rd, Smithfield NC 27577",35.5037,-78.3695,5000,300,Medium,Large campus; Johnston County
 Within,Fayetteville Technical Community College,Community College,"2201 Hull Rd, Fayetteville NC 28303",35.0888,-78.9875,12000,236,High,Large community college; Fayetteville
@@ -29,6 +29,14 @@ Within,Cape Fear Community College,Community College,"411 N Front St, Wilmington
 Within,Asheville-Buncombe Technical CC,Community College,"340 Victoria Rd, Asheville NC 28801",35.5680,-82.5362,7000,187,High,Large community college; Asheville
 Within,Davidson-Davie Community College,Community College,"297 DCCC Rd, Thomasville NC 27360",35.8568,-80.0817,4000,193,Medium,Davidson County; solid campus
 Within,Sandhills Community College,Community College,"3395 Airport Rd, Pinehurst NC 28374",35.2016,-79.3947,3500,246,Medium,Pinehurst area; moderate enrollment
+Within,Nash Community College,Community College,"522 N. Old Carriage Road, Rocky Mount NC 27804",35.976412,-77.899891,3574,125,Medium,Mid-sized community college between Nashville and Rocky Mount
+Within,Vance-Granville Community College,Community College,"200 Community College Road, Henderson NC 27537",36.32249,-78.487429,2883,83,Medium,Main campus serving four counties with multiple satellite locations
+Within,Wilson Community College,Community College,"902 Herring Avenue, Wilson NC 27893",35.733634,-77.890999,2701,156,Medium,Community college with modern facilities and open spaces
+Within,Wayne Community College,Community College,"3000 Wayne Memorial Drive, Goldsboro NC 27534",35.402989,-77.94584,2883,156,Medium,Well-established community college with extensive campus
+Within,College of The Albemarle,Community College,"1208 North Road Street, Elizabeth City NC 27909",36.324958,-76.220322,2508,75,Medium,First community college in NC system with multiple campuses
+Within,Halifax Community College,Community College,"100 College Drive, Weldon NC 27890",36.427013,-77.615055,1700,69,Low,Small community college near Virginia border
+Within,Edgecombe Community College,Community College,"2009 W. Wilson Street, Tarboro NC 27886",35.879087,-77.572197,1459,120,Low,Community college with campuses in Tarboro and Rocky Mount
+Within,Roanoke-Chowan Community College,Community College,"109 Community College Road, Ahoskie NC 27910",36.324882,-77.023699,1200,75,Low,Small community college serving northeastern NC
 Within,Elon University,Private University,"100 Campus Dr, Elon NC 27244",36.1002,-79.5006,7000,656,High,Highly regarded private; Elon; beautiful campus
 Within,Wake Forest University,Private University,"1834 Wake Forest Rd, Winston-Salem NC 27109",36.1346,-80.2758,8500,340,High,Prestigious private; Winston-Salem; strong campus culture
 Within,Duke University,Private University,"107 Union Dr W, Durham NC 27708",36.0014,-78.9382,16600,8700,High,Elite private; Durham; iconic campus; huge grounds
