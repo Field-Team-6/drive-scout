@@ -2291,6 +2291,13 @@
                 }
             }
             markers = [];
+
+            for (var i = 0; i < statewideMarkers.length; i++) {
+                if (map && statewideMarkers[i]) {
+                    map.removeLayer(statewideMarkers[i]);
+                }
+            }
+            statewideMarkers = [];
             
             if (userLocationMarker && map) {
                 map.removeLayer(userLocationMarker);
@@ -2976,6 +2983,16 @@
             'IA': 'Iowa'
         };
 
+        var senateSenatorData = {
+            'OH': { senator: 'Jon Husted', party: 'R', action: 'FLIP', center: [40.4173, -82.9071] },
+            'NC': { senator: 'Thom Tillis', party: 'R', action: 'FLIP', center: [35.7596, -79.0193] },
+            'GA': { senator: 'Jon Ossoff', party: 'D', action: 'HOLD', center: [32.9, -83.6] },
+            'AK': { senator: 'Daniel Sullivan', party: 'R', action: 'FLIP', center: [64.2008, -153.4937] },
+            'MI': { senator: 'Gary Peters', party: 'D', action: 'HOLD', center: [44.3148, -85.6024] },
+            'ME': { senator: 'Susan Collins', party: 'R', action: 'FLIP', center: [45.2538, -69.4455] },
+            'IA': { senator: 'Joni Ernst', party: 'R', action: 'FLIP', center: [41.878, -93.0977] }
+        };
+
         var senateDistrictToState = {
             'OH-01': 'OH', 'OH-09': 'OH', 'OH-13': 'OH',
             'NC-01': 'NC',
@@ -3063,7 +3080,7 @@
             showStatewideCollegesForState(stateAbbr, stateName);
         }
 
-        // Show statewide colleges — full view
+        // Show statewide colleges — full view or append to current district
         function showStatewideCollegesForState(stateAbbr, stateName) {
             var mapContainer = document.getElementById('mapContainer');
             var collegeList = document.getElementById('collegeList');
@@ -3074,6 +3091,35 @@
 
             var closestDistrictsResults = document.getElementById('closestDistrictsResults');
             if (closestDistrictsResults) closestDistrictsResults.style.display = 'none';
+
+            // Update the top swing-state banner
+            var senateInfo = senateSenatorData[stateAbbr];
+            var resultContainer = document.getElementById('closestCampusesResult');
+            if (resultContainer && senateInfo) {
+                var partyBg = senateInfo.party === 'D' ? '#e3f2fd' : '#ffebee';
+                var partyBorder = senateInfo.party === 'D' ? '#2196f3' : '#f44336';
+                var distanceText = '';
+                if (window.lastUserLocation && senateInfo.center) {
+                    var dist = calculateDistance(
+                        window.lastUserLocation.lat, window.lastUserLocation.lng,
+                        senateInfo.center[0], senateInfo.center[1]
+                    );
+                    distanceText = '<em>' + Math.round(dist) + ' miles away</em> &bull; ';
+                }
+                resultContainer.innerHTML =
+                    '<div style="background: ' + partyBg + '; padding: 12px 20px; border-radius: 10px; border-left: 5px solid ' + partyBorder + '; margin: 6px 0 0 0 !important;">' +
+                        '<div style="font-weight: bold; font-size: 1.2rem; color: #333; margin-bottom: 2px;">Swing state: ' + stateAbbr + '</div>' +
+                        '<div style="color: #666; margin-bottom: 0;">' + distanceText + 'Sen. ' + senateInfo.senator + ' (' + senateInfo.party + ') &bull; ' + senateInfo.action + '</div>' +
+                    '</div>';
+                resultContainer.style.display = 'block';
+            }
+
+            // If a district from this state is already showing, just append
+            var districtAlreadyShowing = (currentSelectedDistrict && senateDistrictToState[currentSelectedDistrict] === stateAbbr);
+            if (districtAlreadyShowing) {
+                loadStatewideCSV(stateAbbr, stateName, true);
+                return;
+            }
 
             if (collegeItems) {
                 collegeItems.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading ' + stateName + ' campuses...</h3></div>';
@@ -3138,9 +3184,12 @@
 
             var banner = document.createElement('div');
             banner.className = 'senate-banner';
+            var bannerText = stateAbbr === 'GA'
+                ? 'In <strong>' + stateName + '</strong>, there are no swing House districts &mdash; but we ARE fighting to win the Senate seat! Every Democrat you register <strong>anywhere in the state</strong> is worth their weight in gold!'
+                : 'In <strong>' + stateName + '</strong>, we\'re fighting to win the Senate seat &mdash; so every Democrat you register <strong>anywhere in the state</strong> is worth their weight in gold!';
             banner.innerHTML =
                 '<div class="senate-banner-title">&#127963; Senate Target State!</div>' +
-                '<div class="senate-banner-text">In <strong>' + stateName + '</strong>, we\'re also fighting to win the Senate seat &mdash; so every Democrat you register <strong>anywhere in the state</strong> is worth their weight in gold!</div>';
+                '<div class="senate-banner-text">' + bannerText + '</div>';
             collegeItems.appendChild(banner);
 
             var header = document.createElement('h2');
@@ -3260,7 +3309,7 @@
             banner.className = 'senate-banner';
             banner.innerHTML =
                 '<div class="senate-banner-title">&#127963; Senate Target State!</div>' +
-                '<div class="senate-banner-text">In <strong>' + stateName + '</strong>, we\'re also fighting to win the Senate seat &mdash; so every Democrat you register <strong>anywhere in the state</strong> is worth their weight in gold!</div>' +
+                '<div class="senate-banner-text">In <strong>' + stateName + '</strong>, we\'re fighting to win the Senate seat &mdash; so every Democrat you register <strong>anywhere in the state</strong> is worth their weight in gold!</div>' +
                 '<button class="senate-statewide-btn" id="statewideBtn" onclick="loadStatewideCSV(\'' + stateAbbr + '\', \'' + stateName + '\', true)">&#127979; Show all ' + stateName + ' campuses</button>';
             container.appendChild(banner);
         }
