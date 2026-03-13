@@ -541,6 +541,68 @@
             border: none !important;
             outline: none !important;
         }
+
+        .senate-banner {
+            background: linear-gradient(135deg, #1a237e 0%, #283593 50%, #1565c0 100%);
+            border: 2px solid #ffd700;
+            border-radius: 10px;
+            padding: 16px 20px;
+            margin: 12px 0 8px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .senate-banner-title {
+            font-size: 1.15rem;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #ffd700;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+        }
+
+        .senate-banner-text {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 12px;
+            opacity: 0.95;
+        }
+
+        .senate-statewide-btn {
+            background: #ffd700;
+            color: #1a237e;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .senate-statewide-btn:hover {
+            background: #ffeb3b;
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+        }
+
+        .senate-statewide-btn:disabled {
+            background: #aaa;
+            color: #555;
+            cursor: default;
+            transform: none;
+        }
+
+        .senate-colleges-section {
+            margin-top: 30px;
+        }
+
+        .senate-colleges-header {
+            margin: 0 0 20px 0;
+            color: #ffd700;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 10px;
+            font-size: 1.1rem;
+        }
     </style>
 </head>
 <body>
@@ -583,6 +645,13 @@
                     <div style="text-align: center; margin-bottom: 20px;">
                         <button onclick="exploreNationalMap()" style="background: #8bc3af; color: white; padding: 12px 25px; border: none; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
                             Explore national map
+                        </button>
+                    </div>
+                    
+                    <div style="text-align: center; margin-bottom: 20px; border-top: 1px solid rgba(255,255,255,0.2); padding-top: 16px;">
+                        <div style="color: white; font-size: 0.9rem; margin-bottom: 10px; opacity: 0.9;">&#127963; Senate target state with no swing House districts:</div>
+                        <button onclick="loadGeorgiaStatewide()" style="background: linear-gradient(135deg, #1a237e, #1565c0); color: #ffd700; border: 2px solid #ffd700; padding: 12px 25px; border-radius: 8px; font-size: 1rem; cursor: pointer; font-weight: bold;">
+                            &#127979; Georgia Senate &mdash; All Campuses
                         </button>
                     </div>
                 </div>
@@ -2575,6 +2644,9 @@
             
             container.innerHTML = '';
 
+            // Senate Target States: inject banner if applicable
+            showSenateBannerIfNeeded(district);
+
             if (withinColleges.length > 0) {
                 var withinSection = document.createElement('div');
                 withinSection.innerHTML = '<h2 style="margin-bottom: 20px; color: white; border-bottom: 2px solid #3D9BE9; padding-bottom: 10px;">COLLEGES IN ' + district + '</h2>';
@@ -2886,7 +2958,274 @@
 
         showCampusesFromPopup = window.showCampusesFromPopup;
 
-        console.log("&#127919; Drive Scout loaded successfully with 56 total swing districts!");
+        // ============================================================
+        // SENATE TARGET STATES FEATURE
+        // ============================================================
+
+        // States where the Senate race makes statewide voter reg valuable
+        var senateTargetStates = {
+            'OH': 'Ohio',
+            'NC': 'North Carolina',
+            'GA': 'Georgia',
+            'AK': 'Alaska',
+            'MI': 'Michigan',
+            'ME': 'Maine',
+            'IA': 'Iowa'
+        };
+
+        // Which districts belong to senate target states
+        var senateDistrictToState = {
+            'OH-01': 'OH', 'OH-09': 'OH', 'OH-13': 'OH',
+            'NC-01': 'NC',
+            'AK-AL': 'AK',
+            'MI-07': 'MI', 'MI-08': 'MI', 'MI-10': 'MI',
+            'ME-02': 'ME',
+            'IA-01': 'IA', 'IA-03': 'IA'
+        };
+
+        // Cache for loaded statewide college data
+        var statewideCollegeData = {};
+
+        // Check if a district is in a Senate target state
+        function getSenateStateForDistrict(districtId) {
+            return senateDistrictToState[districtId] || null;
+        }
+
+        // Show the Senate banner in the college list
+        function showSenateBanner(stateAbbr, districtId) {
+            var container = document.getElementById('collegeItems');
+            if (!container) return;
+
+            var stateName = senateTargetStates[stateAbbr];
+            if (!stateName) return;
+
+            // Check if banner already exists
+            var existingBanner = document.getElementById('senateBanner');
+            if (existingBanner) return;
+
+            var banner = document.createElement('div');
+            banner.id = 'senateBanner';
+            banner.className = 'senate-banner';
+            banner.innerHTML =
+                '<div class="senate-banner-title">&#127963; Senate Target State!</div>' +
+                '<div class="senate-banner-text">In <strong>' + stateName + '</strong>, we\'re also fighting to win the Senate seat &mdash; so every Democrat you register <strong>anywhere in the state</strong> is worth their weight in gold!</div>' +
+                '<button class="senate-statewide-btn" id="statewideBtn" onclick="loadStatewideColleges(\'' + stateAbbr + '\', \'' + stateName + '\')">&#127979; Show all ' + stateName + ' campuses</button>';
+
+            // Insert banner before the first child of collegeItems
+            container.insertBefore(banner, container.firstChild);
+        }
+
+        // Load statewide college CSV and display below district colleges
+        function loadStatewideColleges(stateAbbr, stateName) {
+            var btn = document.getElementById('statewideBtn');
+            if (btn) {
+                btn.innerHTML = '&#9203; Loading ' + stateName + ' campuses...';
+                btn.disabled = true;
+            }
+
+            // Use cached data if available
+            if (statewideCollegeData[stateAbbr] && statewideCollegeData[stateAbbr].length > 0) {
+                displayStatewideColleges(stateAbbr, stateName, statewideCollegeData[stateAbbr]);
+                return;
+            }
+
+            var csvUrl = 'data/' + stateAbbr + '-statewide.csv';
+
+            fetch(csvUrl)
+                .then(function(response) {
+                    if (!response.ok) {
+                        throw new Error('CSV not found: ' + response.status);
+                    }
+                    return response.text();
+                })
+                .then(function(csvText) {
+                    return parseCSV(csvText, stateAbbr + '-statewide');
+                })
+                .then(function(parsed) {
+                    var colleges = [];
+                    if (parsed && parsed.within) colleges = colleges.concat(parsed.within);
+                    if (parsed && parsed.near) colleges = colleges.concat(parsed.near);
+
+                    colleges = colleges.filter(function(c) {
+                        return c && c.name &&
+                               c.lat !== null && c.lng !== null &&
+                               !isNaN(parseFloat(c.lat)) && !isNaN(parseFloat(c.lng));
+                    });
+
+                    statewideCollegeData[stateAbbr] = colleges;
+                    displayStatewideColleges(stateAbbr, stateName, colleges);
+                })
+                .catch(function(error) {
+                    console.log('Error loading statewide CSV:', error);
+                    if (btn) {
+                        btn.innerHTML = '&#10060; CSV not yet available';
+                        btn.disabled = true;
+                    }
+                });
+        }
+
+        // Render the statewide colleges in the list and add purple map markers
+        function displayStatewideColleges(stateAbbr, stateName, colleges) {
+            var container = document.getElementById('collegeItems');
+            if (!container) return;
+
+            // Remove existing statewide section if present
+            var existing = document.getElementById('statewideSection');
+            if (existing) existing.parentNode.removeChild(existing);
+
+            var section = document.createElement('div');
+            section.id = 'statewideSection';
+            section.className = 'senate-colleges-section';
+
+            var header = document.createElement('h2');
+            header.className = 'senate-colleges-header';
+            header.innerHTML = '&#127963; ALL COLLEGES IN ' + stateName.toUpperCase();
+            section.appendChild(header);
+
+            if (colleges.length === 0) {
+                var noData = document.createElement('div');
+                noData.style.cssText = 'color: white; padding: 20px; text-align: center;';
+                noData.innerHTML = 'No statewide college data available yet.';
+                section.appendChild(noData);
+            } else {
+                for (var i = 0; i < colleges.length; i++) {
+                    var el = createCollegeElement(colleges[i]);
+                    section.appendChild(el);
+                }
+            }
+
+            container.appendChild(section);
+
+            // Add purple markers to map for statewide colleges
+            if (map && colleges.length > 0) {
+                addStatewideMarkersToMap(colleges);
+            }
+
+            // Update button
+            var btn = document.getElementById('statewideBtn');
+            if (btn) {
+                btn.innerHTML = '&#10003; Showing all ' + stateName + ' campuses (' + colleges.length + ')';
+                btn.disabled = true;
+            }
+
+            // Scroll to statewide section
+            setTimeout(function() {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 100);
+        }
+
+        // Add purple markers for statewide colleges (stored separately so they persist)
+        var statewideMarkers = [];
+
+        function addStatewideMarkersToMap(colleges) {
+            // Clear any old statewide markers
+            for (var i = 0; i < statewideMarkers.length; i++) {
+                if (map && statewideMarkers[i]) map.removeLayer(statewideMarkers[i]);
+            }
+            statewideMarkers = [];
+
+            for (var i = 0; i < colleges.length; i++) {
+                var college = colleges[i];
+                if (!college.lat || !college.lng) continue;
+
+                var lat = parseFloat(college.lat);
+                var lng = parseFloat(college.lng);
+                if (isNaN(lat) || isNaN(lng)) continue;
+
+                var marker = L.marker([lat, lng], {
+                    icon: L.divIcon({
+                        className: 'custom-marker',
+                        html: '<div style="background-color: #7b1fa2; width: 18px; height: 18px; border-radius: 50%; border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.4);"></div>',
+                        iconSize: [18, 18],
+                        iconAnchor: [9, 9]
+                    })
+                });
+
+                var popupContent = '<div style="text-align: center; padding: 4px;">' +
+                    '<div style="font-weight: bold; margin-bottom: 2px; color: #333; font-size: 0.9rem;">' + college.name + '</div>' +
+                    '<div style="font-size: 0.75rem; color: #7b1fa2; font-weight: bold;">Statewide campus</div>' +
+                    '<div style="font-size: 0.8rem; color: #666;">Rating: <strong>' + college.suitability + '</strong></div>' +
+                    '</div>';
+                marker.bindPopup(popupContent);
+                marker.addTo(map);
+                statewideMarkers.push(marker);
+            }
+        }
+
+        // Hook into displayCollegeListWithSections to inject Senate banner after rendering
+        // We wrap the existing function call sites by modifying displayColleges and displayCollegesWithoutMapInit
+        // to call showSenateBannerIfNeeded after the list renders.
+        function showSenateBannerIfNeeded(districtId) {
+            var stateAbbr = getSenateStateForDistrict(districtId);
+            if (stateAbbr) {
+                // Small delay to let the DOM settle
+                setTimeout(function() {
+                    showSenateBanner(stateAbbr, districtId);
+                }, 50);
+            }
+        }
+
+        // ============================================================
+        // GEORGIA SPECIAL ENTRY POINT
+        // Georgia has no House districts in app — Senate-only state
+        // ============================================================
+        // GA button is injected into the header area via the init function
+
+        function loadGeorgiaStatewide() {
+            // Show map and college list containers
+            var mapContainer = document.getElementById('mapContainer');
+            var collegeList = document.getElementById('collegeList');
+            var collegeItems = document.getElementById('collegeItems');
+            if (mapContainer) mapContainer.style.display = 'block';
+            if (collegeList) collegeList.style.display = 'block';
+            if (collegeItems) {
+                collegeItems.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading Georgia campuses...</h3></div>';
+            }
+
+            // Initialize map centered on Georgia if not active
+            if (!map) {
+                setTimeout(function() {
+                    if (typeof L !== 'undefined') {
+                        map = L.map('map', {
+                            attributionControl: false,
+                            minZoom: 1,
+                            maxZoom: 15
+                        }).setView([32.9, -83.6], 7);
+
+                        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+                            maxZoom: 15,
+                            minZoom: 1
+                        }).addTo(map);
+                    }
+                    loadStatewideColleges('GA', 'Georgia');
+                    displayGeorgiaOnlyBanner();
+                }, 100);
+            } else {
+                map.setView([32.9, -83.6], 7);
+                loadStatewideColleges('GA', 'Georgia');
+                displayGeorgiaOnlyBanner();
+            }
+        }
+
+        function displayGeorgiaOnlyBanner() {
+            var collegeItems = document.getElementById('collegeItems');
+            if (!collegeItems) return;
+
+            var existing = document.getElementById('senateBanner');
+            if (existing) existing.parentNode.removeChild(existing);
+
+            var banner = document.createElement('div');
+            banner.id = 'senateBanner';
+            banner.className = 'senate-banner';
+            banner.innerHTML =
+                '<div class="senate-banner-title">&#127963; Georgia Senate Target State!</div>' +
+                '<div class="senate-banner-text">Georgia\'s Senate seat is in play &mdash; every Democrat you register <strong>anywhere in Georgia</strong> is worth their weight in gold!</div>';
+
+            collegeItems.insertBefore(banner, collegeItems.firstChild);
+        }
+
+        console.log("&#127919; Drive Scout loaded successfully with 56 total swing districts + Senate Target States feature!");
     </script>
 </body>
 </html>
