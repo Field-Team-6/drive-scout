@@ -3066,31 +3066,11 @@
             if (mapContainer) mapContainer.style.display = 'block';
             if (collegeList) collegeList.style.display = 'block';
 
-            var resultContainer = document.getElementById('closestCampusesResult');
-            if (resultContainer) {
-                resultContainer.innerHTML =
-                    '<div style="background: #02013C; padding: 12px 20px; border-radius: 10px; border: 2px solid #ffd700; margin: 6px 0 0 0 !important;">' +
-                        '<div style="font-weight: bold; font-size: 1.2rem; color: #ffd700; margin-bottom: 2px;">&#127963; Senate Target State: ' + stateName + '</div>' +
-                        '<div style="color: rgba(255,255,255,0.85);">Showing all colleges statewide</div>' +
-                    '</div>';
-                resultContainer.style.display = 'block';
-            }
-
             var closestDistrictsResults = document.getElementById('closestDistrictsResults');
             if (closestDistrictsResults) closestDistrictsResults.style.display = 'none';
 
             if (collegeItems) {
                 collegeItems.innerHTML = '<div class="loading-modern"><div class="loading-spinner"></div><h3>Loading ' + stateName + ' campuses...</h3></div>';
-            }
-
-            // Zoom to state
-            if (senateStateLayers[stateAbbr] && map) {
-                try {
-                    var bounds = senateStateLayers[stateAbbr].getBounds();
-                    if (bounds.isValid()) {
-                        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 8 });
-                    }
-                } catch(err) {}
             }
 
             loadStatewideCSV(stateAbbr, stateName, false);
@@ -3258,16 +3238,6 @@
             var collegeList = document.getElementById('collegeList');
             if (mapContainer) mapContainer.style.display = 'block';
             if (collegeList) collegeList.style.display = 'block';
-
-            var resultContainer = document.getElementById('closestCampusesResult');
-            if (resultContainer) {
-                resultContainer.innerHTML =
-                    '<div style="background: #02013C; padding: 12px 20px; border-radius: 10px; border: 2px solid #ffd700; margin: 6px 0 0 0 !important;">' +
-                        '<div style="font-weight: bold; font-size: 1.2rem; color: #ffd700; margin-bottom: 2px;">&#127963; Senate Target State: Georgia</div>' +
-                        '<div style="color: rgba(255,255,255,0.85);">Showing all colleges statewide</div>' +
-                    '</div>';
-                resultContainer.style.display = 'block';
-            }
 
             var closestDistrictsResults = document.getElementById('closestDistrictsResults');
             if (closestDistrictsResults) closestDistrictsResults.style.display = 'none';
