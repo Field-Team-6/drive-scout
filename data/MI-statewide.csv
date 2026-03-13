@@ -1,0 +1,40 @@
+Section,Institution,Type,Address,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Michigan,Public University,"503 Thompson St, Ann Arbor MI 48109",42.2780,-83.7382,48000,3177,High,Elite flagship; Ann Arbor; iconic Diag quad; massive campus
+Within,Michigan State University,Public University,"426 Auditorium Rd, East Lansing MI 48824",42.7018,-84.4822,50000,5239,High,One of largest campuses in US; East Lansing; great open spaces
+Within,Wayne State University,Public University,"42 W Warren Ave, Detroit MI 48202",42.3590,-83.0632,24000,203,High,Urban Detroit campus; large enrollment; strong foot traffic
+Within,Western Michigan University,Public University,"1903 W Michigan Ave, Kalamazoo MI 49008",42.2837,-85.6235,20000,1200,High,Large campus; Kalamazoo; good open spaces
+Within,Central Michigan University,Public University,"1200 S Franklin St, Mount Pleasant MI 48859",43.5773,-84.7760,18000,854,High,Large campus; Mount Pleasant; open quad areas
+Within,Eastern Michigan University,Public University,"900 Oakwood St, Ypsilanti MI 48197",42.2516,-83.6244,17000,800,High,Large campus; Ypsilanti; near Ann Arbor
+Within,Oakland University,Public University,"2200 N Squirrel Rd, Rochester MI 48309",42.6712,-83.2063,19000,1600,High,Large suburban campus; Rochester; good open grounds
+Within,Grand Valley State University,Public University,"1 Campus Dr, Allendale MI 49401",42.9630,-85.8896,25000,1400,High,Fast-growing; Allendale; large campus; lively student life
+Within,Ferris State University,Public University,"1201 S State St, Big Rapids MI 49307",43.6982,-85.4840,14000,880,High,Large campus; Big Rapids; open spaces
+Within,Northern Michigan University,Public University,"1401 Presque Isle Ave, Marquette MI 49855",46.5424,-87.3962,7500,360,High,Upper Peninsula; Marquette; scenic campus
+Within,Lake Superior State University,Public University,"650 W Easterday Ave, Sault Ste Marie MI 49783",46.4799,-84.3559,2100,115,Low,Upper Peninsula; small enrollment; Sault Ste Marie
+Within,Saginaw Valley State University,Public University,"7400 Bay Rd, University Center MI 48710",43.5606,-83.9847,9500,782,High,Saginaw Bay area; large campus
+Within,Michigan Technological University,Public University,"1400 Townsend Dr, Houghton MI 49931",47.1142,-88.5479,7200,925,High,Engineering focus; Houghton; large campus
+Within,University of Michigan-Dearborn,Public University,"4901 Evergreen Rd, Dearborn MI 48128",42.3201,-83.2284,9500,200,High,Metro Detroit; large commuter campus
+Within,University of Michigan-Flint,Public University,"303 E Kearsley St, Flint MI 48502",43.0128,-83.6884,7500,73,High,Urban Flint campus; large commuter enrollment
+Within,Mott Community College,Community College,"1401 E Court St, Flint MI 48503",43.0140,-83.6763,9000,32,High,Large community college; Flint
+Within,Kalamazoo Valley Community College,Community College,"6767 West O Ave, Kalamazoo MI 49003",42.2636,-85.6978,9500,288,High,Large community college; Kalamazoo
+Within,Henry Ford College,Community College,"5101 Evergreen Rd, Dearborn MI 48128",42.3138,-83.2271,16000,155,High,Large community college; Dearborn metro
+Within,Macomb Community College,Community College,"14500 E 12 Mile Rd, Warren MI 48088",42.4982,-82.9887,22000,570,High,One of largest community colleges in MI; Warren
+Within,Oakland Community College,Community College,"2480 Opdyke Rd, Bloomfield Hills MI 48304",42.5773,-83.2628,16000,540,High,Large multi-campus community college; Oakland County
+Within,Grand Rapids Community College,Community College,"143 Bostwick Ave NE, Grand Rapids MI 49503",42.9680,-85.6598,16000,25,High,Large community college; Grand Rapids downtown
+Within,Lansing Community College,Community College,"419 N Capitol Ave, Lansing MI 48933",42.7338,-84.5554,18000,30,High,Large community college; Lansing downtown
+Within,Washtenaw Community College,Community College,"4800 E Huron River Dr, Ann Arbor MI 48105",42.2540,-83.6975,12000,270,High,Large community college; Ann Arbor metro
+Within,Delta College,Community College,"1961 Delta Rd, University Center MI 48710",43.5500,-83.9742,10000,640,High,Large community college; Saginaw/Bay area
+Within,Schoolcraft College,Community College,"18600 Haggerty Rd, Livonia MI 48152",42.3896,-83.3995,12000,188,High,Large community college; Livonia
+Within,Kellogg Community College,Community College,"450 North Ave, Battle Creek MI 49017",42.3357,-85.1766,6000,151,Medium,Battle Creek; moderate enrollment
+Within,Jackson College,Community College,"2111 Emmons Rd, Jackson MI 49201",42.2090,-84.4182,4500,487,Medium,Jackson; large campus; moderate enrollment
+Within,Southwestern Michigan College,Community College,"58900 Cherry Grove Rd, Dowagiac MI 49047",41.9840,-86.0770,2800,240,Low,Rural southwest Michigan; Dowagiac
+Within,West Shore Community College,Community College,"3000 N Stiles Rd, Scottville MI 49454",43.9671,-86.2734,1800,375,Low,Rural west Michigan; small enrollment
+Within,Bay de Noc Community College,Community College,"2001 N Lincoln Rd, Escanaba MI 49829",45.7671,-87.0749,2000,170,Low,Upper Peninsula; Escanaba; small enrollment
+Within,Gogebic Community College,Community College,"E4946 Jackson Rd, Ironwood MI 49938",46.4529,-90.1508,1000,285,Low,Upper Peninsula; very small enrollment
+Within,Hope College,Private College,"141 E 12th St, Holland MI 49423",42.7906,-86.1037,3300,100,Medium,Private Reformed; Holland; active campus
+Within,Calvin University,Private University,"3201 Burton St SE, Grand Rapids MI 49546",42.9205,-85.5870,3600,400,Medium,Private Christian; Grand Rapids; large campus
+Within,Kalamazoo College,Private College,"1200 Academy St, Kalamazoo MI 49006",42.2983,-85.5916,1500,60,Low,Elite private liberal arts; Kalamazoo; small enrollment
+Within,Albion College,Private College,"611 E Porter St, Albion MI 49224",42.2452,-84.7564,1400,225,Low,Private Methodist; Albion; small enrollment
+Within,Aquinas College,Private College,"1607 Robinson Rd SE, Grand Rapids MI 49506",42.9361,-85.6244,2000,107,Low,Private Catholic; Grand Rapids; small enrollment
+Within,Spring Arbor University,Private University,"106 E Main St, Spring Arbor MI 49283",42.1993,-84.5504,3000,130,Medium,Private evangelical; Spring Arbor; moderate enrollment
+Within,Andrews University,Private University,"4150 Administration Dr, Berrien Springs MI 49104",41.9453,-86.3399,3500,1600,Medium,Private Seventh-day Adventist; Berrien Springs; large campus
+Within,Cornerstone University,Private University,"1001 E Beltline Ave NE, Grand Rapids MI 49525",42.9892,-85.6085,2500,132,Low,Private evangelical; Grand Rapids; small enrollment

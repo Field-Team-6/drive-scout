@@ -1,0 +1,16 @@
+Section,Institution,Type,Address,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Alaska Fairbanks,Public University,"1750 Tanana Loop, Fairbanks AK 99775",64.8581,-147.8253,8500,2250,High,Flagship; Fairbanks; large open tundra campus
+Within,University of Alaska Anchorage,Public University,"3211 Providence Dr, Anchorage AK 99508",61.1899,-149.8220,14000,428,High,Largest campus in Alaska; Anchorage; good open spaces
+Within,University of Alaska Southeast,Public University,"11120 Glacier Hwy, Juneau AK 99801",58.3611,-134.5539,3000,198,Medium,Southeast Alaska; Juneau; scenic campus
+Within,Alaska Pacific University,Private University,"4101 University Dr, Anchorage AK 99508",61.1851,-149.8136,500,170,Low,Very small private; Anchorage; small enrollment
+Within,Charter College,Private College,"2221 E Northern Lights Blvd, Anchorage AK 99508",61.2001,-149.8237,1200,5,Low,Private; Anchorage; small campus
+Within,Prince William Sound College,Community College,"303 Lowe St, Valdez AK 99686",61.1270,-146.3498,1000,10,Low,Very small; Valdez; remote campus
+Within,Kodiak College,Community College,"117 Benny Benson Dr, Kodiak AK 99615",57.7940,-152.4072,1100,8,Low,Small community college; Kodiak Island; remote
+Within,Kenai Peninsula College,Community College,"156 College Rd, Soldotna AK 99669",60.4867,-151.0794,1500,357,Low,UAA campus; Soldotna; moderate campus size
+Within,Mat-Su College,Community College,"8295 E College Dr, Palmer AK 99645",61.5882,-149.1222,2000,950,Low,UAA campus; Palmer/Wasilla; large rural campus
+Within,Bristol Bay Campus,Community College,"521 Main St, Dillingham AK 99576",59.0436,-158.4575,1000,5,Low,Very remote; Dillingham; very small
+Within,Chukchi Campus,Community College,"PO Box 297, Kotzebue AK 99752",66.8975,-162.5955,500,3,Low,Very remote; Kotzebue; tiny enrollment
+Within,Interior Alaska Campus,Community College,"604 Barnette St, Fairbanks AK 99701",64.8382,-147.7187,1500,5,Low,UAF community campus; Fairbanks downtown
+Within,Kuskokwim Campus,Community College,"1 Kuskokwim Drive, Bethel AK 99559",60.7938,-161.7564,800,30,Low,Very remote; Bethel; tiny enrollment
+Within,Northwest Campus,Community College,"PO Box 400, Nome AK 99762",64.5011,-165.4064,600,5,Low,Very remote; Nome; tiny enrollment
+Within,Sitka Campus,Community College,"1332 Seward Ave, Sitka AK 99835",57.0563,-135.3390,1000,5,Low,Southeast Alaska; Sitka; small enrollment

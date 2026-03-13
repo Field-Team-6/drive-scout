@@ -1,0 +1,48 @@
+Section,Institution,Type,Address,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,University of Georgia,Public University,"210 S Jackson St, Athens GA 30602",33.9480,-83.3774,40000,762,High,Flagship; iconic North Campus quad; Athens
+Within,Georgia Tech,Public University,"225 North Ave NW, Atlanta GA 30332",33.7756,-84.3963,21000,400,High,Top research university; Atlanta; Tech Green quad
+Within,Georgia State University,Public University,"33 Gilmer St, Atlanta GA 30302",33.7536,-84.3866,52000,30,High,Massive urban enrollment; Atlanta downtown; multiple buildings
+Within,Kennesaw State University,Public University,"1000 Chastain Rd, Kennesaw GA 30144",34.0395,-84.5819,43000,591,High,Fast-growing; suburban Atlanta; large campus
+Within,University of West Georgia,Public University,"1601 Maple St, Carrollton GA 30118",33.7652,-85.1620,14000,645,High,Carrollton; large suburban campus
+Within,Georgia Southern University,Public University,"1332 Southern Dr, Statesboro GA 30458",32.4229,-81.7874,26000,900,High,Large campus; Statesboro; strong campus culture
+Within,Valdosta State University,Public University,"1500 N Patterson St, Valdosta GA 31698",30.8458,-83.2786,10500,168,High,South Georgia; Valdosta; moderate campus
+Within,University of North Georgia,Public University,"82 College Circle, Dahlonega GA 30597",34.5301,-83.9856,19000,147,High,Multiple campuses; fast-growing north Georgia
+Within,Augusta University,Public University,"1120 15th St, Augusta GA 30912",33.4745,-82.0254,9000,150,High,Medical-heavy; Augusta; urban campus
+Within,Clayton State University,Public University,"2000 Clayton State Blvd, Morrow GA 30260",33.5787,-84.3431,6500,163,Medium,South Atlanta metro; Morrow campus
+Within,Albany State University,Public University,"504 College Dr, Albany GA 31705",31.5780,-84.1784,6000,232,Medium,HBCU; Albany; moderate enrollment
+Within,Fort Valley State University,Public University,"1005 State University Dr, Fort Valley GA 31030",32.5389,-83.8840,2800,130,Low,HBCU; Fort Valley; small enrollment
+Within,Savannah State University,Public University,"3219 College St, Savannah GA 31404",32.0536,-81.1008,4000,200,Medium,HBCU; Savannah; waterfront campus
+Within,Georgia College & State University,Public University,"231 W Hancock St, Milledgeville GA 31061",33.0847,-83.2258,7000,517,High,Public liberal arts; Milledgeville; beautiful campus
+Within,Columbus State University,Public University,"4225 University Ave, Columbus GA 31907",32.4807,-84.9616,8500,132,High,Columbus; urban campus near Fort Moore
+Within,Georgia Gwinnett College,Public University,"1000 University Center Ln, Lawrenceville GA 30043",33.9521,-83.9933,13000,260,High,Fast-growing suburban Atlanta; Lawrenceville
+Within,Dalton State College,Public College,"650 College Dr, Dalton GA 30720",34.7666,-84.9728,5500,141,Medium,Northwest Georgia; Dalton; growing enrollment
+Within,Abraham Baldwin Agricultural College,Public College,"2802 Moore Hwy, Tifton GA 31793",31.4456,-83.5238,3500,400,Medium,Rural south Georgia; Tifton; agriculture focus
+Within,Gordon State College,Public College,"419 College Dr, Barnesville GA 30204",33.0518,-84.1531,2800,127,Low,Small public college; Barnesville
+Within,Georgia Highlands College,Public College,"3175 Cedartown Hwy SE, Rome GA 30161",34.2437,-85.1541,5000,226,Medium,Northwest Georgia; Rome; multiple campuses
+Within,East Georgia State College,Public College,"131 College Circle, Swainsboro GA 30401",32.5952,-82.3378,2500,207,Low,Rural east Georgia; Swainsboro
+Within,Georgia Perimeter College (GPC at GSU),Public College,"555 N Indian Creek Dr, Clarkston GA 30021",33.8059,-84.2393,18000,100,High,Large community-style campus; part of GSU
+Within,Atlanta Metropolitan State College,Public College,"1630 Metropolitan Pkwy SW, Atlanta GA 30310",33.7154,-84.4197,2500,68,Low,South Atlanta; small enrollment
+Within,South Georgia State College,Public College,"100 W College Park Dr, Douglas GA 31533",31.5133,-82.8512,3000,189,Low,Rural south Georgia; Douglas; small enrollment
+Within,Georgia Military College,Public College,"201 E Greene St, Milledgeville GA 31061",33.0797,-83.2277,11000,130,High,Public military junior college; multiple campuses; large enrollment
+Within,Gwinnett Technical College,Community College,"5150 Sugarloaf Pkwy, Lawrenceville GA 30043",33.9378,-83.9772,9000,100,High,Large technical college; Gwinnett County
+Within,Atlanta Technical College,Community College,"1560 Metropolitan Pkwy SW, Atlanta GA 30310",33.7124,-84.4199,5500,40,Medium,Atlanta; urban technical college
+Within,Central Georgia Technical College,Community College,"3300 Macon Tech Dr, Macon GA 31206",32.8031,-83.7263,9000,220,High,Large technical college; Macon area
+Within,Chattahoochee Technical College,Community College,"980 S Cobb Dr, Marietta GA 30060",33.9345,-84.5491,11000,60,High,Large technical college; Marietta/Cobb County
+Within,Columbus Technical College,Community College,"928 Manchester Expy, Columbus GA 31904",32.5007,-84.9750,4500,100,Medium,Columbus metro; moderate enrollment
+Within,Georgia Northwestern Technical College,Community College,"One Maurice Culberson Dr, Rome GA 30161",34.2595,-85.1784,4000,210,Medium,Northwest Georgia; Rome; large campus
+Within,Lanier Technical College,Community College,"2990 Landrum Education Dr, Oakwood GA 30566",34.2406,-83.8862,5500,206,Medium,Hall County; growing enrollment
+Within,Oconee Fall Line Technical College,Community College,"1189 Deepstep Rd, Sandersville GA 31082",32.9693,-82.8140,2000,140,Low,Rural central Georgia; small enrollment
+Within,Southeastern Technical College,Community College,"3001 E First St, Vidalia GA 30474",32.2215,-82.3795,2500,114,Low,Rural south Georgia; Vidalia
+Within,West Georgia Technical College,Community College,"176 Murphy Campus Blvd, Waco GA 30182",33.7027,-85.1978,7500,260,High,West Georgia; Carroll County; solid enrollment
+Within,Emory University,Private University,"201 Dowman Dr, Atlanta GA 30322",33.7938,-84.3244,15000,630,High,Elite private; Atlanta; beautiful campus; strong foot traffic
+Within,Morehouse College,Private College,"830 Westview Dr SW, Atlanta GA 30314",33.7486,-84.4133,2600,61,Low,Elite HBCU; Atlanta; small but activist campus
+Within,Spelman College,Private College,"350 Spelman Ln SW, Atlanta GA 30314",33.7480,-84.4120,2200,39,Low,Elite HBCU women's college; Atlanta; small campus
+Within,Clark Atlanta University,Private University,"223 James P Brawley Dr SW, Atlanta GA 30314",33.7522,-84.4148,3600,126,Medium,HBCU; Atlanta; AUC campus
+Within,Morehouse School of Medicine,Private University,"720 Westview Dr SW, Atlanta GA 30310",33.7449,-84.4155,1100,50,Low,Medical school only; small enrollment
+Within,Agnes Scott College,Private College,"141 E College Ave, Decatur GA 30030",33.7697,-84.2956,1100,100,Low,Private women's college; Decatur; small enrollment
+Within,Mercer University,Private University,"1501 Mercer University Dr, Macon GA 31207",32.8415,-83.6887,9000,130,High,Private Baptist; Macon; large enrollment
+Within,Savannah College of Art and Design,Private University,"342 Bull St, Savannah GA 31401",32.0765,-81.0927,15000,50,High,Large private art school; Savannah; strong urban foot traffic
+Within,Berry College,Private College,"2277 Martha Berry Hwy NW, Mount Berry GA 30149",34.2914,-85.2012,2200,27000,Medium,Private; Rome area; largest contiguous campus in world
+Within,Reinhardt University,Private University,"7300 Reinhardt Circle, Waleska GA 30183",34.3036,-84.5529,1500,600,Low,Small private; Waleska; rural north Georgia
+Within,LaGrange College,Private College,"601 Broad St, LaGrange GA 30240",33.0402,-85.0361,1100,120,Low,Private Methodist; LaGrange; small enrollment
+Within,Piedmont University,Private University,"165 Central Ave, Demorest GA 30535",34.5617,-83.5408,3000,186,Medium,Private; Demorest; moderate enrollment; scenic campus

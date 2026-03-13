@@ -1,0 +1,34 @@
+Section,Institution,Type,Address,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
+Within,Ohio State University,Public University,"281 W Lane Ave, Columbus OH 43210",40.0076,-83.0300,61000,1665,High,Largest university in Ohio; massive open Oval quad; Columbus
+Within,University of Cincinnati,Public University,"2600 Clifton Ave, Cincinnati OH 45221",39.1329,-84.5150,47000,476,High,Large urban campus; multiple quads; Cincinnati
+Within,Kent State University,Public University,"800 E Summit St, Kent OH 44242",41.1520,-81.3432,28000,1200,High,Large campus with open spaces; Kent
+Within,Ohio University,Public University,"1 Ohio University, Athens OH 45701",39.3220,-82.1013,22000,1740,High,Beautiful collegiate green; Athens; strong foot traffic
+Within,University of Akron,Public University,"302 Buchtel Common, Akron OH 44325",41.0757,-81.5096,18000,223,High,Urban campus; Akron; solid quad spaces
+Within,Cleveland State University,Public University,"2121 Euclid Ave, Cleveland OH 44115",41.5018,-81.6747,16500,85,High,Urban Cleveland campus; high foot traffic
+Within,University of Toledo,Public University,"2801 W Bancroft St, Toledo OH 43606",41.6605,-83.6129,17000,628,High,Large campus; Toledo; good open spaces
+Within,Bowling Green State University,Public University,"1851 N Research Dr, Bowling Green OH 43403",41.3784,-83.6358,17500,1338,High,Classic college town; open grassy areas
+Within,Wright State University,Public University,"3640 Colonel Glenn Hwy, Dayton OH 45435",39.7828,-84.0541,12500,557,High,Dayton metro; large campus
+Within,Miami University,Public University,"501 E High St, Oxford OH 45056",39.5090,-84.7351,19000,2000,High,Beautiful campus; Oxford; strong quad culture
+Within,Youngstown State University,Public University,"1 University Plaza, Youngstown OH 44555",41.0997,-80.6435,11500,250,High,Urban campus; Youngstown
+Within,Sinclair Community College,Community College,"444 W Third St, Dayton OH 45402",39.7593,-84.1951,21000,110,High,Largest community college in Ohio; Dayton downtown
+Within,Cuyahoga Community College,Community College,"700 Carnegie Ave, Cleveland OH 44115",41.4988,-81.6823,20000,50,High,Multiple campuses; Cleveland metro; huge enrollment
+Within,Columbus State Community College,Community College,"550 E Spring St, Columbus OH 43215",39.9623,-83.0007,24000,85,High,Largest community college by enrollment; Columbus downtown
+Within,Lakeland Community College,Community College,"7700 Clocktower Dr, Kirtland OH 44094",41.6077,-81.3470,5500,380,Medium,Large wooded campus; Lake County
+Within,Lorain County Community College,Community College,"1005 N Abbe Rd, Elyria OH 44035",41.3746,-82.1278,8500,280,High,Large campus; Elyria; solid enrollment
+Within,Stark State College,Community College,"6200 Frank Ave NW, North Canton OH 44720",40.8743,-81.3985,11000,190,High,Large community college; North Canton
+Within,Clark State College,Community College,"570 E Leffel Ln, Springfield OH 45505",39.9020,-83.7700,4500,60,Medium,Springfield; growing enrollment
+Within,Cincinnati State Technical and Community College,Community College,"3520 Central Pkwy, Cincinnati OH 45223",39.1598,-84.5285,10000,80,High,Large urban community college; Cincinnati
+Within,Terra State Community College,Community College,"2830 Napoleon Rd, Fremont OH 43420",41.3592,-83.1277,2500,100,Low,Small enrollment; Fremont; 100-acre campus
+Within,Rhodes State College,Community College,"4240 Campus Dr, Lima OH 45804",40.7237,-84.1422,2000,60,Low,Small community college; Lima
+Within,Zane State College,Community College,"1555 Newark Rd, Zanesville OH 43701",39.9548,-82.0133,2400,180,Low,Rural campus; Zanesville
+Within,Shawnee State University,Public University,"940 Second St, Portsmouth OH 45662",38.7298,-82.9980,3800,57,Medium,Small public university; Portsmouth
+Within,Central State University,Public University,"1400 Brush Row Rd, Wilberforce OH 45384",39.7163,-83.8810,2200,60,Low,HBCU; Wilberforce; small enrollment
+Within,Capital University,Private University,"1 College and Main, Bexley OH 43209",39.9601,-82.9317,3200,48,Medium,Private Lutheran; Bexley/Columbus suburb
+Within,John Carroll University,Private University,"1 John Carroll Blvd, University Heights OH 44118",41.4939,-81.5355,3500,60,Medium,Private Jesuit; University Heights; solid campus
+Within,Xavier University,Private University,"3800 Victory Pkwy, Cincinnati OH 45207",39.1522,-84.4747,7200,190,High,Private Jesuit; Cincinnati; large urban campus
+Within,Denison University,Private College,"100 W College St, Granville OH 43023",40.0707,-82.5196,2400,900,Medium,Liberal arts; Granville; large campus
+Within,Oberlin College,Private College,"101 N Professor St, Oberlin OH 44074",41.2947,-82.2173,2900,440,Medium,Prestigious liberal arts; Oberlin; active campus
+Within,College of Wooster,Private College,"1189 Beall Ave, Wooster OH 44691",40.8045,-81.9369,2000,240,Medium,Liberal arts; Wooster; strong campus culture
+Within,Ohio Wesleyan University,Private University,"61 S Sandusky St, Delaware OH 43015",40.2967,-83.0614,1600,200,Low,Private Methodist; Delaware; small enrollment
+Within,Kenyon College,Private College,"106 College Park St, Gambier OH 43022",40.3712,-82.3945,1700,1000,Low,Elite liberal arts; Gambier; rural large campus
+Within,Muskingum University,Private University,"163 Stormont St, New Concord OH 43762",39.9934,-81.7448,2000,215,Low,Private Presbyterian; New Concord
