@@ -1,8 +1,8 @@
 Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
-Within,Scottsdale Community College,Community College,"9000 E. Chaparral Road, Scottsdale, AZ 85256",Scottsdale,AZ,85256,33.512778,-111.884017,10000,160,,"Main campus with University Center, panoramic views"
-Near,Arizona State University - Tempe Campus,4-Year University,"1151 S Forest Ave, Tempe, AZ 85287",Tempe,AZ,85287,33.416871,-111.936235,57000,642,,"Modular buildings with planned permanent facilities, Don Takeda Science Center"
-Near,Arizona State University - Downtown Phoenix Campus,4-Year University,"411 N Central Ave, Phoenix, AZ 85004",Phoenix,AZ,85004,33.452997,-112.073534,11465,20,,"Hosts CSUB-AV satellite, Sheriff's Training Academy, performing arts facilities"
-Near,Arizona State University - West Campus,4-Year University,"4701 W Thunderbird Rd, Glendale, AZ 85306",Glendale,AZ,85306,33.607044,-112.163878,4000,278,,"Arts-focused institution, all programs in single 500,000 sq. ft. building"
-Near,Paradise Valley Community College,Community College,"18401 N 32nd St, Phoenix, AZ 85032",Phoenix,AZ,85032,33.653016,-112.010722,8000,240,,"Serves 2,000 students, planned permanent 60-acre campus on 25th Street East"
-Near,Mesa Community College,Community College,"1833 W Southern Ave, Mesa, AZ 85202",Mesa,AZ,85202,33.39283,-111.871537,25000,160,,"Second-largest public master's university in the nation, approximately 15 miles from CA-27 border"
-Near,Glendale Community College,Community College,"6000 W Olive Ave, Glendale, AZ 85302",Glendale,AZ,85302,33.568837,-112.190886,15000,160,,
+Within,Scottsdale Community College,Community College,"9000 E. Chaparral Road, Scottsdale, AZ 85256",Scottsdale,AZ,85256,33.512778,-111.884017,10000,160,High,"Main campus with University Center, panoramic views"
+Near,Arizona State University - Tempe Campus,4-Year University,"1151 S Forest Ave, Tempe, AZ 85287",Tempe,AZ,85287,33.416871,-111.936235,57000,642,High,"Modular buildings with planned permanent facilities, Don Takeda Science Center"
+Near,Arizona State University - Downtown Phoenix Campus,4-Year University,"411 N Central Ave, Phoenix, AZ 85004",Phoenix,AZ,85004,33.452997,-112.073534,11465,20,Medium,"Hosts CSUB-AV satellite, Sheriff's Training Academy, performing arts facilities"
+Near,Arizona State University - West Campus,4-Year University,"4701 W Thunderbird Rd, Glendale, AZ 85306",Glendale,AZ,85306,33.607044,-112.163878,4000,278,Medium,"Arts-focused institution, all programs in single 500,000 sq. ft. building"
+Near,Paradise Valley Community College,Community College,"18401 N 32nd St, Phoenix, AZ 85032",Phoenix,AZ,85032,33.653016,-112.010722,8000,240,Medium,"Serves 2,000 students, planned permanent 60-acre campus on 25th Street East"
+Near,Mesa Community College,Community College,"1833 W Southern Ave, Mesa, AZ 85202",Mesa,AZ,85202,33.39283,-111.871537,25000,160,High,"Second-largest public master's university in the nation, approximately 15 miles from CA-27 border"
+Near,Glendale Community College,Community College,"6000 W Olive Ave, Glendale, AZ 85302",Glendale,AZ,85302,33.568837,-112.190886,15000,160,High,

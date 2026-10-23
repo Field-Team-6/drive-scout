@@ -1,10 +1,10 @@
 Section,Institution,Type,Address,City,State,Zip,Latitude,Longitude,Enrollment,Campus Size,Suitability,Notes
-Within,University of Northern Colorado,4-Year University,"501 20th St, Greeley CO 80639",Greeley,CO,80639,40.406318,-104.68563,10000,260,,"260-acre campus with Central and West campus areas, historic district"
-Within,Aims Community College - Greeley Campus,Community College,"5401 W 20th St, Greeley CO 80634",Greeley,CO,80634,40.407069,-104.7676,6000,185,,185-acre main campus with Student Commons and Welcome Center
-Within,Front Range Community College - Westminster Campus,Community College,"3645 W 112th Ave, Westminster CO 80031",Westminster,CO,80031,39.901456,-105.03781,7800,25,,Most diverse FRCC campus with student facilities and multicultural center
-Near,Colorado State University,4-Year University,"1062 Campus Delivery, Fort Collins CO 80523",Fort Collins,CO,80523,40.45553,-105.46483,26168,4773,,Large flagship campus with central oval and multiple walkable areas
-Near,Front Range Community College - Larimer Campus,Community College,"4616 S Shields St, Fort Collins CO 80526",Fort Collins,CO,80526,40.522388,-105.09323,10494,20,,Campus with Harmony Library and student gathering areas
-Near,University of Colorado Boulder,4-Year University,"914 Broadway, Boulder CO 80309",Boulder,CO,80309,40.004103,-105.26812,37000,786,,Large flagship campus with multiple quads and walkable areas
-Near,Front Range Community College - Boulder County Campus,Community College,"2190 Miller Dr, Longmont CO 80501",Longmont,CO,80501,40.138539,-105.13008,4100,5,,Campus with library resources and student facilities
-Near,Metropolitan State University of Denver,4-Year University,"1201 5th St, Denver CO 80204",Denver,CO,80204,39.741704,-105.00932,16000,127,,Urban campus with student center and walkable areas
-Near,Community College of Denver,Community College,"1111 W Colfax Ave, Denver CO 80204",Denver,CO,80204,39.741756,-105.00116,9000,150,,Urban campus with student gathering areas
+Within,University of Northern Colorado,4-Year University,"501 20th St, Greeley CO 80639",Greeley,CO,80639,40.406318,-104.68563,10000,260,High,"260-acre campus with Central and West campus areas, historic district"
+Within,Aims Community College - Greeley Campus,Community College,"5401 W 20th St, Greeley CO 80634",Greeley,CO,80634,40.407069,-104.7676,6000,185,Medium,185-acre main campus with Student Commons and Welcome Center
+Within,Front Range Community College - Westminster Campus,Community College,"3645 W 112th Ave, Westminster CO 80031",Westminster,CO,80031,39.901456,-105.03781,7800,25,Medium,Most diverse FRCC campus with student facilities and multicultural center
+Near,Colorado State University,4-Year University,"1062 Campus Delivery, Fort Collins CO 80523",Fort Collins,CO,80523,40.45553,-105.46483,26168,4773,High,Large flagship campus with central oval and multiple walkable areas
+Near,Front Range Community College - Larimer Campus,Community College,"4616 S Shields St, Fort Collins CO 80526",Fort Collins,CO,80526,40.522388,-105.09323,10494,20,Medium,Campus with Harmony Library and student gathering areas
+Near,University of Colorado Boulder,4-Year University,"914 Broadway, Boulder CO 80309",Boulder,CO,80309,40.004103,-105.26812,37000,786,High,Large flagship campus with multiple quads and walkable areas
+Near,Front Range Community College - Boulder County Campus,Community College,"2190 Miller Dr, Longmont CO 80501",Longmont,CO,80501,40.138539,-105.13008,4100,5,Low,Campus with library resources and student facilities
+Near,Metropolitan State University of Denver,4-Year University,"1201 5th St, Denver CO 80204",Denver,CO,80204,39.741704,-105.00932,16000,127,High,Urban campus with student center and walkable areas
+Near,Community College of Denver,Community College,"1111 W Colfax Ave, Denver CO 80204",Denver,CO,80204,39.741756,-105.00116,9000,150,Medium,Urban campus with student gathering areas
