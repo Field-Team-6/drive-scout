@@ -2610,9 +2610,14 @@
                 score += 15;
             }
             
-            // Campus Size (unchanged)
-            var campusSize = parseFloat(college.campusSize) || 0;
-            if (campusSize >= 50) score += 20;
+            // Campus Size (acres). If blank, estimate from enrollment instead of scoring zero.
+            var campusSize = parseFloat(college.campusSize);
+            if (isNaN(campusSize) || campusSize <= 0) {
+                if (enrollment >= 10000) score += 15;
+                else if (enrollment >= 3000) score += 10;
+                else score += 5;
+            }
+            else if (campusSize >= 50) score += 20;
             else if (campusSize >= 25) score += 15;
             else if (campusSize >= 10) score += 10;
             
@@ -2623,13 +2628,18 @@
                 score -= 15;
             }
             
-            // Specialized school penalty (art, music, trade, technical)
-            if (type.includes('art') || type.includes('music') || 
-                type.includes('trade') || type.includes('technical') ||
-                type.includes('culinary') || type.includes('design') ||
-                name.includes('art institute') || name.includes('music college') ||
-                name.includes('technical') || name.includes('trade school')) {
-                score -= 10;
+            // Specialized school penalty: whole phrases only, so 'Liberal Arts'
+            // colleges and 'Technical' community colleges are NOT penalized.
+            var specialtyPhrases = ['art institute', 'institute of art', 'school of art', 'college of art',
+                'art school', 'art college', 'school of music', 'college of music', 'music college',
+                'conservatory', 'school of design', 'college of design', 'design school', 'design institute',
+                'culinary', 'trade school', 'cosmetology', 'beauty school', 'barber'];
+            var specialtyText = ' ' + type + ' ' + name + ' ';
+            for (var p = 0; p < specialtyPhrases.length; p++) {
+                if (specialtyText.indexOf(specialtyPhrases[p]) > -1) {
+                    score -= 10;
+                    break;
+                }
             }
             
             // NEW: Raised Rating Thresholds
