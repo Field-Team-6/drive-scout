@@ -1462,13 +1462,13 @@
             setTimeout(function() {
                 if (typeof L !== 'undefined') {
                     map = L.map('map', {
-                        attributionControl: false,
+                        attributionControl: true,
                         minZoom: 1,
                         maxZoom: 15
                     }).setView([39.8283, -98.5795], 3);
                     
-                    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors',
                         maxZoom: 15,
                         minZoom: 1
                     }).addTo(map);
@@ -1639,13 +1639,13 @@
             setTimeout(function() {
                 if (typeof L !== 'undefined') {
                     map = L.map('map', {
-                        attributionControl: false,
+                        attributionControl: true,
                         minZoom: 1,
                         maxZoom: 15
                     }).setView([39.8283, -98.5795], 8);
                     
-                    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                        attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; OpenStreetMap contributors',
                         maxZoom: 15,
                         minZoom: 1
                     }).addTo(map);
@@ -2713,8 +2713,8 @@
                     '</div>' +
                 '</div>' +
                 '<div style="display: flex; gap: 8px;">' +
-                    '<a href="https://www.google.com/maps/search/' + encodeURIComponent(addressDisplay) + '" target="_blank" class="btn btn-primary" style="padding: 4px 10px; font-size: 0.75rem;">&#128506; Directions</a>' +
-                    '<a href="https://www.mobilize.us/ft6/c/lead-a-voter-drive/event/create/" target="_blank" class="btn btn-tertiary" style="padding: 4px 10px; font-size: 0.75rem;">&#128499; Set Up Voter Drive</a>' +
+                    '<a href="https://www.google.com/maps/search/' + encodeURIComponent(addressDisplay) + '" target="_blank" class="btn btn-primary" style="padding: 4px 10px; font-size: 0.75rem;">&#128506;&#65039; Directions</a>' +
+                    '<a href="https://www.mobilize.us/ft6/c/lead-a-voter-drive/event/create/" target="_blank" class="btn btn-tertiary" style="padding: 4px 10px; font-size: 0.75rem;">&#128499;&#65039; Set Up Voter Drive</a>' +
                 '</div>';
 
             return div;
@@ -3323,9 +3323,9 @@
             if (!map) {
                 setTimeout(function() {
                     if (typeof L !== 'undefined') {
-                        map = L.map('map', { attributionControl: false, minZoom: 1, maxZoom: 15 }).setView([32.9, -83.6], 7);
-                        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                            attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+                        map = L.map('map', { attributionControl: true, minZoom: 1, maxZoom: 15 }).setView([32.9, -83.6], 7);
+                        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                            attribution: '&copy; OpenStreetMap contributors',
                             maxZoom: 15, minZoom: 1
                         }).addTo(map);
                         setTimeout(function() {
